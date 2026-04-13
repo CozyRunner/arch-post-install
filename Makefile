@@ -1,4 +1,4 @@
-.PHONY: help install full base dotfiles packages fonts zsh lint clean
+.PHONY: help install full base dotfiles packages fonts fish lint clean
 
 help: ## Show this help
 	@echo ""
@@ -31,9 +31,9 @@ fonts: ## Install fonts
 	@chmod +x scripts/fonts.sh
 	@bash scripts/fonts.sh
 
-zsh: ## Setup Zsh + Oh My Zsh
-	@chmod +x scripts/setup_zsh.sh
-	@bash scripts/setup_zsh.sh
+fish: ## Setup Fish + Fisher
+	@chmod +x scripts/setup_fish.sh
+	@bash scripts/setup_fish.sh
 
 lint: ## Lint all shell scripts with shellcheck
 	@echo "Running shellcheck..."

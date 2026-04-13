@@ -96,4 +96,5 @@ dotfiles:
   - rofi
   - yazi
   - nvim
+  - fish
   - zellij

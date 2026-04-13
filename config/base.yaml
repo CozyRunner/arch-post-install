@@ -24,6 +24,7 @@ packages:
     - htop
     - btop
     - fastfetch
+    - fish
     - man-db
     - man-pages
     - openssh
@@ -43,7 +44,7 @@ services:
   - fstrim.timer
 
 user:
-  shell: /bin/bash
+  shell: /usr/bin/fish
   groups:
     - wheel
     - video

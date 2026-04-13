@@ -38,7 +38,7 @@ The included `Makefile` provides convenient shortcuts for common tasks:
 - `make base`: Setup system essentials, users, and base packages only.
 - `make dotfiles`: Deploy/refresh configuration files via symlinks.
 - `make fonts`: Install JetBrainsMono Nerd Font and system fonts.
-- `make zsh`: Configure Zsh with Oh My Zsh and essential plugins.
+- `make fish`: Configure Fish with Fisher and essential plugins.
 
 ---
 
@@ -68,7 +68,7 @@ arch-post-install/
 │   └── zellij/                # Terminal workspace multiplexer
 ├── scripts/
 │   ├── install_yay.sh         # Zero-config AUR helper setup
-│   ├── setup_zsh.sh           # Zsh + Oh My Zsh + Plugins
+│   ├── setup_fish.sh          # Fish + Fisher + Plugins
 │   └── fonts.sh               # System-wide typography injection
 ├── logs/                      # Comprehensive history of installations
 └── Makefile                   # Developer/Power-user shortcuts
