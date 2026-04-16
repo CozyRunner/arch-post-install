@@ -4,17 +4,23 @@
 # setup_fish.sh — Install and configure Fish
 # ─────────────────────────────────────────────
 
-set -e
+set -euo pipefail
+
+FISHER_URL="https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish"
 
 echo "[INFO] Setting up Fish..."
 
 # Install fish
-sudo pacman -S --needed --noconfirm fish
+if ! command -v fish &>/dev/null; then
+    sudo pacman -S --needed --noconfirm fish
+fi
 
 # Set Fish as default shell
-if [[ "$(getent passwd "${USER}" | cut -d: -f7)" != "$(which fish)" ]]; then
+local fish_path
+fish_path="$(command -v fish)"
+if [[ -n "${fish_path}" && "$(getent passwd "${USER}" | cut -d: -f7)" != "${fish_path}" ]]; then
     echo "[INFO] Setting Fish as default shell..."
-    chsh -s "$(which fish)"
+    chsh -s "${fish_path}"
     echo "[OK] Default shell changed to Fish."
 else
     echo "[OK] Fish is already the default shell."
@@ -23,13 +29,21 @@ fi
 # Optional: Install Fisher (plugin manager) and some plugins
 if [[ ! -f "${HOME}/.config/fish/functions/fisher.fish" ]]; then
     echo "[INFO] Installing Fisher plugin manager..."
-    fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
-    echo "[OK] Fisher installed."
-    
-    # Install helpful plugins (like autosuggestions, though fish has it built-in, there are prompt themes like tide or sponge)
+
+    local fisher_dir="${HOME}/.config/fish"
+    mkdir -p "${fisher_dir}/functions"
+
+    if curl -sL "${FISHER_URL}" -o "${fisher_dir}/functions/fisher.fish"; then
+        echo "[OK] Fisher downloaded."
+        echo "[INFO] Run 'fisher install jorgebucaran/fisher' in fish to activate."
+    else
+        echo "[ERROR] Failed to download Fisher."
+        exit 1
+    fi
+
     echo "[INFO] Installing tide prompt..."
-    fish -c "fisher install IlanCosman/tide@v6"
-    echo "[OK] Tide prompt installed."
+    fish -c "fisher install IlanCosman/tide@v6" || echo "[WARN] Tide installation may require manual setup."
+    echo "[OK] Tide prompt installation initiated."
 fi
 
 echo "[OK] Fish setup complete."

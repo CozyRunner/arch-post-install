@@ -4,7 +4,9 @@
 # install_yay.sh — Install yay AUR helper
 # ─────────────────────────────────────────────
 
-set -e
+set -euo pipefail
+
+YAY_REPO="https://aur.archlinux.org/yay.git"
 
 if command -v yay &>/dev/null; then
     echo "[OK] yay is already installed."
@@ -14,14 +16,36 @@ fi
 echo "[INFO] Installing yay AUR helper..."
 
 # Ensure dependencies
-sudo pacman -S --needed --noconfirm base-devel git
+if ! command -v git &>/dev/null; then
+    sudo pacman -S --needed --noconfirm git
+fi
+
+if ! command -v makepkg &>/dev/null; then
+    sudo pacman -S --needed --noconfirm base-devel
+fi
 
 # Build in a temporary directory
 TMPDIR="$(mktemp -d)"
 trap 'rm -rf "${TMPDIR}"' EXIT
 
-git clone https://aur.archlinux.org/yay.git "${TMPDIR}/yay"
-cd "${TMPDIR}/yay"
-makepkg -si --noconfirm
+echo "[INFO] Cloning yay repository..."
+if ! git clone "${YAY_REPO}" "${TMPDIR}/yay"; then
+    echo "[ERROR] Failed to clone yay repository."
+    exit 1
+fi
 
-echo "[OK] yay installed successfully."
+cd "${TMPDIR}/yay"
+
+echo "[INFO] Building yay..."
+if ! makepkg -si --noconfirm; then
+    echo "[ERROR] Failed to build yay."
+    exit 1
+fi
+
+# Verify installation
+if command -v yay &>/dev/null; then
+    echo "[OK] yay installed successfully."
+else
+    echo "[ERROR] yay installation verification failed."
+    exit 1
+fi

@@ -1,0 +1,6 @@
+[terminal.shell]
+program = "/usr/bin/fish"
+
+[window.padding]
+x = 12
+y = 12

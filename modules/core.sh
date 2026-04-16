@@ -16,6 +16,19 @@ mkdir -p "${LOG_DIR}"
 # Log file for current run
 LOG_FILE="${LOG_DIR}/install-$(date +%Y%m%d-%H%M%S).log"
 
+# Verbose mode (set via -v flag)
+VERBOSE=false
+DRY_RUN=false
+
+# Cleanup handler
+cleanup_on_exit() {
+    local exit_code=$?
+    if [[ ${exit_code} -ne 0 ]]; then
+        log_error "Script failed. Log saved to: ${LOG_FILE}"
+    fi
+}
+trap cleanup_on_exit EXIT
+
 # ── Colors ────────────────────────────────────
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -31,11 +44,33 @@ log_success() { echo -e "${GREEN}[OK]${NC}      $*" | tee -a "${LOG_FILE}"; }
 log_warn()    { echo -e "${YELLOW}[WARN]${NC}    $*" | tee -a "${LOG_FILE}"; }
 log_error()   { echo -e "${RED}[ERROR]${NC}   $*" | tee -a "${LOG_FILE}"; }
 log_step()    { echo -e "\n${CYAN}${BOLD}▸ $*${NC}\n" | tee -a "${LOG_FILE}"; }
+log_debug()   { [[ "${VERBOSE}" == true ]] && echo -e "${GRAY}[DEBUG]${NC}  $*" | tee -a "${LOG_FILE}"; }
+
+# ── Network check ─────────────────────────────
+check_internet() {
+    log_step "Checking internet connectivity..."
+    if curl -s --max-time 5 https://archlinux.org > /dev/null 2>&1; then
+        log_success "Internet connection verified"
+        return 0
+    elif ping -c 1 -W 3 archlinux.org > /dev/null 2>&1; then
+        log_success "Internet connection verified (via ping)"
+        return 0
+    else
+        log_error "No internet connection. Please check your network."
+        return 1
+    fi
+}
 
 # ── Checks ────────────────────────────────────
 require_root() {
     if [[ $EUID -eq 0 ]]; then
         log_error "Do not run this script as root. Use a normal user with sudo."
+        exit 1
+    fi
+
+    # Verify sudo access
+    if ! sudo -v 2>/dev/null; then
+        log_error "sudo access required but not available. Add user to wheel group."
         exit 1
     fi
 }
@@ -85,28 +120,52 @@ yaml_value() {
 }
 
 _yaml_list_fallback() {
-    # Simple line-by-line YAML list parser (handles `key:\n  - val` format)
+    # Simple line-by-line YAML list parser (handles nested `key:\n  - val` format)
     local file="$1" key="$2"
-    local in_block=false depth=0
-
-    # Convert dotted key to last segment for matching
-    local match_key="${key##*.}"
+    local in_block=false
+    local depth=0
+    local target_depth="${key//[^:]}"  # Count colons for depth
+    target_depth="${#target_depth}"
+    local key_segments=(${key//./ })
+    local current_segment=0
+    local match_key="${key_segments[-1]}"
 
     while IFS= read -r line; do
-        # Detect block start
-        if [[ "${line}" =~ ^[[:space:]]*${match_key}:[[:space:]]*$ ]]; then
-            in_block=true
-            continue
+        # Strip leading whitespace for easier parsing
+        local stripped="${line#"${line%%[![:space:]]*}"}"
+
+        # Track current depth based on leading spaces
+        local line_depth=0
+        if [[ "${stripped}" =~ ^([[:space:]]*) ]]; then
+            line_depth=$((${#BASH_REMATCH[1]} / 2))
+        fi
+
+        # Skip empty lines and comments
+        [[ -z "${stripped}" || "${stripped}" =~ ^# ]] && continue
+
+        # Parse key-value
+        if [[ "${stripped}" =~ ^([^:]+):[[:space:]]*(.*)$ ]]; then
+            local current_key="${BASH_REMATCH[1]}"
+            local current_val="${BASH_REMATCH[2]}"
+
+            # Handle parent keys for nested structures
+            if [[ "${line_depth}" -eq $((target_depth - 1)) && "${current_key}" == "${match_key}" ]]; then
+                in_block=true
+                continue
+            fi
+
+            # If we're inside our target block and hit a sibling key at same depth, stop
+            if ${in_block} && [[ "${line_depth}" -le $((target_depth - 1)) && -n "${current_val}" ]]; then
+                break
+            fi
         fi
 
         if ${in_block}; then
-            # Still in list items (lines starting with "  - ")
-            if [[ "${line}" =~ ^[[:space:]]*-[[:space:]]+(.*) ]]; then
+            if [[ "${stripped}" =~ ^-[[:space:]]+(.*) ]]; then
                 echo "${BASH_REMATCH[1]}"
-            elif [[ "${line}" =~ ^[[:space:]]*$ ]]; then
+            elif [[ "${stripped}" =~ ^-[[:space:]]*$ ]]; then
                 continue
             else
-                # New key encountered, stop
                 break
             fi
         fi
@@ -125,6 +184,7 @@ _yaml_value_fallback() {
 # ── System Update ─────────────────────────────
 setup_core() {
     log_step "Updating system"
+    check_internet || { log_error "Cannot proceed without internet"; exit 1; }
     sudo pacman -Syu --noconfirm 2>&1 | tee -a "${LOG_FILE}"
     log_success "System updated"
 }

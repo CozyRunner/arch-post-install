@@ -18,6 +18,56 @@ source "${SCRIPT_DIR}/modules/users.sh"
 source "${SCRIPT_DIR}/modules/dotfiles.sh"
 source "${SCRIPT_DIR}/modules/hyprland.sh"
 
+# ── Help ──────────────────────────────────────
+show_help() {
+    cat << EOF
+Usage: ./install.sh [OPTIONS] [MODE]
+
+Modes:
+  full        Full install (Base + Hyprland + dotfiles)
+  base        Base system only (no DE)
+  dotfiles    Deploy dotfiles only
+
+Options:
+  -v, --verbose    Enable verbose output
+  -d, --dry-run    Show what would be done without executing
+  -h, --help       Show this help message
+
+Examples:
+  ./install.sh              Interactive mode
+  ./install.sh full         Full install non-interactively
+  ./install.sh -v base      Verbose base install
+  ./install.sh -d dotfiles  Preview dotfiles deployment
+EOF
+}
+
+# ── Parse Arguments ────────────────────────────
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -v|--verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -d|--dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        full|base|dotfiles)
+            MODE="$1"
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+done
+
 # ── Banner ────────────────────────────────────
 show_banner() {
     echo -e "${CYAN}${BOLD}"
@@ -83,6 +133,15 @@ confirm_install() {
     esac
 }
 
+# ── Dry-run wrapper ────────────────────────────
+run_cmd() {
+    if [[ "${DRY_RUN}" == true ]]; then
+        log_info "[DRY RUN] $*"
+    else
+        "$@"
+    fi
+}
+
 # ── Main ──────────────────────────────────────
 main() {
     show_banner
@@ -92,33 +151,35 @@ main() {
     require_root
 
     # Mode selection (can be overridden via CLI arg)
-    if [[ $# -ge 1 ]]; then
-        MODE="$1"
-    else
+    if [[ -z "${MODE:-}" ]]; then
         select_mode
     fi
 
-    confirm_install
+    if [[ "${DRY_RUN}" != true ]]; then
+        confirm_install
+    else
+        log_warn "DRY RUN MODE - No changes will be made"
+    fi
 
     log_step "Starting '${MODE}' installation"
 
     case "${MODE}" in
         full)
-            setup_core
-            install_base_packages
-            enable_base_services
-            setup_users
-            ensure_yay
-            setup_hyprland
+            run_cmd setup_core
+            run_cmd install_base_packages
+            run_cmd enable_base_services
+            run_cmd setup_users
+            run_cmd ensure_yay
+            run_cmd setup_hyprland
             ;;
         base)
-            setup_core
-            install_base_packages
-            enable_base_services
-            setup_users
+            run_cmd setup_core
+            run_cmd install_base_packages
+            run_cmd enable_base_services
+            run_cmd setup_users
             ;;
         dotfiles)
-            deploy_dotfiles_from_config "${CONFIG_DIR}/hyprland.yaml"
+            run_cmd deploy_dotfiles_from_config "${CONFIG_DIR}/hyprland.yaml"
             ;;
         *)
             log_error "Unknown mode: ${MODE}"
