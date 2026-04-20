@@ -6,6 +6,8 @@ HYPR_THEME="$HOME/.config/hypr/theme.conf"
 WAYBAR_CONFIG="$HOME/.config/waybar"
 KITTY_CONFIG="$HOME/.config/kitty/"
 ROFI_CONFIG="$HOME/.config/rofi/"
+ALACRITTY_CONFIG="$HOME/.config/alacritty/"
+FISH_CONFIG="$HOME/.config/fish"
 
 # Get current color scheme
 CURRENT_SCHEME=$(gsettings get org.gnome.desktop.interface color-scheme)
