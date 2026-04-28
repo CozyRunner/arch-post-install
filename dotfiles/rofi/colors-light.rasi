@@ -6,4 +6,13 @@
     foreground-dim: #9ca0b0;
     accent:         #1e66f5;
     border:         #1e66f566;
+
+    /* Compatibility aliases */
+    bg:      @background;
+    bg-alt:  @background-alt;
+    fg:      @foreground;
+    fg-dim:  @foreground-dim;
+    sel:     @selected;
+    bg-sel:  @background-alt;
+    accent:  @selected;
 }

@@ -2,32 +2,12 @@
 @import "~/.config/rofi/config.rasi"
 
 * {
-    bg:      #0d1117;
-    bg-sel:  #1c2030;
-    fg:      #c9d1d9;
-    fg-dim:  #8b949e;
-    accent:  #58a6ff;
-
     background-color: transparent;
     text-color:       @fg;
     border-color:     transparent;
     spacing:          0;
     padding:          0;
     margin:           0;
-    /* theme-changer: begin */
-    bg:      #1a1c20;
-    bg-sel:  #141421;
-    fg:      #d3dae3;
-    fg-dim:  #666a73;
-    accent:  #f2b311;
-
-    background-color: transparent;
-    text-color:       @fg;
-    border-color:     #1e2024;
-    spacing:          0;
-    padding:          0;
-    margin:           0;
-    /* theme-changer: end */
 }
 
 configuration {

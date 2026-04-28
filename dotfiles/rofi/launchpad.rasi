@@ -9,38 +9,18 @@ configuration {
 }
 
 * {
-    bg:      #11140e;
-    bg-alt:  #1d211a;
-    fg:      #e1e4d9;
-    fg-dim:  #33362f;
-    sel:     #abd290;
-
     background-color: transparent;
     text-color:       @fg;
     border-color:     transparent;
     spacing:          0;
     padding:          0;
     margin:           0;
-    /* theme-changer: begin */
-    bg:      #1a1c20;
-    bg-alt:  #141421;
-    fg:      #d3dae3;
-    fg-dim:  #666a73;
-    sel:     #f2b311;
-
-    background-color: transparent;
-    text-color:       @fg;
-    border-color:     transparent;
-    spacing:          0;
-    padding:          0;
-    margin:           0;
-    /* theme-changer: end */
 }
 
 window {
     background-color: @bg;
     border:           1px;
-    border-color:     #282b24;
+    border-color:     @bg-alt;
     border-radius:    20px;
     width:            900px;
     location:         center;
@@ -64,7 +44,7 @@ inputbar {
 entry {
     background-color:  transparent;
     text-color:        @fg;
-    placeholder:       "Buscar aplicación...";
+    placeholder:       "Launch Application...";
     placeholder-color: @fg-dim;
     vertical-align:    0.5;
     font:              "JetBrains Mono 14";
@@ -113,6 +93,11 @@ element.normal.urgent    { background-color: transparent; }
 element.alternate.normal { background-color: transparent; }
 element.alternate.active { background-color: transparent; }
 element.alternate.urgent { background-color: transparent; }
+
+element.selected.normal {
+    background-color: @bg-alt;
+    border-radius:    12px;
+}
 
 element.selected.normal element-icon {
     background-color: @sel;

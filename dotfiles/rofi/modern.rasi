@@ -8,111 +8,142 @@ configuration {
     terminal:            "kitty";
 }
 
+/* =========================
+   Color System (RGBA)
+   ========================= */
 * {
-    bg:      #11140e;
-    bg-alt:  #1d211a;
-    fg:      #e1e4d9;
-    fg-dim:  #33362f;
-    sel:     #abd290;
+    /* 50% transparency */
+    bg: rgba(26, 28, 32, 0.5);        /* main background */
+    bg-alt: rgba(40, 44, 52, 0.5);    /* cards / input */
+    
+    fg: #d3dae3;
+    fg-dim: #8b9199;
+    sel: #71f79f;
 
     background-color: transparent;
     text-color:       @fg;
     border-color:     transparent;
-    spacing:          0;
-    padding:          0;
-    margin:           0;
-    /* theme-changer: begin */
-    bg:      #1a1c20;
-    bg-alt:  #141421;
-    fg:      #d3dae3;
-    fg-dim:  #666a73;
-    sel:     #f2b311;
 
-    background-color: transparent;
-    text-color:       @fg;
-    border-color:     transparent;
-    spacing:          0;
-    padding:          0;
-    margin:           0;
-    /* theme-changer: end */
+    spacing: 0;
+    padding: 0;
+    margin:  0;
 }
 
+/* =========================
+   Window
+   ========================= */
 window {
     background-color: @bg;
     border:           1px;
-    border-color:     #282b24;
+    border-color:     @bg-alt;
     border-radius:    20px;
-    width:            900px;
-    location:         center;
-    anchor:           center;
+
+    width:    900px;
+    location: center;
+    anchor:   center;
 }
 
+/* =========================
+   Layout
+   ========================= */
 mainbox {
     background-color: transparent;
     children:         [inputbar, listview];
-    padding:          24px;
-    spacing:          20px;
+
+    padding: 24px;
+    spacing: 20px;
 }
 
+/* =========================
+   Search Bar
+   ========================= */
 inputbar {
     background-color: @bg-alt;
     border-radius:    10px;
-    padding:          12px 16px;
-    children:         [entry];
+
+    padding: 12px 16px;
+    children: [entry];
 }
 
 entry {
     background-color:  transparent;
     text-color:        @fg;
-    placeholder:       "Buscar aplicación...";
+
+    placeholder:       "Launch Application...";
     placeholder-color: @fg-dim;
-    vertical-align:    0.5;
-    font:              "JetBrains Mono 14";
-    cursor:            text;
+
+    vertical-align: 0.5;
+    font: "JetBrains Mono 14";
+
+    cursor: text;
 }
 
+/* =========================
+   App Grid
+   ========================= */
 listview {
     background-color: transparent;
-    columns:          6;
-    lines:            3;
-    spacing:          16px;
-    scrollbar:        false;
-    fixed-height:     true;
-    layout:           vertical;
+
+    columns: 6;
+    lines:   3;
+
+    spacing:      16px;
+    scrollbar:    false;
+    fixed-height: true;
+    layout:       vertical;
 }
 
+/* =========================
+   Items
+   ========================= */
 element {
     background-color: transparent;
     border-radius:    12px;
-    padding:          0;
-    spacing:          0;
-    orientation:      vertical;
-    cursor:           pointer;
+
+    padding:     0;
+    spacing:     0;
+    orientation: vertical;
+
+    cursor: pointer;
 }
 
 element-icon {
     background-color: @bg-alt;
     border-radius:    16px;
-    size:             56px;
-    padding:          18px;
-    cursor:           inherit;
+
+    size:    56px;
+    padding: 18px;
+
+    cursor: inherit;
 }
 
 element-text {
     background-color: transparent;
     text-color:       @fg;
+
     horizontal-align: 0.5;
     vertical-align:   0.5;
-    padding:          8px 4px 4px 4px;
-    cursor:           inherit;
+
+    padding: 8px 4px 4px 4px;
+    cursor:  inherit;
 }
 
-element.normal.normal    { background-color: transparent; }
-element.normal.active    { background-color: transparent; }
-element.normal.urgent    { background-color: transparent; }
-element.alternate.normal { background-color: transparent; }
-element.alternate.active { background-color: transparent; }
-element.alternate.urgent { background-color: transparent; }
+/* =========================
+   States
+   ========================= */
+element.normal.normal,
+element.normal.active,
+element.normal.urgent,
+element.alternate.normal,
+element.alternate.active,
+element.alternate.urgent {
+    background-color: transparent;
+}
+
+element.selected.normal {
+    background-color: @bg-alt;
+    border-radius:    12px;
+}
 
 element.selected.normal element-icon {
     background-color: @sel;
@@ -122,3 +153,105 @@ element.selected.normal element-text {
     text-color: @sel;
     font:       "JetBrains Mono Bold 11";
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

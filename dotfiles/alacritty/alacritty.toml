@@ -1,5 +1,5 @@
 [general]
-import = ["/home/sachin/.config/alacritty/theme.toml"]
+import = ["~/.config/alacritty/theme.toml"]
 live_config_reload = true
 
 [terminal.shell]

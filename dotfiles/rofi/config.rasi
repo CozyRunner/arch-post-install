@@ -30,6 +30,6 @@ configuration {
 //@theme "/usr/share/rofi/themes/material.rasi"
 
   /* Import dynamic colors */
-  @import "/home/sachin/.config/rofi/colors.rasi"
+  @import "~/.config/rofi/colors.rasi"
 
 @theme "~/.config/rofi/modern.rasi"

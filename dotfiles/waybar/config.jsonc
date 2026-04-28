@@ -28,13 +28,13 @@
     "group/tray"
   ],
   "custom/arch": {
-    "exec": "/home/sachin/.config/waybar/scripts/updates.sh",
+    "exec": "~/.config/waybar/scripts/updates.sh",
     "format": "<span font='16'></span>",
     "return-type": "json",
     "interval": 600,
     "tooltip": true,
     "on-click": "rofi -show drun",
-    "on-click-right": "/home/sachin/.config/waybar/scripts/power_menu.sh"
+    "on-click-right": "~/.config/waybar/scripts/power_menu.sh"
   },
   "hyprland/workspaces": {
     "disable-scroll": true,
@@ -206,7 +206,7 @@
     "on-click": "hyprctl dispatch exec '[float; size 600 450; center] kitty -e bluetui'"
   },
   "custom/language": {
-    "exec": "/home/sachin/.config/waybar/scripts/kb_layout.sh",
+    "exec": "~/.config/waybar/scripts/kb_layout.sh",
     "return-type": "json",
     "interval": 1,
     "on-click": "hyprctl switchxkblayout all next",
