@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # -----------------------------------------------------------------------------
-# Arch Linux System Update Script
-# Full system update using pacman
+# AUR Package Update Script
+# Updates only AUR packages using yay
 # -----------------------------------------------------------------------------
 
 set -euo pipefail
@@ -25,10 +25,10 @@ GRAY="\033[1;90m"
 # Icons
 # -----------------------------------------------------------------------------
 
-ICON_ARCH="󰣇"
-ICON_SYNC="󰚰"
+ICON_AUR="󰣇"
 ICON_OK=""
 ICON_FAIL=""
+ICON_SYNC="󰚰"
 ICON_WARN=""
 
 # -----------------------------------------------------------------------------
@@ -40,7 +40,7 @@ print_header() {
 
   echo
   echo -e "${BLUE}╭──────────────────────────────────────────────────╮${RESET}"
-  echo -e "${BLUE}│${CYAN}  ${ICON_ARCH}  Arch Linux System Update          ${BLUE}│${RESET}"
+  echo -e "${BLUE}│${CYAN}  ${ICON_AUR}  AUR Packages Update                ${BLUE}│${RESET}"
   echo -e "${BLUE}╰──────────────────────────────────────────────────╯${RESET}"
   echo
 }
@@ -61,6 +61,12 @@ print_warning() {
   echo -e "${MAGENTA}${ICON_WARN}  $1${RESET}"
 }
 
+cleanup() {
+  echo
+  echo -e "${GRAY}Press Enter to close...${RESET}"
+  read -r
+}
+
 send_notification() {
   local title="$1"
   local message="$2"
@@ -74,18 +80,16 @@ send_notification() {
   fi
 }
 
-cleanup() {
-  echo
-  echo -e "${GRAY}Press Enter to close...${RESET}"
-  read -r
-}
-
 # -----------------------------------------------------------------------------
 # Validation
 # -----------------------------------------------------------------------------
 
-if ! command -v pacman >/dev/null 2>&1; then
-  print_error "pacman not found."
+if ! command -v yay >/dev/null 2>&1; then
+  print_error "yay is not installed."
+
+  echo
+  echo -e "${GRAY}Install yay first before running this script.${RESET}"
+
   exit 1
 fi
 
@@ -97,36 +101,37 @@ trap cleanup EXIT
 
 print_header
 
-print_info "Synchronizing package databases..."
+print_info "Checking and updating AUR packages only..."
 echo
 
 START_TIME=$(date +%s)
 
-# --needed avoids reinstalling up-to-date packages
-# --noconfirm skips prompts
+# --aur      -> only AUR packages
+# --devel    -> update development packages
+# --timeupdate -> check git package updates properly
 
-if sudo pacman -Syu --noconfirm --needed; then
+if yay -Sua --aur --devel --timeupdate --noconfirm; then
   END_TIME=$(date +%s)
   DURATION=$((END_TIME - START_TIME))
 
   echo
-  print_success "System updated successfully!"
+  print_success "AUR packages updated successfully!"
   echo
   echo -e "${GRAY}Update duration:${RESET} ${DURATION}s"
 
   send_notification \
-    "Arch Linux Update" \
-    "System updated successfully." \
+    "AUR Update" \
+    "AUR packages updated successfully." \
     "software-update-available-symbolic"
 
 else
   echo
-  print_error "System update failed."
-  print_warning "Check the terminal output above."
+  print_error "AUR update failed."
+  print_warning "Check the output above for details."
 
   send_notification \
-    "Arch Linux Update Failed" \
-    "System update failed. Check terminal output." \
+    "AUR Update Failed" \
+    "AUR package update failed." \
     "dialog-error-symbolic" \
     "critical"
 

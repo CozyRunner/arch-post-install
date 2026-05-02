@@ -17,6 +17,7 @@ layout {
     }
     tab name="DevAgent"
     tab name="TestAgent"
+    tab name="DocsAgent"
     tab name="Docker" {
       pane command="lazydocker"
     }

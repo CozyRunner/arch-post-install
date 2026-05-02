@@ -42,7 +42,8 @@ A highly modular, automated, and visually polished Arch Linux post-installation 
 
 | Feature | Description |
 |:---:|:---|
-| 🧱 | **Modular Design**: Packages, services, and dotfiles are decoupled into functional modules. |
+| 🧱 | **Modular Design**: Packages, services, and dotfiles are decoupled into core modules and environment profiles. |
+| 🧩 | **Plugin-based Profiles**: Easily add new desktop environments (e.g., GNOME, KDE) by dropping a script into `profiles/`. |
 | 🎨 | **Unified Theming**: Dark (Macchiato) and Light (Latte) themes applied via `SUPER + N`. |
 | 👤 | **Profile-Based**: Supports `full`, `base`, or `dotfiles` installation modes. |
 | 🔄 | **Idempotent**: Uses `--needed` flags and pre-flight checks for safe re-runs. |
@@ -58,19 +59,20 @@ The workbench operates as a modular engine that parses YAML configurations to dr
 ```mermaid
 graph TD
     A[install.sh] --> B(core.sh)
+    A --> S(system.sh)
     B --> C{Mode Selection}
     C -->|full| D[packages.sh]
     C -->|full| E[services.sh]
     C -->|full| F[users.sh]
     C -->|full| G[dotfiles.sh]
-    C -->|full| H[hyprland.sh]
+    C -->|full| P[profiles/*.sh]
+    
+    P --> D
+    P --> E
+    P --> G
     
     D --> I[(config/*.yaml)]
     G --> I
-    
-    H --> D
-    H --> E
-    H --> G
 ```
 
 ### Installation Lifecycle
@@ -78,11 +80,12 @@ graph TD
 1. **Pre-flight**: Verifies Arch Linux, internet connectivity, and sudo privileges.
 2. **Core Setup**: Updates system and ensures `yay` (AUR helper) and `yq` (YAML parser) are available.
 3. **Module Execution**:
+   - **System**: Installs fonts and configures the system shell.
    - **Packages**: Installs pacman and AUR packages listed in configs.
    - **Services**: Enables systemd services and timers.
    - **Users**: Configures shell, groups, locale, and timezone.
+   - **Profiles**: Environment-specific orchestrators (like Hyprland) execute their logic.
    - **Dotfiles**: Symlinks configurations from `dotfiles/` to `~/.config/` with automatic backups.
-   - **Environment**: Orchestrates DE-specific setup (Hyprland).
 
 ---
 
@@ -170,11 +173,13 @@ arch-post-install/
 │   └── hyprland.yaml          # Hyprland packages, services & dotfiles
 ├── modules/
 │   ├── core.sh                # Engine: YAML parsing, logging, checks
+│   ├── system.sh              # System-wide setup (fonts, shell)
 │   ├── packages.sh            # Pacman & AUR package installation
 │   ├── services.sh            # Systemd service management
 │   ├── users.sh               # User configuration & locale
-│   ├── dotfiles.sh            # Symlink deployment with backup
-│   └── hyprland.sh            # Hyprland environment orchestrator
+│   └── dotfiles.sh            # Symlink deployment with backup
+├── profiles/
+│   └── hyprland.sh            # Hyprland environment orchestrator (plugin)
 ├── dotfiles/
 │   ├── theme/                 # Unified theme definitions
 │   ├── hypr/                  # Hyprland window manager config
@@ -324,25 +329,19 @@ THEME=macchiato   # Dark mode
 THEME=latte       # Light mode
 ```
 
-### Advanced: Custom Scripts
+### Advanced: Custom Profiles
 
-You can add post-install scripts to the `scripts/` directory and call them from `install.sh` or a module. Follow the existing pattern:
-```bash
-#!/usr/bin/env bash
-source modules/core.sh
-log_step "Running custom setup"
-# Your logic here
-```
+The workbench supports a plugin-based architecture for desktop environments. To add a new profile (e.g., `gnome`):
+
+1. Create `config/gnome.yaml` with required packages and dotfiles.
+2. Create `profiles/gnome.sh` and define a `setup_gnome()` function.
+3. Add `run_cmd setup_gnome` to the `full` case in `install.sh`.
 
 ---
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing`)
-5. Open a Pull Request
+Contributions are welcome! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct and the process for submitting pull requests.
 
 ---
 

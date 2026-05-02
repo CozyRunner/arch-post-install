@@ -1,0 +1,231 @@
+themes {
+    catppuccin-mocha {
+        text_unselected {
+            base "#cdd6f4"
+            emphasis_0 "#a6adc8"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#a6e3a1"
+            emphasis_3 "#f9e2af"
+            background "#000000"
+        }
+        text_selected {
+            base "#1e1e2e"
+            emphasis_0 "#181825"
+            emphasis_1 "#74c7ec"
+            emphasis_2 "#94e2d5"
+            emphasis_3 "#f9e2af"
+            background "#0a0a0f"
+        }
+        ribbon_unselected {
+            base "#cdd6f4"
+            emphasis_0 "#a6adc8"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#a6e3a1"
+            emphasis_3 "#f9e2af"
+            background "#000000"
+        }
+        ribbon_selected {
+            base "#cdd6f4"
+            emphasis_0 "#bac2de"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#a6e3a1"
+            emphasis_3 "#f9e2af"
+            background "#1e1e2e"
+        }
+        table_title {
+            base "#1e1e2e"
+            emphasis_0 "#585b70"
+            emphasis_1 "#74c7ec"
+            emphasis_2 "#94e2d5"
+            emphasis_3 "#f9e2af"
+            background "#89b4fa"
+        }
+        table_cell_unselected {
+            base "#cdd6f4"
+            emphasis_0 "#a6adc8"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#a6e3a1"
+            emphasis_3 "#f9e2af"
+            background "#1e1e2e"
+        }
+        table_cell_selected {
+            base "#cdd6f4"
+            emphasis_0 "#a6adc8"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#a6e3a1"
+            emphasis_3 "#f9e2af"
+            background "#313244"
+        }
+        list_unselected {
+            base "#cdd6f4"
+            emphasis_0 "#a6adc8"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#a6e3a1"
+            emphasis_3 "#f9e2af"
+            background "#1e1e2e"
+        }
+        list_selected {
+            base "#cdd6f4"
+            emphasis_0 "#a6adc8"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#a6e3a1"
+            emphasis_3 "#f9e2af"
+            background "#313244"
+        }
+        frame_unselected {
+            base "#585b70"
+            emphasis_0 "#45475a"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#a6e3a1"
+            emphasis_3 "#f9e2af"
+        }
+        frame_selected {
+            base "#89b4fa"
+            emphasis_0 "#585b70"
+            emphasis_1 "#74c7ec"
+            emphasis_2 "#94e2d5"
+            emphasis_3 "#f9e2af"
+        }
+        exit_code_success {
+            base "#a6e3a1"
+            emphasis_0 "#585b70"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#94e2d5"
+            emphasis_3 "#f9e2af"
+        }
+        exit_code_error {
+            base "#f38ba8"
+            emphasis_0 "#585b70"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#94e2d5"
+            emphasis_3 "#f9e2af"
+        }
+        multiplayer_user_colors {
+            player_1 "#f38ba8"
+            player_2 "#fab387"
+            player_3 "#f9e2af"
+            player_4 "#a6e3a1"
+            player_5 "#94e2d5"
+            player_6 "#89b4fa"
+            player_7 "#cba6f7"
+            player_8 "#f5c2e7"
+            player_9 "#eba0ac"
+            player_10 "#f2cdcd"
+        }
+    }
+    catppuccin-latte {
+        text_unselected {
+            base "#4c4f69"
+            emphasis_0 "#6c6f85"
+            emphasis_1 "#1e66f5"
+            emphasis_2 "#40a02b"
+            emphasis_3 "#df8e1d"
+            background "#eff1f5"
+        }
+        text_selected {
+            base "#eff1f5"
+            emphasis_0 "#ccd0da"
+            emphasis_1 "#04a5e5"
+            emphasis_2 "#179287"
+            emphasis_3 "#df8e1d"
+            background "#4c4f69"
+        }
+        ribbon_unselected {
+            base "#4c4f69"
+            emphasis_0 "#6c6f85"
+            emphasis_1 "#1e66f5"
+            emphasis_2 "#40a02b"
+            emphasis_3 "#df8e1d"
+            background "#ffffff"
+        }
+        ribbon_selected {
+            base "#eff1f5"
+            emphasis_0 "#ccd0da"
+            emphasis_1 "#04a5e5"
+            emphasis_2 "#179287"
+            emphasis_3 "#df8e1d"
+            background "#1e66f5"
+        }
+        table_title {
+            base "#eff1f5"
+            emphasis_0 "#ccd0da"
+            emphasis_1 "#04a5e5"
+            emphasis_2 "#179287"
+            emphasis_3 "#df8e1d"
+            background "#1e66f5"
+        }
+        table_cell_unselected {
+            base "#4c4f69"
+            emphasis_0 "#6c6f85"
+            emphasis_1 "#1e66f5"
+            emphasis_2 "#40a02b"
+            emphasis_3 "#df8e1d"
+            background "#eff1f5"
+        }
+        table_cell_selected {
+            base "#4c4f69"
+            emphasis_0 "#6c6f85"
+            emphasis_1 "#1e66f5"
+            emphasis_2 "#40a02b"
+            emphasis_3 "#df8e1d"
+            background "#ccd0da"
+        }
+        list_unselected {
+            base "#4c4f69"
+            emphasis_0 "#6c6f85"
+            emphasis_1 "#1e66f5"
+            emphasis_2 "#40a02b"
+            emphasis_3 "#df8e1d"
+            background "#eff1f5"
+        }
+        list_selected {
+            base "#4c4f69"
+            emphasis_0 "#6c6f85"
+            emphasis_1 "#1e66f5"
+            emphasis_2 "#40a02b"
+            emphasis_3 "#df8e1d"
+            background "#ccd0da"
+        }
+        frame_unselected {
+            base "#bcc0cc"
+            emphasis_0 "#ccd0da"
+            emphasis_1 "#1e66f5"
+            emphasis_2 "#40a02b"
+            emphasis_3 "#df8e1d"
+        }
+        frame_selected {
+            base "#1e66f5"
+            emphasis_0 "#bcc0cc"
+            emphasis_1 "#04a5e5"
+            emphasis_2 "#179287"
+            emphasis_3 "#df8e1d"
+        }
+        exit_code_success {
+            base "#40a02b"
+            emphasis_0 "#bcc0cc"
+            emphasis_1 "#1e66f5"
+            emphasis_2 "#179287"
+            emphasis_3 "#df8e1d"
+        }
+        exit_code_error {
+            base "#d20f39"
+            emphasis_0 "#bcc0cc"
+            emphasis_1 "#1e66f5"
+            emphasis_2 "#179287"
+            emphasis_3 "#df8e1d"
+        }
+        multiplayer_user_colors {
+            player_1 "#d20f39"
+            player_2 "#fe640b"
+            player_3 "#df8e1d"
+            player_4 "#40a02b"
+            player_5 "#179287"
+            player_6 "#1e66f5"
+            player_7 "#8839ef"
+            player_8 "#ea76cb"
+            player_9 "#e64553"
+            player_10 "#dd7878"
+        }
+    }
+}
+

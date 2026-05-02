@@ -35,15 +35,15 @@ if [[ ! -f "${HOME}/.config/fish/functions/fisher.fish" ]]; then
 
     if curl -sL "${FISHER_URL}" -o "${fisher_dir}/functions/fisher.fish"; then
         echo "[OK] Fisher downloaded."
-        echo "[INFO] Run 'fisher install jorgebucaran/fisher' in fish to activate."
     else
         echo "[ERROR] Failed to download Fisher."
         exit 1
     fi
+fi
 
-    echo "[INFO] Installing tide prompt..."
-    fish -c "fisher install IlanCosman/tide@v6" || echo "[WARN] Tide installation may require manual setup."
-    echo "[OK] Tide prompt installation initiated."
+# Note: Starship prompt is configured via dotfiles/fish/conf.d/tools.fish
+if command -v starship &>/dev/null; then
+    echo "[OK] Starship prompt detected."
 fi
 
 echo "[OK] Fish setup complete."

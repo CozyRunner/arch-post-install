@@ -22,4 +22,4 @@ SETUVAR fish_prompt_color_logo:cyan
 SETUVAR fish_prompt_color_symbol:yellow
 SETUVAR fish_prompt_color_time:purple
 SETUVAR fish_prompt_color_user:green
-SETUVAR fish_user_paths:/home/sachin/\x2elocal/share/pnpm\x1e/home/sachin/\x2elocal/bin
+

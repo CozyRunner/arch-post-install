@@ -50,6 +50,13 @@ install_packages_from_config() {
             log_info "Packages to install: ${to_install[*]}"
             if sudo pacman -S --needed --noconfirm "${to_install[@]}" 2>&1 | tee -a "${LOG_FILE}"; then
                 log_success "Pacman packages installed"
+                
+                # Enable corepack if nodejs was installed
+                if is_installed "nodejs"; then
+                    log_info "Enabling corepack..."
+                    sudo corepack enable 2>/dev/null
+                    log_success "Corepack enabled"
+                fi
             else
                 log_error "Some pacman packages failed to install"
             fi

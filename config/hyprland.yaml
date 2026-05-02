@@ -21,10 +21,12 @@ packages:
 
     # Terminal
     - kitty
+    - alacritty
 
     # File manager
     - nautilus
     - yazi
+    - superfile
     - ffmpegthumbnailer   # yazi thumbnails
     - poppler             # yazi pdf preview
 
@@ -33,6 +35,21 @@ packages:
 
     # Multiplexer
     - zellij
+
+    # Git & Docker
+    - lazygit
+    - docker
+    - lazydocker
+
+    # Shell tools
+    - atuin
+    - starship
+    - eza
+    - bat
+    - ripgrep
+    - fd
+    - fzf
+    - zoxide
 
     # Browser
     - chromium
@@ -58,6 +75,13 @@ packages:
     - pipewire
     - pipewire-pulse
     - pipewire-alsa
+    - nodejs
+    - npm
+
+    # Network & DNS
+    - trippy
+    - dog
+    - dust
 
     # Theming
     - qt5ct
@@ -80,6 +104,8 @@ packages:
     - grimblast-git
     - wiremix             # audio TUI
     - hyprshutdown        # graceful shutdown
+    - posting
+    - vfox
 
 services:
   - bluetooth
@@ -87,6 +113,7 @@ services:
   - pipewire
   - pipewire-pulse
   - wireplumber
+  - docker
 
 dotfiles:
   - theme

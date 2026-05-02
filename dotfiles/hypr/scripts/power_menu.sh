@@ -17,9 +17,7 @@ options="$ICON_LOCK  Lock Session\n$ICON_LOGOUT  Logout ($USER_NAME)\n$ICON_SUSP
 
 # Show menu
 # Using rofi in dmenu mode with modern theme and custom overrides
-selection=$(
-  echo -e "$options" | rofi -dmenu -i -p "System Menu" -theme ~/.config/rofi/floating-menu.rasi
-)
+selection=$(echo -e "$options" | rofi -dmenu -i -p "System Menu" -theme ~/.config/rofi/floating-menu.rasi -theme-str 'window {width: 450px;} listview {lines: 5;}')
 
 # Parse selection and execute
 case "$selection" in

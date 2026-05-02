@@ -52,3 +52,4 @@ user:
     - audio
     - storage
     - network
+    - docker

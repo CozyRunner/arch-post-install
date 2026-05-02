@@ -14,9 +14,10 @@ This document provides a technical deep-dive into how the Arch Post-Installation
 | Directory | Purpose |
 |-----------|---------|
 | `config/` | YAML definitions for packages, services, and dotfiles. |
-| `modules/` | Bash scripts containing the logic for each installation phase. |
+| `modules/` | Core logic modules (packages, dotfiles, system, etc.). |
+| `profiles/` | Environment-specific orchestrators (e.g., Hyprland). |
 | `dotfiles/` | The actual configuration files to be deployed to `~/.config/`. |
-| `scripts/` | Standalone helper scripts for complex setups (e.g., yay, fish, fonts). |
+| `scripts/` | Standalone helper scripts for complex setups. |
 | `logs/` | Timestamped logs for every installation run. |
 
 ## Module Breakdown
@@ -27,30 +28,28 @@ The "Engine" of the workbench.
 - **Logging**: Standardized `log_info`, `log_success`, `log_error` functions.
 - **Checks**: Internet verification, root/sudo checks, and Arch Linux verification.
 
+### `system.sh`
+Handles system-wide common tasks.
+- **Fonts**: Orchestrates system font installation.
+- **Shell**: Manages default shell configuration.
+- **Updates**: Wraps system update logic.
+
 ### `packages.sh`
-Handles software installation.
-- Checks if a package is already installed to skip redundant work.
-- Supports both `pacman` (official) and `yay` (AUR) packages.
-
+...
 ### `dotfiles.sh`
-Manages configuration deployment.
-- Creates symlinks from the repository to `~/.config/`.
-- **Automatic Backups**: If a real directory exists where a symlink should be, it moves it to a timestamped backup folder.
-
+...
 ### `services.sh`
-Manages systemd units.
-- Automatically handles both `.service` and `.timer` units.
-- Uses `enable --now` to both enable on boot and start immediately.
-
+...
 ### `users.sh`
-Configures the user environment.
-- Sets the default shell (`chsh`).
-- Manages group memberships (`usermod`).
-- Sets system-wide locale, timezone, and keymap.
+...
+
+## Profiles (`profiles/`)
+
+Profiles are high-level orchestrators that combine modules to create a specific environment.
 
 ### `hyprland.sh`
 The desktop environment orchestrator.
-- High-level module that calls other modules specifically for the Hyprland environment.
+- Calls packages, services, and dotfiles modules specifically for the Hyprland environment.
 - Handles GTK/theming defaults and XDG user directories.
 
 ## Installation Sequence

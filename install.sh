@@ -16,7 +16,14 @@ source "${SCRIPT_DIR}/modules/packages.sh"
 source "${SCRIPT_DIR}/modules/services.sh"
 source "${SCRIPT_DIR}/modules/users.sh"
 source "${SCRIPT_DIR}/modules/dotfiles.sh"
-source "${SCRIPT_DIR}/modules/hyprland.sh"
+source "${SCRIPT_DIR}/modules/system.sh"
+
+# Load profiles (plugin-based)
+if [[ -d "${SCRIPT_DIR}/profiles" ]]; then
+    for profile in "${SCRIPT_DIR}/profiles/"*.sh; do
+        [[ -f "${profile}" ]] && source "${profile}"
+    done
+fi
 
 # ── Help ──────────────────────────────────────
 show_help() {
@@ -165,18 +172,22 @@ main() {
 
     case "${MODE}" in
         full)
-            run_cmd setup_core
+            run_cmd apply_system_updates
             run_cmd install_base_packages
             run_cmd enable_base_services
             run_cmd setup_users
             run_cmd ensure_yay
+            run_cmd setup_system_fonts
+            run_cmd setup_system_shell
             run_cmd setup_hyprland
             ;;
         base)
-            run_cmd setup_core
+            run_cmd apply_system_updates
             run_cmd install_base_packages
             run_cmd enable_base_services
             run_cmd setup_users
+            run_cmd setup_system_fonts
+            run_cmd setup_system_shell
             ;;
         dotfiles)
             run_cmd deploy_dotfiles_from_config "${CONFIG_DIR}/hyprland.yaml"
