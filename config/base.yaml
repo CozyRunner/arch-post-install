@@ -18,7 +18,7 @@ packages:
     - unzip
     - zip
     - p7zip
-    - unar
+    - unarchiver
     - jq
     - yq
     - htop
@@ -28,6 +28,9 @@ packages:
     - man-db
     - man-pages
     - openssh
+    - networkmanager
+    - docker
+    - corepack
     - rsync
     - reflector
     - pacman-contrib
@@ -40,6 +43,7 @@ packages:
 services:
   - NetworkManager
   - sshd
+  - docker
   - reflector.timer
   - fstrim.timer
 

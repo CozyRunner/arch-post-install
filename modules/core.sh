@@ -40,6 +40,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
+GRAY='\033[0;90m'
 BOLD='\033[1m'
 NC='\033[0m' # No Color
 
@@ -51,7 +52,7 @@ log_success() { echo -e "${GREEN}[OK]${NC}      $*" | tee -a "${LOG_FILE}"; }
 log_warn()    { echo -e "${YELLOW}[WARN]${NC}    $*" | tee -a "${LOG_FILE}"; }
 log_error()   { echo -e "${RED}[ERROR]${NC}   $*" | tee -a "${LOG_FILE}"; }
 log_step()    { echo -e "\n${CYAN}${BOLD}▸ $*${NC}\n" | tee -a "${LOG_FILE}"; }
-log_debug()   { [[ "${VERBOSE}" == true ]] && echo -e "${GRAY}[DEBUG]${NC}  $*" | tee -a "${LOG_FILE}"; }
+log_debug()   { [[ "${VERBOSE}" == true ]] && echo -e "${GRAY}[DEBUG]${NC}  $*" | tee -a "${LOG_FILE}" || true; }
 
 # ── Network check ─────────────────────────────────────────────────────────────
 # /**

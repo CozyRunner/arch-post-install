@@ -52,9 +52,9 @@ install_packages_from_config() {
                 log_success "Pacman packages installed"
                 
                 # Enable corepack if nodejs was installed
-                if is_installed "nodejs"; then
+                if is_installed "nodejs" && command -v corepack &>/dev/null; then
                     log_info "Enabling corepack..."
-                    sudo corepack enable 2>/dev/null
+                    sudo corepack enable 2>/dev/null || log_warn "Could not enable corepack"
                     log_success "Corepack enabled"
                 fi
             else

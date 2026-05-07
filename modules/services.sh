@@ -32,12 +32,21 @@ enable_services_from_config() {
     log_step "Enabling ${#services[@]} services"
 
     for svc in "${services[@]}"; do
-        if systemctl list-unit-files "${svc}.service" &>/dev/null; then
+        if systemctl list-unit-files "${svc}" &>/dev/null; then
             sudo systemctl enable --now "${svc}" 2>&1 | tee -a "${LOG_FILE}"
+            log_success "Enabled: ${svc}"
+        elif systemctl list-unit-files "${svc}.service" &>/dev/null; then
+            sudo systemctl enable --now "${svc}.service" 2>&1 | tee -a "${LOG_FILE}"
             log_success "Enabled: ${svc}"
         elif systemctl list-unit-files "${svc}.timer" &>/dev/null; then
             sudo systemctl enable --now "${svc}.timer" 2>&1 | tee -a "${LOG_FILE}"
             log_success "Enabled timer: ${svc}"
+        elif systemctl --user list-unit-files "${svc}" &>/dev/null; then
+            systemctl --user enable --now "${svc}" 2>&1 | tee -a "${LOG_FILE}"
+            log_success "Enabled (user): ${svc}"
+        elif systemctl --user list-unit-files "${svc}.service" &>/dev/null; then
+            systemctl --user enable --now "${svc}.service" 2>&1 | tee -a "${LOG_FILE}"
+            log_success "Enabled (user): ${svc}"
         else
             log_warn "Unit not found: ${svc} (skipped)"
         fi

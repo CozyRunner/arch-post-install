@@ -16,7 +16,6 @@ if ! command -v fish &>/dev/null; then
 fi
 
 # Set Fish as default shell
-local fish_path
 fish_path="$(command -v fish)"
 if [[ -n "${fish_path}" && "$(getent passwd "${USER}" | cut -d: -f7)" != "${fish_path}" ]]; then
     echo "[INFO] Setting Fish as default shell..."
@@ -30,7 +29,7 @@ fi
 if [[ ! -f "${HOME}/.config/fish/functions/fisher.fish" ]]; then
     echo "[INFO] Installing Fisher plugin manager..."
 
-    local fisher_dir="${HOME}/.config/fish"
+    fisher_dir="${HOME}/.config/fish"
     mkdir -p "${fisher_dir}/functions"
 
     if curl -sL "${FISHER_URL}" -o "${fisher_dir}/functions/fisher.fish"; then
