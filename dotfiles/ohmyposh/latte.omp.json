@@ -11,6 +11,7 @@
   "blocks": [
     {
       "alignment": "left",
+      "type": "prompt",
       "segments": [
         {
           "background": "p:blue",
@@ -62,8 +63,20 @@
           "template": " {{ .HEAD }}",
           "type": "git"
         }
-      ],
-      "type": "prompt"
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "prompt",
+      "newline": true,
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "p:blue",
+          "template": "└─❯ "
+        }
+      ]
     }
   ],
   "final_space": true,
