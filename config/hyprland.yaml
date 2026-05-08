@@ -67,6 +67,9 @@ packages:
 
     # System tools
     - polkit-kde-agent
+    - kwallet
+    - kwallet-pam
+    - kwalletmanager
     - bluez
     - bluez-utils
     - brightnessctl

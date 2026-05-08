@@ -1,3 +1,5 @@
+@import "~/.config/rofi/colors.rasi"
+
 configuration {
     modi:                "drun";
     show-icons:          true;
@@ -9,34 +11,16 @@ configuration {
 }
 
 * {
-    bg:      #11140e;
-    bg-sel:  #1d211a;
-    fg:      #e1e4d9;
-    fg-dim:  #33362f;
-
     background-color: transparent;
     text-color:       @fg;
-    border-color:     #282b24;
+    border-color:     @bg-alt;
     spacing:          0;
     padding:          0;
     margin:           0;
-    /* theme-changer: begin */
-    bg:      #1a1c20;
-    bg-sel:  #141421;
-    fg:      #d3dae3;
-    fg-dim:  #666a73;
-    accent:  #f2b311;
-
-    background-color: transparent;
-    text-color:       @fg;
-    border-color:     #1e2024;
-    spacing:          0;
-    padding:          0;
-    margin:           0;
-    /* theme-changer: end */
 }
 
 window {
+    transparency:     "real";
     background-color: @bg;
     border:           1px;
     border-radius:    16px;

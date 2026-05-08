@@ -189,6 +189,7 @@ arch-post-install/
 ├── scripts/
 │   ├── install_yay.sh         # AUR helper setup
 │   ├── setup_fish.sh          # Fish + Fisher + plugins
+│   ├── setup_kwallet.sh       # PAM configuration for KWallet auto-unlock
 │   └── fonts.sh               # Font installation
 ├── assets/                    # Repository branding & documentation media
 └── logs/                      # Timestamped installation logs
@@ -226,7 +227,7 @@ Toggle themes instantly with **`SUPER + N`**. The system synchronizes the follow
 | `SUPER + M` | System menu |
 | `SUPER + L` | Lock screen |
 | `SUPER + C` | Close active window |
-| `SUPER + Shift + Q` | Exit/power menu |
+| `SUPER + Shift + Q` | Kill session |
 | `Print` | Screenshot (selection) |
 
 ---
@@ -246,6 +247,7 @@ Toggle themes instantly with **`SUPER + N`**. The system synchronizes the follow
 | **Media** | [MPV](https://mpv.io/), [imv](https://github.com/epezent/imv), [feh](https://feh.finalrewind.org/), [Evince](https://wiki.gnome.org/Apps/Evince) |
 | **Audio** | [PipeWire](https://pipewire.org/), [WirePlumber](https://pipewire.pages.freedesktop.org/wireplumber/) |
 | **Network** | [NetworkManager](https://wiki.archlinux.org/title/NetworkManager), [iWD](https://iwd.wiki.kernel.org/) |
+| **Security** | [KWallet](https://utils.kde.org/projects/kwalletmanager/), `pam_kwallet` |
 | **Theming** | [Papirus Icons](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme), [Adwaita](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/), [Kvantum](https://github.com/tsujan/Kvantum) |
 
 ---

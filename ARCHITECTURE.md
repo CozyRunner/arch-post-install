@@ -17,7 +17,7 @@ This document provides a technical deep-dive into how the Arch Post-Installation
 | `modules/` | Core logic modules (packages, dotfiles, system, etc.). |
 | `profiles/` | Environment-specific orchestrators (e.g., Hyprland). |
 | `dotfiles/` | The actual configuration files to be deployed to `~/.config/`. |
-| `scripts/` | Standalone helper scripts for complex setups. |
+| `scripts/` | Standalone helper scripts for complex setups (fonts, Fish shell, KWallet). |
 | `logs/` | Timestamped logs for every installation run. |
 
 ## Module Breakdown
@@ -35,13 +35,27 @@ Handles system-wide common tasks.
 - **Updates**: Wraps system update logic.
 
 ### `packages.sh`
-...
-### `dotfiles.sh`
-...
+Manages the installation of software packages.
+- Parses `config/` YAML files for pacman and AUR packages.
+- Automatically detects already installed packages to save time and ensure idempotency.
+- Uses `yay` for AUR package management.
+
 ### `services.sh`
-...
+Handles systemd daemon management.
+- Parses `config/` YAML files for services and timers.
+- Automatically determines if a unit is a `.service` or `.timer` and enables/starts them.
+
 ### `users.sh`
-...
+Manages user account configuration and privileges.
+- Sets the default shell to Fish.
+- Assigns the user to necessary groups (wheel, video, input, audio, docker, etc.).
+- Configures timezone and locale settings.
+
+### `dotfiles.sh`
+Orchestrates the deployment of user configurations.
+- Reads requested dotfiles from the configuration.
+- Symlinks directories from `dotfiles/` to `~/.config/`.
+- Automatically backs up existing configurations to prevent data loss.
 
 ## Profiles (`profiles/`)
 

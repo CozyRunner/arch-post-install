@@ -1,3 +1,5 @@
+@import "~/.config/rofi/colors.rasi";
+
 configuration {
     modi:                "drun";
     show-icons:          true;
@@ -12,14 +14,6 @@ configuration {
    Color System (RGBA)
    ========================= */
 * {
-    /* 50% transparency */
-    bg: rgba(26, 28, 32, 0.5);        /* main background */
-    bg-alt: rgba(40, 44, 52, 0.5);    /* cards / input */
-    
-    fg: #d3dae3;
-    fg-dim: #8b9199;
-    sel: #71f79f;
-
     background-color: transparent;
     text-color:       @fg;
     border-color:     transparent;
@@ -33,6 +27,7 @@ configuration {
    Window
    ========================= */
 window {
+    transparency:     "real";
     background-color: @bg;
     border:           1px;
     border-color:     @bg-alt;

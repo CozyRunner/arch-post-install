@@ -51,6 +51,9 @@ setup_hyprland() {
     xdg-user-dirs-update 2>/dev/null
     log_success "XDG user directories created"
 
+    # Setup KWallet
+    setup_kwallet
+
     log_success "Hyprland setup complete"
     log_info "Log out and select Hyprland from your display manager to start."
 }

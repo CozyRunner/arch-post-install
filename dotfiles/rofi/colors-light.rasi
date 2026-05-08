@@ -1,11 +1,11 @@
 * {
-    background:     #eff1f5e6;
-    background-alt: #ccd0dacc;
+    background:     rgba(239, 241, 245, 0.8);
+    background-alt: rgba(204, 208, 218, 0.8);
     selected:       #1e66f5;
     foreground:     #4c4f69;
     foreground-dim: #9ca0b0;
     accent:         #1e66f5;
-    border:         #1e66f566;
+    border:         rgba(30, 102, 245, 0.4);
 
     /* Compatibility aliases */
     bg:      @background;

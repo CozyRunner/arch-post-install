@@ -23,7 +23,7 @@ First off, thank you for considering contributing to this project! It's people l
 2. If you've added code that should be tested, add tests.
 3. If you've changed APIs, update the documentation.
 4. Ensure the test suite passes (if applicable).
-5. Make sure your code follows the existing style (ShellCheck is used for linting).
+5. Make sure your code follows the existing style. Run `make lint` before committing to verify your scripts pass `shellcheck`.
 
 ## Style Guide
 
@@ -31,6 +31,7 @@ First off, thank you for considering contributing to this project! It's people l
 - Use `[[ ... ]]` for conditions instead of `[ ... ]`.
 - Quote variables to prevent word splitting.
 - Use `$(...)` instead of backticks for command substitution.
+- Use `make lint` to automatically check your code for ShellCheck errors.
 - Provide comments for non-obvious logic.
 - Use the `log_` functions from `modules/core.sh` for output.
 

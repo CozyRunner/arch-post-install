@@ -18,6 +18,7 @@ configuration {
 }
 
 window {
+    transparency:     "real";
     background-color: @bg;
     border:           1px;
     border-color:     @bg-alt;

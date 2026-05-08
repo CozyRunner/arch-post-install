@@ -41,3 +41,17 @@ setup_system_shell() {
 apply_system_updates() {
     setup_core
 }
+
+# /**
+#  * setup_kwallet()
+#  * Installs and configures PAM for KWallet.
+#  */
+setup_kwallet() {
+    log_step "Setting up KWallet"
+    if [[ -f "${SCRIPT_DIR}/scripts/setup_kwallet.sh" ]]; then
+        bash "${SCRIPT_DIR}/scripts/setup_kwallet.sh" 2>&1 | tee -a "${LOG_FILE}"
+        log_success "KWallet setup complete"
+    else
+        log_warn "setup_kwallet.sh script not found"
+    fi
+}
