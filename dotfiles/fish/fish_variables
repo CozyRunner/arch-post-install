@@ -22,4 +22,3 @@ SETUVAR fish_prompt_color_logo:cyan
 SETUVAR fish_prompt_color_symbol:yellow
 SETUVAR fish_prompt_color_time:purple
 SETUVAR fish_prompt_color_user:green
-
