@@ -151,7 +151,7 @@
   "network": {
     "format-wifi": " ({signalStrength}%) ↑{bandwidthUpBits} ↓{bandwidthDownBits}",
     "format-ethernet": " {ipaddr} 󰇶 {bandwidthUpBits} 󰇚 {bandwidthDownBits}",
-    "on-click": "hyprctl dispatch exec '[float; size 600 450; center] kitty -e impala'",
+    "on-click": "hyprctl dispatch exec '[float; size 800 600; center] kitty -e impala'",
     "format-linked": " (No IP)",
     "format-disconnected": "⚠ Disconnected",
     "tooltip-format": "{ifname} via {gwaddr} ",
@@ -204,7 +204,7 @@
     "tooltip-format": "{controller_alias}\t{controller_address}",
     "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-    "on-click": "hyprctl dispatch exec '[float; size 600 450; center] kitty -e bluetui'"
+    "on-click": "hyprctl dispatch exec '[float; size 800 600; center] kitty -e bluetui'"
   },
   "custom/language": {
     "exec": "~/.config/waybar/scripts/kb_layout.sh",
