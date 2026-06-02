@@ -212,6 +212,12 @@ window#waybar {
   margin: 2px 0;          
 }                         
 
+#custom-power {
+    color: @accent-red;
+    padding: 0 15px;
+    margin: 2px 0;
+}
+
 #window {
     font-style: italic;
     font-weight: 500;

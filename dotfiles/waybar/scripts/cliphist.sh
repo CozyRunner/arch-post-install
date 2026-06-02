@@ -13,7 +13,7 @@ case "$1" in
         else
             last_item="Last copied: $last_item"
         fi
-        echo "{\"text\": \"\", \"tooltip\": \"$last_item\"}"
+        jq -nc --arg text "" --arg tooltip "$last_item" '{text: $text, tooltip: $tooltip}'
         ;;
     --list)
         # Call the existing clipboard script
