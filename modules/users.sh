@@ -47,6 +47,20 @@ setup_users() {
         fi
     done
 
+    # ── Set hostname ─────────────────────────────────────────────────────────
+    local hostname
+    hostname="$(yaml_value "${config}" "system.hostname")"
+    if [[ -n "${hostname}" ]]; then
+        if [[ "$(cat /etc/hostname 2>/dev/null)" != "${hostname}" ]]; then
+            log_info "Setting hostname to ${hostname}"
+            echo "${hostname}" | sudo tee /etc/hostname >/dev/null
+            sudo hostnamectl set-hostname "${hostname}" 2>&1 | tee -a "${LOG_FILE}"
+            log_success "Hostname: ${hostname}"
+        else
+            log_success "Hostname already set to ${hostname}"
+        fi
+    fi
+
     # ── Set locale & timezone ─────────────────────────────────────────────────
     local timezone locale keymap
     timezone="$(yaml_value "${config}" "system.timezone")"

@@ -16,12 +16,16 @@ case "$1" in
         jq -nc --arg text "" --arg tooltip "$last_item" '{text: $text, tooltip: $tooltip}'
         ;;
     --list)
-        # Call the existing clipboard script
-        bash ~/.config/hypr/scripts/clipboard.sh
+        # Show clipboard history via rofi
+        selection=$(/usr/bin/cliphist list | rofi -dmenu -theme ~/.config/rofi/clipboard.rasi -p "󱘖  Clipboard Manager")
+        if [ -n "$selection" ]; then
+            echo "$selection" | /usr/bin/cliphist decode | wl-copy
+            notify-send "Clipboard" "Item copied to clipboard" -i clipboard
+        fi
         ;;
     --wipe)
         # Confirmation via rofi
-        confirm=$(echo -e "No\nYes" | rofi -dmenu -i -p "󰗨 Clear Clipboard?" -theme ~/.config/rofi/floating-menu.rasi)
+        confirm=$(echo -e "No\nYes" | rofi -dmenu -theme ~/.config/rofi/clipboard.rasi -p "󰗨 Clear Clipboard?")
         if [ "$confirm" == "Yes" ]; then
             /usr/bin/cliphist wipe
             notify-send "Clipboard" "History cleared" -i clipboard

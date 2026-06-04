@@ -47,34 +47,3 @@ rules = [
   { mime = "application/pdf", use = "pdf" },
   { mime = "application/*zip", use = "archive" },
 ]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

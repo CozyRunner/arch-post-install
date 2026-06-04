@@ -4,7 +4,7 @@
  * Author: Sachin                                                          
  */                                                                        
                                                                            
-@import "/home/sachin/.config/rofi/colors.rasi"                            
+@import "~/.config/rofi/colors.rasi"                            
                                                                            
 * {                                                                        
     background-color: transparent;                                         

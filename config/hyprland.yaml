@@ -111,6 +111,8 @@ packages:
     - posting
     - vfox
 
+  flatpak: []
+
 services:
   - bluetooth
   - NetworkManager
@@ -120,12 +122,15 @@ services:
   - docker
 
 dotfiles:
-  - theme
   - hypr
   - waybar
   - kitty
+  - alacritty
   - rofi
   - yazi
   - nvim
   - fish
   - zellij
+  - fastfetch
+  - ohmyposh
+  - superfile

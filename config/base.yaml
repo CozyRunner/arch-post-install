@@ -40,6 +40,8 @@ packages:
 
   aur: []
 
+  flatpak: []
+
 services:
   - NetworkManager
   - sshd

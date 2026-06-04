@@ -17,6 +17,7 @@ source "${SCRIPT_DIR}/modules/services.sh"
 source "${SCRIPT_DIR}/modules/users.sh"
 source "${SCRIPT_DIR}/modules/dotfiles.sh"
 source "${SCRIPT_DIR}/modules/system.sh"
+source "${SCRIPT_DIR}/modules/flatpak.sh"
 
 # Load profiles (plugin-based)
 if [[ -d "${SCRIPT_DIR}/profiles" ]]; then
@@ -179,6 +180,7 @@ main() {
             run_cmd ensure_yay
             run_cmd setup_system_fonts
             run_cmd setup_system_shell
+            run_cmd setup_flatpak
             run_cmd setup_hyprland
             ;;
         base)

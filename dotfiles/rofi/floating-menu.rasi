@@ -4,7 +4,7 @@
  * Author: Sachin
  */
 
-@import "/home/sachin/.config/rofi/colors.rasi"
+@import "~/.config/rofi/colors.rasi"
 
 * {
     background-color: transparent;
@@ -103,4 +103,3 @@ element-text {
     vertical-align:   0.5;
     horizontal-align: 0.0;
 }
-

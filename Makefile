@@ -1,4 +1,4 @@
-.PHONY: help install full base dotfiles packages fonts fish lint clean check
+.PHONY: help install full base dotfiles packages fonts fish flatpak lint clean check restore
 
 help: ## Show this help
 	@echo ""
@@ -57,6 +57,38 @@ lint: ## Lint all shell scripts with shellcheck
 	@echo "Running shellcheck..."
 	@shellcheck install.sh modules/*.sh scripts/*.sh 2>/dev/null || echo "shellcheck not installed. Install with: sudo pacman -S shellcheck"
 	@echo "Done."
+
+flatpak: ## Install Flatpak and Flathub apps
+	@bash -c 'source modules/core.sh && source modules/flatpak.sh && setup_flatpak'
+
+restore: ## Restore configs from latest backup
+	@echo "Looking for backups in ~/.config-backup-*..."
+	@latest=$$(ls -dt ~/.config-backup-* 2>/dev/null | head -1); \
+	if [ -z "$$latest" ]; then \
+		echo "  No backups found."; \
+		exit 1; \
+	fi; \
+	echo "  Found: $$latest"; \
+	echo "  Contents:"; ls "$$latest"; \
+	echo ""; \
+	read -rp "  Restore all configs from this backup? [y/N]: " yn; \
+	case "$$yn" in \
+		[Yy]*) \
+			for dir in "$$latest"/*/; do \
+				name=$$(basename "$$dir"); \
+				dest="$$HOME/.config/$$name"; \
+				if [ -L "$$dest" ]; then \
+					rm "$$dest"; \
+				elif [ -d "$$dest" ]; then \
+					mv "$$dest" "$${dest}.overridden-$$(date +%s)"; \
+				fi; \
+				cp -r "$$dir" "$$dest"; \
+				echo "  Restored: $$name"; \
+			done; \
+			echo "  Done. Log out and back in to apply.";; \
+		*) \
+			echo "  Aborted.";; \
+	esac
 
 clean: ## Remove logs
 	@rm -rf logs/*

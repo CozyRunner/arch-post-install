@@ -6,4 +6,3 @@ end
 set -g fish_greeting ""
 
 # Legacy path (now in conf.d/path.fish)
-
