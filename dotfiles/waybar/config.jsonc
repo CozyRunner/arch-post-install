@@ -149,21 +149,21 @@
     "interval": 2
   },
   "pulseaudio": {
-    "format": "{icon} {volume}%",
-    "format-bluetooth": "{icon}󰂯 {volume}%",
-    "format-bluetooth-muted": " {icon}󰂯",
-    "format-muted": " {volume}%",
+    "format": "<span font='14'>{icon}</span> {volume}%",
+    "format-bluetooth": "<span font='14'>{icon} 󰂯</span> {volume}%",
+    "format-bluetooth-muted": "<span font='14'>󰝟 {icon} 󰂯</span> {volume}%",
+    "format-muted": "<span font='14'>󰝟</span> {volume}%",
     "format-icons": {
-      "headphone": "",
-      "hands-free": "",
-      "headset": "",
+      "headphone": "󰋋",
+      "hands-free": "󰋎",
+      "headset": "󰋎",
       "phone": "",
       "portable": "",
       "car": "",
       "default": [
-        "",
-        "",
-        ""
+        "󰕿",
+        "󰖀",
+        "󰕾"
       ]
     },
     "on-click": "hyprctl dispatch exec '[float; size 600 450; center] kitty -e wiremix'"
@@ -175,8 +175,8 @@
   },
   "pulseaudio#microphone": {
     "format": "{format_source}",
-    "format-source": "",
-    "format-source-muted": "",
+    "format-source": "<span font='14'>󰍬</span>",
+    "format-source-muted": "<span font='14'>󰍭</span>",
     "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
     "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+",
     "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-",

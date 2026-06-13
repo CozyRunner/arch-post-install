@@ -109,8 +109,16 @@ window#waybar {
     color: @accent-blue;
 }
 
+#pulseaudio.muted {
+    color: @accent-red;
+}
+
 #pulseaudio.microphone {
     color: @accent-purple;
+}
+
+#pulseaudio.microphone.muted {
+    color: @accent-red;
 }
 
 /* Audio Group & Sliders */
