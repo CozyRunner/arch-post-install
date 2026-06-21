@@ -106,11 +106,10 @@ echo
 
 START_TIME=$(date +%s)
 
-# --aur      -> only AUR packages
-# --devel    -> update development packages
-# --timeupdate -> check git package updates properly
+# -Sua  -> sync, upgrade, AUR only
+# --devel -> include development packages
 
-if yay -Sua --aur --devel --timeupdate --noconfirm; then
+if yay -Sua --devel --noconfirm; then
   END_TIME=$(date +%s)
   DURATION=$((END_TIME - START_TIME))
 

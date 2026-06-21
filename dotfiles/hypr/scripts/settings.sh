@@ -13,6 +13,8 @@ options="󰌌  Input Settings
 󰌓  Key Bindings
 󱕰  Additional Bindings
 󰍹  Monitor Settings
+󰒲  Hypridle Settings
+󰂎  Power Management
 󰖩  Network Settings
 󰂯  Bluetooth Settings
 󰓃  Audio Mixer"
@@ -35,6 +37,12 @@ case "$selection" in
   ;;
 *"Monitor Settings"*)
   kitty --title "Monitor Settings" --class large-floating-term nvim "$HYPR_DIR/monitors.conf"
+  ;;
+*"Hypridle Settings"*)
+  kitty --title "Hypridle Settings" --class large-floating-term nvim "$HYPR_DIR/hypridle.conf"
+  ;;
+*"Power Management"*)
+  kitty --title "Power Management" --class large-floating-term nvim "$HYPR_DIR/hypridle.conf"
   ;;
 *"Network Settings"*)
   kitty --title "Network Settings (Impala)" --class large-floating-term impala
