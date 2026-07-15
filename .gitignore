@@ -17,3 +17,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.bak
+
+# Local builds
+build_test/
+dotfiles/hypr/bin/
