@@ -44,7 +44,7 @@ cd hypridle
 # 4. Build hypridle
 echo "Building hypridle..."
 "${CMAKE_BIN}" --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./build
-"${CMAKE_BIN}" --build ./build --config Release --target hypridle -j$(nproc)
+"${CMAKE_BIN}" --build ./build --config Release --target hypridle -j"$(nproc)"
 
 # 5. Install binary to hypr/bin/
 mkdir -p "${BIN_DIR}"

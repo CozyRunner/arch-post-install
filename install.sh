@@ -22,7 +22,8 @@ source "${SCRIPT_DIR}/modules/flatpak.sh"
 # Load profiles (plugin-based)
 if [[ -d "${SCRIPT_DIR}/profiles" ]]; then
     for profile in "${SCRIPT_DIR}/profiles/"*.sh; do
-        [[ -f "${profile}" ]] && source "${profile}"  # shellcheck disable=SC1090
+        # shellcheck disable=SC1090
+        [[ -f "${profile}" ]] && source "${profile}"
     done
 fi
 
@@ -53,7 +54,7 @@ EOF
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -v|--verbose)
-            # shellcheck disable=SC2034 -- used by core.sh log_debug
+            # shellcheck disable=SC2034
             VERBOSE=true
             shift
             ;;

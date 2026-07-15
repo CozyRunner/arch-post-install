@@ -8,9 +8,9 @@
 
 # Resolve the root directory of the project
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-# shellcheck disable=SC2034 -- used by sourcing scripts
+# shellcheck disable=SC2034
 CONFIG_DIR="${SCRIPT_DIR}/config"
-# shellcheck disable=SC2034 -- used by sourcing scripts
+# shellcheck disable=SC2034
 DOTFILES_DIR="${SCRIPT_DIR}/dotfiles"
 LOG_DIR="${SCRIPT_DIR}/logs"
 
@@ -21,9 +21,9 @@ mkdir -p "${LOG_DIR}"
 LOG_FILE="${LOG_DIR}/install-$(date +%Y%m%d-%H%M%S).log"
 
 # Global flags
-# shellcheck disable=SC2034 -- used by sourcing scripts
+# shellcheck disable=SC2034
 VERBOSE=false
-# shellcheck disable=SC2034 -- used by sourcing scripts
+# shellcheck disable=SC2034
 DRY_RUN=false
 
 # /**
