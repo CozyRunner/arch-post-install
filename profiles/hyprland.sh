@@ -26,6 +26,19 @@ setup_hyprland() {
     # Deploy dotfiles listed in hyprland.yaml
     deploy_dotfiles_from_config "${config}"
 
+    # Build hypridle and hyprlock from source (system packages have sdbus-cpp ABI mismatch)
+    local hypr_scripts="${DOTFILES_DIR}/hypr/scripts"
+    if [[ -x "${hypr_scripts}/build_hypridle.sh" ]]; then
+        log_info "Building hypridle from source..."
+        bash "${hypr_scripts}/build_hypridle.sh"
+        log_success "hypridle built successfully"
+    fi
+    if [[ -x "${hypr_scripts}/build_hyprlock.sh" ]]; then
+        log_info "Building hyprlock from source..."
+        bash "${hypr_scripts}/build_hyprlock.sh"
+        log_success "hyprlock built successfully"
+    fi
+
     # ── Hyprland-specific post-setup ──────────────────────────────────────────
 
     # Set GTK dark mode defaults
