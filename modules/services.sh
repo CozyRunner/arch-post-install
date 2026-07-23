@@ -32,19 +32,21 @@ enable_services_from_config() {
     log_step "Enabling ${#services[@]} services"
 
     for svc in "${services[@]}"; do
-        if systemctl list-unit-files "${svc}" &>/dev/null; then
+    # Probe unit existence: systemctl cat exits non-zero if unit is not found,
+    # unlike list-unit-files which exits 0 even for missing units.
+    if systemctl cat "${svc}" &>/dev/null; then
             sudo systemctl enable --now "${svc}" 2>&1 | tee -a "${LOG_FILE}"
             log_success "Enabled: ${svc}"
-        elif systemctl list-unit-files "${svc}.service" &>/dev/null; then
+        elif systemctl cat "${svc}.service" &>/dev/null; then
             sudo systemctl enable --now "${svc}.service" 2>&1 | tee -a "${LOG_FILE}"
             log_success "Enabled: ${svc}"
-        elif systemctl list-unit-files "${svc}.timer" &>/dev/null; then
+        elif systemctl cat "${svc}.timer" &>/dev/null; then
             sudo systemctl enable --now "${svc}.timer" 2>&1 | tee -a "${LOG_FILE}"
             log_success "Enabled timer: ${svc}"
-        elif systemctl --user list-unit-files "${svc}" &>/dev/null; then
+        elif systemctl --user cat "${svc}" &>/dev/null; then
             systemctl --user enable --now "${svc}" 2>&1 | tee -a "${LOG_FILE}"
             log_success "Enabled (user): ${svc}"
-        elif systemctl --user list-unit-files "${svc}.service" &>/dev/null; then
+        elif systemctl --user cat "${svc}.service" &>/dev/null; then
             systemctl --user enable --now "${svc}.service" 2>&1 | tee -a "${LOG_FILE}"
             log_success "Enabled (user): ${svc}"
         else

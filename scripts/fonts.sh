@@ -4,7 +4,7 @@
 # fonts.sh — Install Nerd Fonts and system fonts
 # ─────────────────────────────────────────────
 
-set -e
+set -euo pipefail
 
 echo "[INFO] Installing fonts..."
 

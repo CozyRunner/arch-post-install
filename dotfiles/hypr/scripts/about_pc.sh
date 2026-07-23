@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════════════╗
 # ║                                                                      ║
 # ║   ⚡ About This PC — Modernized System Information Dashboard         ║

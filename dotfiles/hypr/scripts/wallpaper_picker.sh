@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Wallpaper Changer — Browse and set wallpaper with image previews
 # Uses rofi's icon column to show thumbnail previews in a grid
 

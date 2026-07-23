@@ -7,6 +7,8 @@
 set -euo pipefail
 
 HYPR_DIR="$HOME/.config/hypr"
+# Prefer $TERMINAL env var; fall back to kitty
+TERM_APP="${TERMINAL:-kitty}"
 
 # Menu entries with Nerd Font icons
 options="󰌌  Input Settings
@@ -21,36 +23,37 @@ options="󰌌  Input Settings
 
 # Show the rofi menu
 selection=$(echo -e "$options" | rofi -dmenu -i \
-  -p "  Settings" \
+  -p "  Settings" \
   -theme ~/.config/rofi/floating-menu.rasi)
 
 # Handle selection
 case "$selection" in
 *"Input Settings"*)
-  kitty --title "Input Settings" --class large-floating-term nvim "$HYPR_DIR/input.conf"
+  $TERM_APP --title "Input Settings" --class large-floating-term nvim "$HYPR_DIR/input.conf"
   ;;
 *"Key Bindings"*)
-  kitty --title "Key Bindings" --class large-floating-term nvim "$HYPR_DIR/bindings.conf"
+  $TERM_APP --title "Key Bindings" --class large-floating-term nvim "$HYPR_DIR/bindings.conf"
   ;;
 *"Additional Bindings"*)
-  kitty --title "Additional Bindings" --class large-floating-term nvim "$HYPR_DIR/additional-bindings.conf"
+  $TERM_APP --title "Additional Bindings" --class large-floating-term nvim "$HYPR_DIR/additional-bindings.conf"
   ;;
 *"Monitor Settings"*)
-  kitty --title "Monitor Settings" --class large-floating-term nvim "$HYPR_DIR/monitors.conf"
+  $TERM_APP --title "Monitor Settings" --class large-floating-term nvim "$HYPR_DIR/monitors.conf"
   ;;
 *"Hypridle Settings"*)
-  kitty --title "Hypridle Settings" --class large-floating-term nvim "$HYPR_DIR/hypridle.conf"
+  $TERM_APP --title "Hypridle Settings" --class large-floating-term nvim "$HYPR_DIR/hypridle.conf"
   ;;
 *"Power Management"*)
-  kitty --title "Power Management" --class large-floating-term nvim "$HYPR_DIR/hypridle.conf"
+  $TERM_APP --title "Power Management" --class large-floating-term nvim "$HYPR_DIR/hyprlock.conf"
   ;;
 *"Network Settings"*)
-  kitty --title "Network Settings (Impala)" --class large-floating-term impala
+  $TERM_APP --title "Network Settings (Impala)" --class large-floating-term impala
   ;;
 *"Bluetooth Settings"*)
-  kitty --title "Bluetooth Settings (Bluetui)" --class large-floating-term bluetui
+  $TERM_APP --title "Bluetooth Settings (Bluetui)" --class large-floating-term bluetui
   ;;
 *"Audio Mixer"*)
-  kitty --title "Audio Mixer (WireMix)" --class large-floating-term wiremix
+  $TERM_APP --title "Audio Mixer (WireMix)" --class large-floating-term wiremix
   ;;
 esac
+

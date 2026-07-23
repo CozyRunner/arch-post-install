@@ -7,6 +7,8 @@
 set -euo pipefail
 
 SCRIPTS_DIR="$HOME/.config/hypr/scripts"
+# Prefer $TERMINAL env var; fall back to kitty
+TERM_APP="${TERMINAL:-kitty}"
 
 # Detect current theme for dynamic icon
 CURRENT_SCHEME=$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null)
@@ -54,13 +56,13 @@ case "$selection" in
 
   case "$update_selection" in
   *"Check Update"*)
-    kitty --title "Check Update" --class floating-term bash "$SCRIPTS_DIR/check_updates.sh"
+    $TERM_APP --title "Check Update" --class floating-term bash "$SCRIPTS_DIR/check_updates.sh"
     ;;
   *"Update Arch"*)
-    kitty --title "System Update" --class floating-term bash "$SCRIPTS_DIR/update_arch.sh"
+    $TERM_APP --title "System Update" --class floating-term bash "$SCRIPTS_DIR/update_arch.sh"
     ;;
   *"Update AUR"*)
-    kitty --title "AUR Update" --class floating-term bash "$SCRIPTS_DIR/aur_update.sh"
+    $TERM_APP --title "AUR Update" --class floating-term bash "$SCRIPTS_DIR/aur_update.sh"
     ;;
   esac
   ;;
@@ -69,7 +71,7 @@ case "$selection" in
   ;;
 *"About This PC"*)
 
-  kitty --title "About This PC" --class meduim-floating-term bash "$SCRIPTS_DIR/about_pc.sh"
+  $TERM_APP --title "About This PC" --class medium-floating-term bash "$SCRIPTS_DIR/about_pc.sh"
   ;;
 *"Power Menu"*)
   bash "$SCRIPTS_DIR/power_menu.sh"

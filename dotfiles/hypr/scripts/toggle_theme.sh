@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Define paths
 THEME_DIR="$HOME/.config/hypr/themes"

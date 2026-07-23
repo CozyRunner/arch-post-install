@@ -53,8 +53,8 @@ deploy_dotfiles_from_config() {
             rm -f "${dest}"
         fi
 
-        # Create symlink
-        ln -sf "${src}" "${dest}"
+        # Create symlink (-n treats dest symlink as a file, preventing nesting)
+        ln -sfn "${src}" "${dest}"
         log_success "Linked: ${src} → ${dest}"
     done
 

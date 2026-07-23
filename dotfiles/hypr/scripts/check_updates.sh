@@ -66,35 +66,39 @@ pause_exit() {
 }
 
 prompt_update() {
-  echo
-  echo -e "${BLUE}󰚰  Actions:${RESET}"
-  echo -e "  ${CYAN}[1]${RESET} Update Arch Linux"
-  echo -e "  ${CYAN}[2]${RESET} Update AUR Packages"
-  echo -e "  ${CYAN}[3]${RESET} Full Update (Arch + AUR)"
-  echo -e "  ${CYAN}[q]${RESET} Quit"
-  echo
-  read -rn 1 -p "  Select an option: " choice
-  echo
+  while true; do
+    echo
+    echo -e "${BLUE}󰚰  Actions:${RESET}"
+    echo -e "  ${CYAN}[1]${RESET} Update Arch Linux"
+    echo -e "  ${CYAN}[2]${RESET} Update AUR Packages"
+    echo -e "  ${CYAN}[3]${RESET} Full Update (Arch + AUR)"
+    echo -e "  ${CYAN}[q]${RESET} Quit"
+    echo
+    read -rn 1 -p "  Select an option: " choice
+    echo
 
-  case "$choice" in
-  1)
-    bash "$SCRIPTS_DIR/update_arch.sh"
-    ;;
-  2)
-    bash "$SCRIPTS_DIR/aur_update.sh"
-    ;;
-  3)
-    bash "$SCRIPTS_DIR/update_arch.sh"
-    bash "$SCRIPTS_DIR/aur_update.sh"
-    ;;
-  q | Q)
-    exit 0
-    ;;
-  *)
-    echo -e "${RED}Invalid option.${RESET}"
-    prompt_update
-    ;;
-  esac
+    case "$choice" in
+    1)
+      bash "$SCRIPTS_DIR/update_arch.sh"
+      break
+      ;;
+    2)
+      bash "$SCRIPTS_DIR/aur_update.sh"
+      break
+      ;;
+    3)
+      bash "$SCRIPTS_DIR/update_arch.sh"
+      bash "$SCRIPTS_DIR/aur_update.sh"
+      break
+      ;;
+    q | Q)
+      exit 0
+      ;;
+    *)
+      echo -e "${RED}Invalid option. Please enter 1, 2, 3, or q.${RESET}"
+      ;;
+    esac
+  done
 }
 
 # -----------------------------------------------------------------------------

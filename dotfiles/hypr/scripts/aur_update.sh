@@ -107,9 +107,11 @@ echo
 START_TIME=$(date +%s)
 
 # -Sua  -> sync, upgrade, AUR only
-# --devel -> include development packages
+# --devel is intentionally omitted: it rebuilds ALL -git/-svn/-hg packages
+# unconditionally and can take 30+ minutes. Run manually when needed:
+#   yay -Sua --devel --noconfirm
 
-if yay -Sua --devel --noconfirm; then
+if yay -Sua --noconfirm; then
   END_TIME=$(date +%s)
   DURATION=$((END_TIME - START_TIME))
 

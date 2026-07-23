@@ -3,7 +3,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-LOG="/var/log/fw-update-check.log"
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/fw-update-check.log"
+mkdir -p "$(dirname "$LOG")"
 TMP="$(mktemp)"
 trap 'rm -f "$TMP"' EXIT
 
