@@ -251,25 +251,41 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | Keybind | Action |
 |---------|--------|
 | `Super + Q` | Open terminal (kitty) |
-| `Super + C` | Close active window |
-| `Super + Shift + Q` | Exit Hyprland |
-| `Ctrl + Alt + Delete` | Close all windows |
-| `Super + E` | Open file manager |
-| `Super + V` | Toggle floating |
+| `Alt + F4` / `Super + C` | Close active window |
+| `Ctrl + Shift + Escape` | Open Task Manager (btop) |
+| `Ctrl + Alt + Delete` | Power & Session Menu |
+| `Super + E` | Open file manager (Explorer) |
+| `Super + R` | Run command dialog |
+| `Super + I` | Quick Settings menu |
+| `Super + V` | Clipboard history |
+| `Super + Up` | Maximize active window |
+| `Super + Down` | Restore / unmaximize window |
 | `Super + F` | Fullscreen |
+| `Super + Shift + V` | Toggle floating mode |
 | `Super + T` | Pin window |
 | `Super + Backspace` | Center window |
-| `Super + R` | Open app launcher |
-| `Super + Space` | Rofi drun menu |
+| `Super + Space` | Rofi app launcher |
 | `Super + P` | Pseudo-tile (dwindle) |
 | `Super + J` | Toggle split (dwindle) |
-| `Super + S` | Toggle special workspace |
+| `Super + S` | Toggle special workspace (scratchpad) |
+| `Super + Alt + S` | Move window to special workspace |
 | `Super + L` | Lock screen |
-| `Super + Tab` | Cycle windows |
+| `Alt + Tab` / `Alt + Shift + Tab` | Switch active windows (forward/reverse) |
+| `Super + Tab` | Task View / Cycle windows |
 | `Super + 1-0` | Switch workspace |
 | `Super + Shift + 1-0` | Move window to workspace |
-| `Super + Arrow` | Move focus |
-| `Super + Mouse` | Move/resize windows |
+| `Super + Arrow` | Move focus (left/right/up/down) |
+| `Super + Shift + Arrow` | Move active window position |
+| `Super + Mouse` | Drag to move/resize window |
+
+### 🪟 Windows Virtual Desktops & Controls
+
+| Keybind | Action |
+|---------|--------|
+| `Ctrl + Super + Left` | Switch to previous virtual desktop |
+| `Ctrl + Super + Right` | Switch to next virtual desktop |
+| `Ctrl + Super + D` | Create / switch to new empty virtual desktop |
+| `Ctrl + Super + F4` | Close active window / desktop task |
 
 ### Personal (personal-bindings.conf)
 
@@ -288,7 +304,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 
 | Keybind | Action |
 |---------|--------|
-| `Print` | Screenshot area → clipboard + file |
+| `Print` / `Super + Shift + S` | Snipping Tool / Screenshot area → clipboard + file |
 | `Alt + Print` | Screenshot active window |
 | `Shift + Print` | Screenshot current monitor |
 

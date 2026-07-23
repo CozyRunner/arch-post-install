@@ -202,8 +202,10 @@
     "format": "{}",
     "exec": "~/.config/waybar/scripts/cliphist.sh --tooltip",
     "return-type": "json",
-    "interval": 10,
+    "interval": 3,
+    "signal": 9,
     "on-click": "~/.config/waybar/scripts/cliphist.sh --list",
+    "on-click-middle": "~/.config/waybar/scripts/cliphist.sh --delete",
     "on-click-right": "~/.config/waybar/scripts/cliphist.sh --wipe",
     "tooltip": true
   },

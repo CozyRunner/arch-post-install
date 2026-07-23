@@ -214,11 +214,18 @@ window#waybar {
     margin: 2px 0;
 }
 
-#custom-clipboard {       
-  color: @accent-orange;  
-  padding: 0 10px;        
-  margin: 2px 0;          
-}                         
+#custom-clipboard {
+  color: @accent-orange;
+  padding: 0 10px;
+  margin: 2px 0;
+  transition: all 0.3s ease;
+}
+
+#custom-clipboard:hover {
+  color: @accent-blue;
+  background: alpha(@accent-blue, 0.15);
+  border-radius: 8px;
+}
 
 #custom-power {
     color: @accent-red;
