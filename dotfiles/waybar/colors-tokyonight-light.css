@@ -1,0 +1,24 @@
+/* Waybar Colors — Tokyo Night Day (Light) */
+@define-color bg-bar rgba(225, 226, 231, 0.85);
+@define-color bg-module rgba(200, 211, 245, 0.9);
+@define-color accent-blue #2e7de9;
+@define-color accent-purple #9854f6;
+@define-color accent-green #587539;
+@define-color accent-red #f52a65;
+@define-color accent-orange #b15c00;
+@define-color foreground #3760bf;
+
+@define-color base #e1e2e7;
+@define-color mantle #c8d3f5;
+@define-color crust #b9bce3;
+@define-color surface0 #d0d5e6;
+@define-color surface1 #a8aecb;
+@define-color overlay0 #b4b5b9;
+@define-color text #3760bf;
+@define-color subtext0 #6172b0;
+@define-color blue #2e7de9;
+@define-color mauve #9854f6;
+@define-color red #f52a65;
+@define-color green #587539;
+@define-color yellow #8c6c3e;
+@define-color peach #b15c00;

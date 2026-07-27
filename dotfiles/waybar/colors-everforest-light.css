@@ -1,0 +1,24 @@
+/* Waybar Colors — Everforest (Light) */
+@define-color bg-bar rgba(253, 246, 227, 0.85);
+@define-color bg-module rgba(239, 235, 212, 0.9);
+@define-color accent-blue #3a94c5;
+@define-color accent-purple #df69ba;
+@define-color accent-green #8da101;
+@define-color accent-red #f85552;
+@define-color accent-orange #f57d26;
+@define-color foreground #5c6a72;
+
+@define-color base #fdf6e3;
+@define-color mantle #efebd4;
+@define-color crust #e0dcc7;
+@define-color surface0 #d3cea6;
+@define-color surface1 #bec5b2;
+@define-color overlay0 #a6b098;
+@define-color text #5c6a72;
+@define-color subtext0 #939f91;
+@define-color blue #3a94c5;
+@define-color mauve #df69ba;
+@define-color red #f85552;
+@define-color green #8da101;
+@define-color yellow #dfa000;
+@define-color peach #f57d26;

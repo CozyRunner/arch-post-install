@@ -1,0 +1,24 @@
+/* Waybar Colors — Rosé Pine Dawn (Light) */
+@define-color bg-bar rgba(250, 244, 237, 0.85);
+@define-color bg-module rgba(242, 233, 225, 0.9);
+@define-color accent-blue #56949f;
+@define-color accent-purple #907aa9;
+@define-color accent-green #286983;
+@define-color accent-red #b4637a;
+@define-color accent-orange #ea9d34;
+@define-color foreground #575279;
+
+@define-color base #faf4ed;
+@define-color mantle #f2e9e1;
+@define-color crust #e4d7ce;
+@define-color surface0 #fffaf3;
+@define-color surface1 #cecad6;
+@define-color overlay0 #9893a5;
+@define-color text #575279;
+@define-color subtext0 #797593;
+@define-color blue #56949f;
+@define-color mauve #907aa9;
+@define-color red #b4637a;
+@define-color green #286983;
+@define-color yellow #ea9d34;
+@define-color peach #d7827e;

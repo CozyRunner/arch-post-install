@@ -1,0 +1,16 @@
+* {
+    background:     rgba(40, 40, 40, 0.85);
+    background-alt: rgba(60, 56, 54, 0.85);
+    selected:       #fabd2f;
+    foreground:     #ebdbb2;
+    foreground-dim: #928374;
+    accent:         #fabd2f;
+    border:         rgba(250, 189, 47, 0.4);
+
+    bg:      @background;
+    bg-alt:  @background-alt;
+    fg:      @foreground;
+    fg-dim:  @foreground-dim;
+    sel:     @selected;
+    bg-sel:  @background-alt;
+}

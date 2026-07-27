@@ -199,10 +199,21 @@ arch-post-install/
 
 ## Theming System
 
-The unified theme engine uses **Catppuccin** color palettes for a consistent, eye-pleasing experience.
+The unified theme engine uses **Catppuccin** color palettes by default for a consistent, eye-pleasing experience, while supporting multiple curated theme schemes.
 
 - 🌑 **Dark Mode**: Catppuccin Macchiato
 - ☀️ **Light Mode**: Catppuccin Latte
+
+### Theme Schemes
+
+| Theme Scheme | Dark Variant | Light Variant | Vibe & Aesthetics |
+|--------------|--------------|---------------|-------------------|
+| **Catppuccin** | Catppuccin Macchiato / Mocha | Catppuccin Latte | Soothing pastel palette with high contrast and cozy aesthetic. |
+| **Tokyo Night** | Tokyo Night Storm / Night | Tokyo Night Day | High-contrast neon blues, purples, and crisp whites. Modern synthwave aesthetic. |
+| **Gruvbox** | Gruvbox Dark (Hard / Medium) | Gruvbox Light | Retro, warm, earthy tones with distinctive yellows and oranges. Very easy on the eyes. |
+| **Everforest** | Everforest Dark | Everforest Light | Natural, muted greens and soft earthy background tones. Clean and soothing. |
+| **Nord / Snow** | Nord Dark | Nord Light (Nord Light/Snow) | Cool, arctic ice blues and slate grays. Minimalist and clean. |
+| **Rose Pine** | Rosé Pine (Main) | Rosé Pine Dawn | Pastel, dreamy, soft pink and lavender tones. |
 
 Toggle themes instantly with **`SUPER + N`**. The system synchronizes the following components:
 
@@ -224,6 +235,7 @@ Toggle themes instantly with **`SUPER + N`**. The system synchronizes the follow
 | `SUPER + E` | File manager |
 | `SUPER + B` | Web browser |
 | `SUPER + N` | Toggle Dark/Light theme |
+| `SUPER + Shift + T` | Select Theme Scheme |
 | `SUPER + M` | System menu |
 | `SUPER + L` | Lock screen |
 | `SUPER + C` | Close active window |

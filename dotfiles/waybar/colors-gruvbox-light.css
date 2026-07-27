@@ -1,0 +1,24 @@
+/* Waybar Colors — Gruvbox (Light) */
+@define-color bg-bar rgba(251, 241, 199, 0.85);
+@define-color bg-module rgba(235, 219, 178, 0.9);
+@define-color accent-blue #076678;
+@define-color accent-purple #8f3f71;
+@define-color accent-green #79740e;
+@define-color accent-red #9d0006;
+@define-color accent-orange #af3a03;
+@define-color foreground #3c3836;
+
+@define-color base #fbf1c7;
+@define-color mantle #ebdbb2;
+@define-color crust #d5c4a1;
+@define-color surface0 #bdae93;
+@define-color surface1 #a89984;
+@define-color overlay0 #928374;
+@define-color text #3c3836;
+@define-color subtext0 #7c6f64;
+@define-color blue #076678;
+@define-color mauve #8f3f71;
+@define-color red #9d0006;
+@define-color green #79740e;
+@define-color yellow #b57614;
+@define-color peach #af3a03;

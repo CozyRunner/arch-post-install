@@ -20,6 +20,7 @@ fi
 
 # Menu entries with Nerd Font icons
 options="$THEME_LABEL
+󰸉  Select Theme Scheme
 󱘖  Clipboard History
 󰋩  Change Wallpaper
 󰚰  Update
@@ -37,6 +38,9 @@ selection=$(echo -e "$options" | rofi -dmenu -i \
 case "$selection" in
 *"Toggle Theme"*)
   bash "$SCRIPTS_DIR/toggle_theme.sh"
+  ;;
+*"Theme Scheme"*)
+  bash "$SCRIPTS_DIR/theme_picker.sh"
   ;;
 *"Clipboard History"*)
   bash "$SCRIPTS_DIR/clipboard.sh"

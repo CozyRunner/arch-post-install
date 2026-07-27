@@ -296,6 +296,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Super + Shift + C` | Calendar & Tasks (calcure) |
 | `Super + Shift + J` | TUI Journal (tui-journal) |
 | `Super + N` | Toggle theme (light/dark) |
+| `Super + Shift + T` | Theme Scheme picker |
 | `Super + M` | **Quick Settings menu** |
 | `Super + Alt + F` | Maximize (monocle) |
 | `Super + F1` | Brightness down |
@@ -353,6 +354,17 @@ Key floating rules defined in `windowrules.conf`:
 ---
 
 ## 🎭 Customization
+
+### Theme Schemes
+
+| Theme Scheme | Dark Variant | Light Variant | Vibe & Aesthetics |
+|--------------|--------------|---------------|-------------------|
+| **Catppuccin** | Catppuccin Macchiato / Mocha | Catppuccin Latte | Soothing pastel palette with high contrast and cozy aesthetic. |
+| **Tokyo Night** | Tokyo Night Storm / Night | Tokyo Night Day | High-contrast neon blues, purples, and crisp whites. Modern synthwave aesthetic. |
+| **Gruvbox** | Gruvbox Dark (Hard / Medium) | Gruvbox Light | Retro, warm, earthy tones with distinctive yellows and oranges. Very easy on the eyes. |
+| **Everforest** | Everforest Dark | Everforest Light | Natural, muted greens and soft earthy background tones. Clean and soothing. |
+| **Nord / Snow** | Nord Dark | Nord Light (Nord Light/Snow) | Cool, arctic ice blues and slate grays. Minimalist and clean. |
+| **Rose Pine** | Rosé Pine (Main) | Rosé Pine Dawn | Pastel, dreamy, soft pink and lavender tones. |
 
 ### Theme Colors
 

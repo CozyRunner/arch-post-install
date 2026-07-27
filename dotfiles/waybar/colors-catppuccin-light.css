@@ -1,0 +1,24 @@
+/* Waybar Colors — Catppuccin Latte (Light) */
+@define-color bg-bar rgba(239, 241, 245, 0.85);
+@define-color bg-module rgba(220, 224, 232, 0.9);
+@define-color accent-blue #1e66f5;
+@define-color accent-purple #8839ef;
+@define-color accent-green #40a02b;
+@define-color accent-red #d20f39;
+@define-color accent-orange #fe640b;
+@define-color foreground #4c4f69;
+
+@define-color base #eff1f5;
+@define-color mantle #e6e9ef;
+@define-color crust #dce0e8;
+@define-color surface0 #ccd0da;
+@define-color surface1 #bcc0cc;
+@define-color overlay0 #9ca0b0;
+@define-color text #4c4f69;
+@define-color subtext0 #6c6f85;
+@define-color blue #1e66f5;
+@define-color mauve #8839ef;
+@define-color red #d20f39;
+@define-color green #40a02b;
+@define-color yellow #df8e1d;
+@define-color peach #fe640b;
