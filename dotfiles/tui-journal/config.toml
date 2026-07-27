@@ -1,0 +1,12 @@
+# ─────────────────────────────────────────────
+# TUI-Journal Configuration
+# ─────────────────────────────────────────────
+
+# Define the back-end storage type ("Sqlite" or "Json")
+backend_type = "Sqlite"
+
+# Default priority for new journal entries (1-3, optional)
+# default_journal_priority = 1
+
+# External text editor command (optional)
+# external_editor = "nvim"

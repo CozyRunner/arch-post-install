@@ -228,6 +228,7 @@ Toggle themes instantly with **`SUPER + N`**. The system synchronizes the follow
 | `SUPER + L` | Lock screen |
 | `SUPER + C` | Close active window |
 | `SUPER + Shift + C` | Calendar & Tasks (Calcure) |
+| `SUPER + Shift + J` | TUI Journal (tui-journal) |
 | `SUPER + Shift + Q` | Kill session |
 | `Print` | Screenshot (selection) |
 
@@ -243,7 +244,7 @@ Toggle themes instantly with **`SUPER + N`**. The system synchronizes the follow
 | **Terminal** | [Kitty](https://sw.kovidgoyal.net/kitty/), [Alacritty](https://alacritty.org/) |
 | **File Manager** | [Nautilus](https://apps.gnome.org/Nautilus/), [Yazi](https://github.com/sxyazi/yazi) |
 | **Editor** | [Neovim](https://neovim.io) ([LazyVim](https://lazyvim.github.io) setup) |
-| **Productivity** | [Calcure](https://github.com/anufrievroman/calcure) (Calendar & Tasks TUI) |
+| **Productivity** | [Calcure](https://github.com/anufrievroman/calcure) (Calendar & Tasks TUI), [TUI-Journal](https://github.com/AmmarAbouZor/tui-journal) (Terminal Journal & Notes TUI) |
 | **Multiplexer** | [Zellij](https://zellij.dev/) |
 | **Browser** | [Chromium](https://www.chromium.org/) |
 | **Media** | [MPV](https://mpv.io/), [imv](https://github.com/epezent/imv), [feh](https://feh.finalrewind.org/), [Evince](https://wiki.gnome.org/Apps/Evince) |

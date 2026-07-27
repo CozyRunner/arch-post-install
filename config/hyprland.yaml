@@ -103,6 +103,7 @@ packages:
     # CLI utilities
     - impala              # network TUI
     - bluetui             # bluetooth TUI
+    - tui-journal         # terminal journal
 
   aur:
     - grimblast-git
@@ -136,6 +137,7 @@ dotfiles:
   - ohmyposh
   - superfile
   - calcure
+  - tui-journal
 
 executables:
   - hypr/scripts

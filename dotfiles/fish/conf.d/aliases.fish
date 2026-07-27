@@ -11,6 +11,8 @@ if status is-interactive
     alias find="fd"
     alias grep="rg"
     alias cal="calcure"
+    alias journal="tui-journal"
+    alias jn="tui-journal"
 
     # Git shortcuts
     alias gs="git status -sb"

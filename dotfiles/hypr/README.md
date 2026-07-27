@@ -294,6 +294,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Super + Return` | Open terminal |
 | `Super + B` | Open browser |
 | `Super + Shift + C` | Calendar & Tasks (calcure) |
+| `Super + Shift + J` | TUI Journal (tui-journal) |
 | `Super + N` | Toggle theme (light/dark) |
 | `Super + M` | **Quick Settings menu** |
 | `Super + Alt + F` | Maximize (monocle) |
