@@ -1,24 +1,24 @@
-/* Waybar Colors — Tokyo Night (Dark) */
-@define-color bg-bar rgba(26, 27, 38, 0.85);
-@define-color bg-module rgba(36, 40, 59, 0.9);
-@define-color accent-blue #7aa2f7;
-@define-color accent-purple #bb9af7;
-@define-color accent-green #9ece6a;
-@define-color accent-red #f7768e;
-@define-color accent-orange #ff9e64;
-@define-color foreground #c0caf5;
+/* Waybar Colors — Catppuccin Mocha (Dark) */
+@define-color bg-bar rgba(30, 30, 46, 0.85);
+@define-color bg-module rgba(49, 50, 68, 0.9);
+@define-color accent-blue #89b4fa;
+@define-color accent-purple #cba6f7;
+@define-color accent-green #a6e3a1;
+@define-color accent-red #f38ba8;
+@define-color accent-orange #fab387;
+@define-color foreground #cdd6f4;
 
-@define-color base #1a1b26;
-@define-color mantle #1f2335;
-@define-color crust #15161e;
-@define-color surface0 #24283b;
-@define-color surface1 #414868;
-@define-color overlay0 #292e42;
-@define-color text #c0caf5;
-@define-color subtext0 #a9b1d6;
-@define-color blue #7aa2f7;
-@define-color mauve #bb9af7;
-@define-color red #f7768e;
-@define-color green #9ece6a;
-@define-color yellow #e0af68;
-@define-color peach #ff9e64;
+@define-color base #1e1e2e;
+@define-color mantle #181825;
+@define-color crust #11111b;
+@define-color surface0 #313244;
+@define-color surface1 #45475a;
+@define-color overlay0 #6c7086;
+@define-color text #cdd6f4;
+@define-color subtext0 #a6adc8;
+@define-color blue #89b4fa;
+@define-color mauve #cba6f7;
+@define-color red #f38ba8;
+@define-color green #a6e3a1;
+@define-color yellow #f9e2af;
+@define-color peach #fab387;
