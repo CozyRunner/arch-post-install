@@ -1,12 +1,12 @@
--- Hyprland Theme — Rosé Pine (Dark)
+-- Hyprland Theme — Catppuccin Mocha (Dark)
 hl.config({
     general = {
         gaps_in  = 5,
         gaps_out = 10,
         border_size = 2,
         col = {
-            active_border   = { colors = { "rgba(ebbcbaff)", "rgba(c4a7e7ff)" }, angle = 45 },
-            inactive_border = "rgba(26233aaa)",
+            active_border   = { colors = { "rgba(a6e3a1ff)", "rgba(94e2d5ff)" }, angle = 45 },
+            inactive_border = "rgba(313244aa)",
         },
         resize_on_border = true,
     },
@@ -16,7 +16,7 @@ hl.config({
             enabled      = true,
             range        = 20,
             render_power = 3,
-            color        = "rgba(191724aa)",
+            color        = "rgba(11111baa)",
         },
         blur = {
             enabled           = true,

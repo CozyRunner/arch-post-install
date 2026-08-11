@@ -32,8 +32,9 @@ hl.bind(mainMod .. " + V",       hl.dsp.exec_cmd("~/.config/hypr/scripts/clipboa
 -- ------------------------------------------------------------------------------
 
 -- Basic Window Operations (Alt + F4 = Close Window)
-hl.bind("ALT + F4",             hl.dsp.window.kill())
-hl.bind(mainMod .. " + C",      hl.dsp.window.kill())
+hl.bind("ALT + F4",             hl.dsp.window.close())
+hl.bind(mainMod .. " + C",      hl.dsp.window.close())
+hl.bind(mainMod .. " + SHIFT + C", hl.dsp.window.kill())
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + T",      hl.dsp.window.pin())
 hl.bind(mainMod .. " + BackSpace", hl.dsp.window.center())
@@ -88,7 +89,7 @@ end)
 hl.bind("CTRL + " .. mainMod .. " + Left",  hl.dsp.focus({ workspace = "e-1" }))
 hl.bind("CTRL + " .. mainMod .. " + Right", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind("CTRL + " .. mainMod .. " + D",     hl.dsp.focus({ workspace = "empty" }))
-hl.bind("CTRL + " .. mainMod .. " + F4",    hl.dsp.window.kill())
+hl.bind("CTRL + " .. mainMod .. " + F4",    hl.dsp.window.close())
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
