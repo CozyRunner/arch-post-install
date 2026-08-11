@@ -165,7 +165,7 @@ make dotfiles DRY=1         # Dry-run mode
 
 ```
 arch-post-install/
-├── install.sh                 # Main entry point
+├── install.sh                 # Main installation entry point
 ├── ARCHITECTURE.md            # Technical design documentation
 ├── Makefile                   # Development shortcuts & automation
 ├── config/
@@ -181,10 +181,17 @@ arch-post-install/
 ├── profiles/
 │   └── hyprland.sh            # Hyprland environment orchestrator (plugin)
 ├── dotfiles/
-│   ├── theme/                 # Unified theme definitions
-│   ├── hypr/                  # Hyprland window manager config
-│   ├── waybar/                # Status bar configuration
-│   ├── kitty/                 # Terminal emulator config
+│   ├── hypr/                  # Modern Lua-based Hyprland WM configuration
+│   │   ├── hyprland.lua       # Main Lua entry point
+│   │   ├── config/            # Modular Lua configurations (monitors, rules, input, etc.)
+│   │   │   └── keybinds/      # Dedicated keybinding subsystem
+│   │   ├── themes/presets/    # 14 curated color palette presets (Lua)
+│   │   └── scripts/           # Quick settings, theme switcher, wallpaper picker
+│   ├── waybar/                # Status bar layout, style & dynamic themes
+│   ├── kitty/                 # Kitty GPU terminal emulator config
+│   ├── alacritty/             # Alacritty terminal emulator config
+│   ├── rofi/                  # Modern application launcher & menus
+│   ├── nvim/                  # Preconfigured LazyVim setup
 │   └── ...                    # (See ARCHITECTURE.md for full list)
 ├── scripts/
 │   ├── install_yay.sh         # AUR helper setup
@@ -199,50 +206,95 @@ arch-post-install/
 
 ## Theming System
 
-The unified theme engine uses **Catppuccin** color palettes by default for a consistent, eye-pleasing experience, while supporting multiple curated theme schemes.
+The unified theme engine uses **Catppuccin** color palettes by default for a consistent, eye-pleasing experience, while supporting 7 curated dual-mode theme schemes:
 
-- 🌑 **Dark Mode**: Catppuccin Macchiato
+- 🌑 **Dark Mode**: Catppuccin Macchiato / Mocha
 - ☀️ **Light Mode**: Catppuccin Latte
 
 ### Theme Schemes
 
 | Theme Scheme | Dark Variant | Light Variant | Vibe & Aesthetics |
 |--------------|--------------|---------------|-------------------|
-| **Catppuccin** | Catppuccin Macchiato / Mocha | Catppuccin Latte | Soothing pastel palette with high contrast and cozy aesthetic. |
+| **Catppuccin** | Catppuccin Mocha | Catppuccin Latte | Soothing pastel palette with high contrast and cozy aesthetic. |
 | **Tokyo Night** | Tokyo Night Storm / Night | Tokyo Night Day | High-contrast neon blues, purples, and crisp whites. Modern synthwave aesthetic. |
-| **Gruvbox** | Gruvbox Dark (Hard / Medium) | Gruvbox Light | Retro, warm, earthy tones with distinctive yellows and oranges. Very easy on the eyes. |
-| **Everforest** | Everforest Dark | Everforest Light | Natural, muted greens and soft earthy background tones. Clean and soothing. |
-| **Nord / Snow** | Nord Dark | Nord Light (Nord Light/Snow) | Cool, arctic ice blues and slate grays. Minimalist and clean. |
-| **Rose Pine** | Rosé Pine (Main) | Rosé Pine Dawn | Pastel, dreamy, soft pink and lavender tones. |
+| **Gruvbox** | Gruvbox Dark | Gruvbox Light | Retro, warm, earthy tones with distinctive yellows and oranges. Easy on the eyes. |
+| **Everforest** | Everforest Dark | Everforest Light | Natural, muted greens and soft earthy background tones. Clean and organic. |
+| **Nord** | Nord Dark | Nord Light / Snow | Cool, arctic ice blues and slate grays. Minimalist and clean. |
+| **Rosé Pine** | Rosé Pine | Rosé Pine Dawn | Pastel, dreamy, soft pink and lavender tones. |
+| **Default Dark/Light** | Dark Theme | Light Theme | Standard high-contrast dark and light system themes. |
 
-Toggle themes instantly with **`SUPER + N`**. The system synchronizes the following components:
+Toggle dark/light mode instantly with **`SUPER + N`**, or open the interactive Theme Scheme Picker with **`SUPER + Shift + T`**. The system synchronizes the following components in real time:
 
-1. **Hyprland** - Borders, active window glow, and workspace indicators.
-2. **Waybar** - CSS variables for background, text, and accent colors.
+1. **Hyprland** - Border gradients, active opacity, shadow colors, and layer blurs via `theme.lua`.
+2. **Waybar** - CSS variables for background, text, borders, and accent colors.
 3. **Kitty / Alacritty** - Terminal color schemes.
-4. **Rofi** - Dynamic RASI variables for launchers and menus.
-5. **GTK/Qt** - System-wide interface preferences (Dark/Light preference).
-6. **Neovim** - Integrated theme switching for LazyVim.
+4. **Rofi** - Dynamic RASI variables for launchers and quick settings.
+5. **GTK/Qt** - System-wide interface preferences (Dark/Light preference & Adwaita themes).
+6. **Superfile / Zellij** - Terminal file manager and multiplexer palette synchronization.
+7. **Wallpapers** - Coordinated dark and light desktop wallpapers via `hyprpaper`.
 
 ---
 
 ## Keybindings
 
+### Core & Applications
 | Keybinding | Action |
 |------------|--------|
-| `SUPER + Return` | Launch terminal (Kitty) |
-| `SUPER + Space` | App launcher (Rofi) |
-| `SUPER + E` | File manager |
-| `SUPER + B` | Web browser |
-| `SUPER + N` | Toggle Dark/Light theme |
-| `SUPER + Shift + T` | Select Theme Scheme |
-| `SUPER + M` | System menu |
-| `SUPER + L` | Lock screen |
-| `SUPER + C` | Close active window |
-| `SUPER + Shift + C` | Calendar & Tasks (Calcure) |
-| `SUPER + Shift + J` | TUI Journal (tui-journal) |
-| `SUPER + Shift + Q` | Kill session |
-| `Print` | Screenshot (selection) |
+| `SUPER + Q` | Launch primary terminal (Kitty) |
+| `SUPER + Return` | Launch secondary terminal (Alacritty) |
+| `SUPER + Space` / `SUPER + R` | Application Launcher (Rofi) |
+| `SUPER + E` | File Manager (Nautilus) |
+| `SUPER + B` | Web Browser (Chromium) |
+| `SUPER + I` / `SUPER + M` | Quick Settings Floating Menu |
+| `SUPER + V` | Clipboard History Manager |
+| `CTRL + SHIFT + Escape` | Task Manager (btop) |
+
+### Window Management & Layout
+| Keybinding | Action |
+|------------|--------|
+| `SUPER + C` / `ALT + F4` | Close / Kill Active Window |
+| `SUPER + Shift + V` | Toggle Window Floating |
+| `SUPER + F` | Toggle True Fullscreen |
+| `SUPER + ALT + F` | Toggle Maximized Window |
+| `SUPER + Up` / `SUPER + Down` | Maximize / Restore Window |
+| `SUPER + T` | Pin Active Window |
+| `SUPER + BackSpace` | Center Floating Window |
+| `SUPER + P` | Pseudo Tile Layout |
+| `SUPER + J` | Toggle Dwindle Split |
+| `SUPER + Arrow Keys` | Move Focus (Left / Right / Up / Down) |
+| `SUPER + Shift + Arrow Keys` | Move Active Window (Left / Right / Up / Down) |
+| `ALT + Tab` / `SUPER + Tab` | Cycle Windows / Bring to Top |
+| `SUPER + LMB (Drag)` | Drag & Move Window |
+| `SUPER + RMB (Drag)` | Resize Window |
+
+### Workspaces & Desktops
+| Keybinding | Action |
+|------------|--------|
+| `SUPER + [1-9, 0]` | Switch to Workspace 1–10 |
+| `SUPER + Shift + [1-9, 0]` | Move Active Window to Workspace 1–10 |
+| `CTRL + SUPER + Left / Right` | Cycle Previous / Next Workspace |
+| `CTRL + SUPER + D` | Switch to Empty Workspace |
+| `SUPER + S` | Toggle Special Workspace (Scratchpad) |
+| `SUPER + ALT + S` | Move Window to Special Workspace |
+| `SUPER + Scroll Up / Down` | Switch Workspace via Mouse Wheel |
+
+### System, Utilities & Screenshots
+| Keybinding | Action |
+|------------|--------|
+| `SUPER + N` | Toggle Dark / Light Mode |
+| `SUPER + Shift + T` | Open Theme Scheme Picker |
+| `SUPER + L` | Lock Screen (hyprlock) |
+| `SUPER + Escape` | Power Management Menu |
+| `SUPER + Shift + Q` | Exit Hyprland Session |
+| `SUPER + Shift + C` | Calendar & Tasks (Calcure TUI) |
+| `SUPER + Shift + J` | Daily Journal & Notes (tui-journal) |
+| `SUPER + F5` | Firmware Update Check |
+| `Print` / `SUPER + Shift + S` | Snipping Tool Screenshot (Area & Clipboard) |
+| `ALT + Print` | Screenshot Active Window |
+| `SHIFT + Print` | Screenshot Current Monitor |
+| `XF86AudioRaise / Lower` | Volume Control (wpctl) |
+| `XF86AudioMute / MicMute` | Mute Output / Microphone |
+| `XF86MonBrightnessUp / Down` | Display Brightness (brightnessctl) |
 
 ---
 
@@ -250,11 +302,11 @@ Toggle themes instantly with **`SUPER + N`**. The system synchronizes the follow
 
 | Category | Components |
 |:---:|:---|
-| **Compositor** | [Hyprland](https://hyprland.org), [hyprpaper](https://github.com/hyprwm/hyprpaper), [hypridle](https://github.com/hyprwm/hypridle), [hyprlock](https://github.com/hyprwm/hyprlock) |
+| **Compositor** | [Hyprland](https://hyprland.org) (Native Lua Engine), [hyprpaper](https://github.com/hyprwm/hyprpaper), [hypridle](https://github.com/hyprwm/hypridle), [hyprlock](https://github.com/hyprwm/hyprlock) |
 | **Bar/UI** | [Waybar](https://github.com/Alexays/Waybar), [Dunst](https://dunst-project.org/) |
-| **Launcher** | [Rofi](https://github.com/davatorium/rofi) (Modern, Spotlight, Launchpad themes) |
+| **Launcher** | [Rofi](https://github.com/davatorium/rofi) (Custom Floating & Dmenu Themes) |
 | **Terminal** | [Kitty](https://sw.kovidgoyal.net/kitty/), [Alacritty](https://alacritty.org/) |
-| **File Manager** | [Nautilus](https://apps.gnome.org/Nautilus/), [Yazi](https://github.com/sxyazi/yazi) |
+| **File Manager** | [Nautilus](https://apps.gnome.org/Nautilus/), [Superfile](https://github.com/yorukot/superfile), [Yazi](https://github.com/sxyazi/yazi) |
 | **Editor** | [Neovim](https://neovim.io) ([LazyVim](https://lazyvim.github.io) setup) |
 | **Productivity** | [Calcure](https://github.com/anufrievroman/calcure) (Calendar & Tasks TUI), [TUI-Journal](https://github.com/AmmarAbouZor/tui-journal) (Terminal Journal & Notes TUI) |
 | **Multiplexer** | [Zellij](https://zellij.dev/) |

@@ -1,95 +1,153 @@
-# Architecture Guide
+# System Architecture & Technical Design Guide
 
-This document provides a technical deep-dive into how the Arch Post-Installation Workbench is structured and how it operates.
+This document provides a comprehensive technical deep-dive into the architectural design, execution lifecycle, configuration engine, and desktop subsystem of the **Arch Linux Post-Installation Workbench**.
 
-## Design Philosophy
+---
 
-- **Modularity**: Every major system component (packages, dotfiles, users) is encapsulated in its own module.
-- **Declarative Configuration**: The system state is defined in YAML files, separating "what" to install from "how" to install it.
-- **Robustness**: Error handling, logging, and pre-flight checks are baked into the core engine.
-- **User-Centric**: Designed to be run by a normal user with `sudo`, ensuring correct ownership and permissions.
+## 1. High-Level Architecture Overview
 
-## Directory Structure
+The system is split into two primary subsystems:
+1. **The Post-Installation Workbench**: A declarative, idempotent shell engine that provisions packages, system daemons, user permissions, and symlinks dotfiles.
+2. **The Modern Desktop Runtime**: A production-ready Wayland environment powered by **Hyprland (Lua Engine)**, Waybar, Rofi, and a centralized multi-scheme theming engine.
 
-| Directory | Purpose |
-|-----------|---------|
-| `config/` | YAML definitions for packages, services, and dotfiles. |
-| `modules/` | Core logic modules (packages, dotfiles, system, etc.). |
-| `profiles/` | Environment-specific orchestrators (e.g., Hyprland). |
-| `dotfiles/` | The actual configuration files to be deployed to `~/.config/`. |
-| `scripts/` | Standalone helper scripts for complex setups (fonts, Fish shell, KWallet). |
-| `logs/` | Timestamped logs for every installation run. |
+```mermaid
+graph TD
+    subgraph Workbench ["Post-Installation Engine"]
+        A[install.sh] --> B(modules/core.sh)
+        B --> C{Execution Mode}
+        C -->|Packages| D[modules/packages.sh]
+        C -->|Services| E[modules/services.sh]
+        C -->|Users| F[modules/users.sh]
+        C -->|Dotfiles| G[modules/dotfiles.sh]
+        C -->|Profiles| H[profiles/hyprland.sh]
+        
+        D --> I[(config/*.yaml)]
+        G --> I
+    end
 
-## Module Breakdown
+    subgraph Runtime ["Desktop Runtime Subsystem"]
+        J[~/.config/hypr/hyprland.lua] --> K[config/monitors.lua]
+        J --> L[config/looknfeel.lua]
+        J --> M[config/input.lua]
+        J --> N[config/rules.lua]
+        J --> O[config/keybinds/init.lua]
+        J --> P[theme.lua]
+        
+        Q[scripts/toggle_theme.sh] -->|Syncs| P
+        Q -->|Syncs| R[Waybar / Kitty / Rofi]
+    end
 
-### `core.sh`
-The "Engine" of the workbench.
-- **YAML Parser**: Contains a fallback regex-based parser if `yq` is missing.
-- **Logging**: Standardized `log_info`, `log_success`, `log_error` functions.
-- **Checks**: Internet verification, root/sudo checks, and Arch Linux verification.
+    G -.->|Symlinks to ~/.config| Runtime
+```
 
-### `system.sh`
-Handles system-wide common tasks.
-- **Fonts**: Orchestrates system font installation.
-- **Shell**: Manages default shell configuration.
-- **Updates**: Wraps system update logic.
+---
 
-### `packages.sh`
-Manages the installation of software packages.
-- Parses `config/` YAML files for pacman and AUR packages.
-- Automatically detects already installed packages to save time and ensure idempotency.
-- Uses `yay` for AUR package management.
+## 2. Post-Installation Engine Design
 
-### `services.sh`
-Handles systemd daemon management.
-- Parses `config/` YAML files for services and timers.
-- Automatically determines if a unit is a `.service` or `.timer` and enables/starts them.
+### Design Principles
+- **Declarative System State**: Configuration is declared in structured YAML files (`config/base.yaml`, `config/hyprland.yaml`), decoupling package lists and service definitions from shell logic.
+- **Idempotency**: All module operations check current state (`pacman -Qi`, `systemctl is-enabled`, symlink validation) before executing changes, ensuring re-runs are safe and fast.
+- **Fail-Safe Symlinking**: The dotfile deployment module automatically preserves timestamped backups of pre-existing user configurations before creating symlinks.
+- **Structured Logging**: All operations output colorized console feedback while simultaneously logging detailed execution traces to `logs/install_<timestamp>.log`.
 
-### `users.sh`
-Manages user account configuration and privileges.
-- Sets the default shell to Fish.
-- Assigns the user to necessary groups (wheel, video, input, audio, docker, etc.).
-- Configures timezone and locale settings.
+### Core Engine Modules (`modules/`)
 
-### `dotfiles.sh`
-Orchestrates the deployment of user configurations.
-- Reads requested dotfiles from the configuration.
-- Symlinks directories from `dotfiles/` to `~/.config/`.
-- Automatically backs up existing configurations to prevent data loss.
+| Module | Responsibility | Key Features |
+|---|---|---|
+| `core.sh` | Orchestration & engine utilities | YAML parser with fallback regex engine, logging handlers, network and root privilege validation. |
+| `system.sh` | Core system provisioning | System clock synchronization, pacman mirror optimization, font installation, default shell configuration. |
+| `packages.sh` | Package lifecycle manager | Batch pacman and AUR installation via `yay`, missing dependency resolution, package presence verification. |
+| `services.sh` | Systemd service manager | Parses and enables systemd `.service` and `.timer` units for both system and user bus. |
+| `users.sh` | User accounts & permissions | Default shell assignment (Fish), supplementary group membership (`wheel`, `video`, `input`, `audio`), locale & timezone. |
+| `dotfiles.sh` | Configuration deployment | Symlinks `dotfiles/*` into `$HOME/.config/` with automatic `.bak` preservation. |
 
-## Profiles (`profiles/`)
+---
 
-Profiles are high-level orchestrators that combine modules to create a specific environment.
+## 3. Desktop Runtime & Hyprland Lua Subsystem
 
-### `hyprland.sh`
-The desktop environment orchestrator.
-- Calls packages, services, and dotfiles modules specifically for the Hyprland environment.
-- Handles GTK/theming defaults and XDG user directories.
+Starting with Hyprland 0.55+, the compositor utilizes a native **Lua configuration engine** (`hyprland.lua`). The workbench structures this environment into an organized, modular hierarchy under `dotfiles/hypr/`:
 
-## Installation Sequence
+```
+dotfiles/hypr/
+├── hyprland.lua                  # Primary entry point
+├── theme.lua                     # Active color scheme & layer rules
+│
+├── config/                       # Core compositor modules
+│   ├── monitors.lua              # Displays, scaling & output resolutions
+│   ├── programs.lua              # Application aliases
+│   ├── env.lua                   # Global environment variables (Wayland, GTK, QT)
+│   ├── autostart.lua             # Daemon launch hooks (hl.on('hyprland.start'))
+│   ├── looknfeel.lua             # Gaps, borders, animations, blur, shadows
+│   ├── input.lua                 # Keyboard layouts, touchpad, gestures
+│   ├── rules.lua                 # Consolidated window & layer rules
+│   ├── permissions.lua           # Hyprland security permission rules
+│   │
+│   └── keybinds/                 # Modular keybinding subsystem
+│       ├── init.lua              # Keybind loader
+│       ├── core.lua              # Applications, window management, workspaces
+│       ├── media.lua             # Volume, mic, brightness, media keys
+│       ├── utilities.lua         # Power menu, screenshots, maintenance
+│       └── personal.lua          # Personal tool hotkeys
+│
+├── themes/
+│   └── presets/                  # 14 curated color palette presets (Lua)
+│
+├── scripts/                      # Desktop automation scripts
+├── assets/                       # Backgrounds, logos, and icons
+└── archive/                      # Preserved legacy .conf & backup files
+```
+
+### Lua Configuration Architecture & Lifecycle
+1. **Module Resolution**: `hyprland.lua` augments Lua's `package.path` with `~/.config/hypr/` so submodules are loaded cleanly with standard `require("config.module_name")`.
+2. **Event-Driven Autostart**: Rather than static `exec-once` directives, startup daemons are attached to the compositor lifecycle using `hl.on("hyprland.start", function() ... end)`.
+3. **Dispatcher Mapping**: Keybindings map human-readable key chords to strongly typed dispatchers in the `hl.dsp.*` namespace (e.g. `hl.dsp.window.kill()`, `hl.dsp.window.float()`).
+
+---
+
+## 4. Unified Theming Engine
+
+The theming system enables seamless dark/light switching and full palette transitions across 7 curated theme schemes:
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant I as install.sh
-    participant C as core.sh
-    participant M as Modules
-    participant S as System
+    participant User
+    participant Switcher as toggle_theme.sh / theme_picker.sh
+    participant Hyprland as Hyprland (theme.lua)
+    participant Waybar as Waybar (colors.css)
+    participant Terminals as Kitty / Alacritty
+    participant GTK as GTK & Desktop Interface
 
-    U->>I: Run ./install.sh
-    I->>C: Load utilities & check environment
-    C-->>I: Environment OK
-    I->>U: Request Mode (full/base/dotfiles)
-    U->>I: Mode Selected
-    I->>C: setup_core (Update system, install yq)
-    C->>S: pacman -Syu
-    I->>M: Execute modules for Mode
-    M->>S: Install packages, symlink dotfiles, enable services
-    I-->>U: Installation Complete
+    User->>Switcher: Trigger SUPER + N or SUPER + Shift + T
+    Switcher->>GTK: Set color-scheme (prefer-dark / prefer-light)
+    Switcher->>Hyprland: Copy themes/presets/<scheme>.lua -> theme.lua
+    Switcher->>Waybar: Swap colors.css & send SIGUSR2
+    Switcher->>Terminals: Update theme.conf & send SIGUSR2
+    Switcher->>Hyprland: Preload & set wallpaper via hyprpaper
+    Switcher-->>User: Desktop Notification (Scheme & Mode)
 ```
 
-## Adding New Features
+### Supported Theme Schemes
+- **Catppuccin** (Mocha / Latte)
+- **Tokyo Night** (Night / Day)
+- **Gruvbox** (Dark / Light)
+- **Everforest** (Dark / Light)
+- **Nord** (Dark / Light Snow)
+- **Rosé Pine** (Main / Dawn)
+- **Default Dark / Light**
 
-1. **New Package**: Add it to `config/base.yaml` (system-wide) or `config/hyprland.yaml` (desktop-specific).
-2. **New Dotfile**: Place the folder in `dotfiles/` and add the name to the `dotfiles` list in `config/hyprland.yaml`.
-3. **New Logic**: If you need new installation logic, create a new script in `modules/` and source it in `install.sh`.
+---
+
+## 5. Adding New Features
+
+### Adding a New Package
+1. For core system tools: Add package name to `config/base.yaml` under `packages.pacman` or `packages.aur`.
+2. For desktop tools: Add package name to `config/hyprland.yaml`.
+
+### Adding a New Dotfile Directory
+1. Place your configuration folder under `dotfiles/<app_name>/`.
+2. Register `<app_name>` under the `dotfiles` list in `config/hyprland.yaml`.
+
+### Adding a New Keybinding
+1. Navigate to `dotfiles/hypr/config/keybinds/`.
+2. Add your binding using `hl.bind("MOD + KEY", hl.dsp.exec_cmd("command"))` in the appropriate module (`core.lua`, `utilities.lua`, or `personal.lua`).
+3. Reload Hyprland with `hyprctl reload`.

@@ -1,5 +1,5 @@
 {
-  "layer": "bottom",
+  "layer": "top",
   "position": "top",
   "height": 44,
   "margin-top": 0,
@@ -7,7 +7,7 @@
   "margin-left": 10,
   "margin-right": 10,
   "spacing": 0,
-  "modules-left": ["custom/arch", "hyprland/workspaces", "hyprland/window"],
+  "modules-left": ["custom/arch", "ext/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
   "modules-right": [
     "group/audio",
@@ -32,29 +32,12 @@
     "on-click": "rofi -show drun",
     "on-click-right": "~/.config/waybar/scripts/power_menu.sh",
   },
-  "hyprland/workspaces": {
-    "disable-scroll": true,
+  "ext/workspaces": {
+    "sort-by-id": true,
     "all-outputs": true,
     "active-only": false,
     "on-click": "activate",
-    "format": "{icon}",
-    "format-icons": {
-      "1": "1",
-      "2": "2",
-      "3": "3",
-      "4": "4",
-      "5": "5",
-      "urgent": "",
-      "active": "",
-      "default": "",
-    },
-    "persistent-workspaces": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-    },
+    "format": "{name}",
   },
   "hyprland/window": {
     "format": " {title}",

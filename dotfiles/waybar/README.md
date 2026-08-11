@@ -71,18 +71,22 @@ The Arch Logo module now integrates a real-time update checker.
 
 ---
 
-### 2. Styling with `style.css`
-The style uses a **Modern Deep Palette** with CSS variables for easy customization:
-- `@accent-blue`: #7aa2f7
-- `@accent-purple`: #bb9af7
-- `@bg-bar`: Glassmorphic background (rgba)
+### 2. Styling & Dynamic Theming
+The style uses CSS variables imported from `colors.css`, which is dynamically updated by the global theme switcher (`~/.config/hypr/scripts/toggle_theme.sh`):
+- **Colors File**: `~/.config/waybar/colors.css` (symlinked/copied from `colors-<scheme>-<mode>.css`)
+- **Supported Palettes**: Catppuccin, Tokyo Night, Gruvbox, Everforest, Nord, Rosé Pine.
+- **Glassmorphic Effect**: High-contrast blur and semi-transparent background.
 
 ---
 
 ## 🛠️ Common Tasks
 
 ### Reload Waybar
-To apply your changes, you can restart waybar via terminal:
+Waybar listens for `SIGUSR2` for seamless live style reloading:
+```bash
+pkill -SIGUSR2 waybar
+```
+To restart the process completely:
 ```bash
 killall waybar && waybar &
 ```
