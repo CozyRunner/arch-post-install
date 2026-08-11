@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 # Define paths
-THEME_DIR="$HOME/.config/hypr/themes"
-HYPR_THEME="$HOME/.config/hypr/theme.conf"
+THEME_DIR="$HOME/.config/hypr/themes/presets"
+HYPR_THEME="$HOME/.config/hypr/theme.lua"
+HYPR_THEME_CONF="$HOME/.config/hypr/theme.conf"
 WAYBAR_CONFIG="$HOME/.config/waybar"
 KITTY_CONFIG="$HOME/.config/kitty"
 ROFI_CONFIG="$HOME/.config/rofi"
@@ -49,11 +50,14 @@ if [ "$TARGET_MODE" == "light" ]; then
     plasma-apply-lookandfeel -a org.kde.breeze.desktop
   fi
 
-  # Hyprland colors
+  # Hyprland colors (Lua & Conf)
+  if [ -f "$THEME_DIR/${SCHEME}-light.lua" ]; then
+    cp "$THEME_DIR/${SCHEME}-light.lua" "$HYPR_THEME"
+  fi
   if [ -f "$THEME_DIR/${SCHEME}-light.conf" ]; then
-    cp "$THEME_DIR/${SCHEME}-light.conf" "$HYPR_THEME"
-  else
-    cp "$THEME_DIR/light.conf" "$HYPR_THEME"
+    cp "$THEME_DIR/${SCHEME}-light.conf" "$HYPR_THEME_CONF"
+  elif [ -f "$THEME_DIR/light.conf" ]; then
+    cp "$THEME_DIR/light.conf" "$HYPR_THEME_CONF"
   fi
 
   # Waybar colors
@@ -106,11 +110,14 @@ else
     plasma-apply-lookandfeel -a org.kde.breezedark.desktop
   fi
 
-  # Hyprland colors
+  # Hyprland colors (Lua & Conf)
+  if [ -f "$THEME_DIR/${SCHEME}-dark.lua" ]; then
+    cp "$THEME_DIR/${SCHEME}-dark.lua" "$HYPR_THEME"
+  fi
   if [ -f "$THEME_DIR/${SCHEME}-dark.conf" ]; then
-    cp "$THEME_DIR/${SCHEME}-dark.conf" "$HYPR_THEME"
-  else
-    cp "$THEME_DIR/dark.conf" "$HYPR_THEME"
+    cp "$THEME_DIR/${SCHEME}-dark.conf" "$HYPR_THEME_CONF"
+  elif [ -f "$THEME_DIR/dark.conf" ]; then
+    cp "$THEME_DIR/dark.conf" "$HYPR_THEME_CONF"
   fi
 
   # Waybar colors

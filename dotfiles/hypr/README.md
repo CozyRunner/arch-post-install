@@ -69,41 +69,56 @@ hyprctl reload
 
 ```
 hypr/
-├── hyprland.conf          # Main config — sources all modules below
+├── hyprland.lua               # Main entry point (Lua)
+├── theme.lua                  # Active theme colors (dynamically linked/copied)
 │
-├── autostart.conf         # Startup applications (waybar, dunst, hyprpaper, etc.)
-├── bindings.conf          # Core keybindings (workspaces, windows, screenshots)
-├── personal-bindings.conf # Personal keybindings (browser, theme toggle, menu)
-├── media.conf             # Volume, brightness, and media player controls
-├── env.conf               # Environment variables (GTK, QT, cursor)
-├── input.conf             # Keyboard, mouse, and touchpad settings
-├── looknfeel.conf         # Gaps, borders, animations, blur, shadows
-├── monitors.conf          # Display/monitor configuration
-├── permissions.conf       # Permission rules
-├── programs.conf          # Default programs ($terminal, $menu, $browser)
-├── theme.conf             # Active theme colors (sourced dynamically)
-├── windowrules.conf       # Window rules (floating, sizing, positioning)
+├── config/                    # Core configuration modules
+│   ├── monitors.lua           # Display/monitor configuration
+│   ├── programs.lua           # Default programs (terminal, menu, browser)
+│   ├── env.lua                # Environment variables (GTK, QT, cursor)
+│   ├── autostart.lua          # Startup applications & lifecycle hooks
+│   ├── looknfeel.lua          # Gaps, borders, animations, blur, shadows
+│   ├── input.lua              # Keyboard, mouse, and touchpad settings
+│   ├── rules.lua              # Window and layer rules
+│   ├── permissions.lua        # Permission rules
+│   │
+│   └── keybinds/              # Modular keybindings directory
+│       ├── init.lua           # Keybindings loader
+│       ├── core.lua           # Workspaces, navigation, windows, apps
+│       ├── media.lua          # Volume, mic, brightness, player controls
+│       ├── utilities.lua      # Power menu, screenshots, maintenance
+│       └── personal.lua       # Personal shortcuts (calcure, tjournal)
 │
-├── hyprpaper.conf         # Wallpaper configuration
-├── hypridle.conf          # Idle timeouts and actions
-├── hyprlock.conf          # Lock screen layout and style
-├── wallpaper.sh           # Animated wallpaper startup script
+├── themes/                    # Theme system
+│   └── presets/               # Theme preset definitions
+│       ├── catppuccin-dark.lua / catppuccin-light.lua
+│       ├── tokyonight-dark.lua / tokyonight-light.lua
+│       ├── gruvbox-dark.lua    / gruvbox-light.lua
+│       ├── everforest-dark.lua / everforest-light.lua
+│       ├── nord-dark.lua       / nord-light.lua
+│       ├── rose-pine-dark.lua  / rose-pine-light.lua
+│       ├── dark.lua            # Dark mode colors
+│       └── light.lua           # Light mode colors
 │
-├── themes/                # Theme presets
-│   ├── dark.conf          # Dark mode colors
-│   └── light.conf         # Light mode colors
+├── hyprpaper.conf             # Wallpaper configuration (hyprlang)
+├── hypridle.conf              # Idle timeouts and actions (hyprlang)
+├── hyprlock.conf              # Lock screen layout and style (hyprlang)
+├── wallpaper.sh               # Animated wallpaper startup script
 │
-├── scripts/               # Automation scripts
-│   ├── floating_menu.sh   # ⚡ Quick Settings floating menu
-│   ├── toggle_theme.sh    # 🌗 Light/Dark theme toggle
-│   ├── wallpaper_picker.sh# 🖼️ Wallpaper picker with image previews
-│   ├── update_arch.sh     # 📦 System update (pacman -Syu)
-│   └── about_pc.sh        # 💻 System information display
+├── scripts/                   # Automation scripts
+│   ├── floating_menu.sh       # ⚡ Quick Settings floating menu
+│   ├── toggle_theme.sh        # 🌗 Light/Dark theme toggle
+│   ├── theme_picker.sh        # 󰸉 Desktop theme scheme picker
+│   ├── wallpaper_picker.sh    # 🖼️ Wallpaper picker with image previews
+│   ├── update_arch.sh         # 📦 System update (pacman -Syu)
+│   └── about_pc.sh            # 💻 System information display
 │
-└── assets/                # Wallpapers and images
-    ├── Arch-Dark.png
-    ├── Arch-Light.png
-    └── wallpaper.jpg
+├── assets/                    # Wallpapers and images
+│   ├── Arch-Dark.png
+│   ├── Arch-Light.png
+│   └── wallpaper.jpg
+│
+└── archive/                   # Preserved legacy .conf & backup files
 ```
 
 ---

@@ -29,16 +29,16 @@ selection=$(echo -e "$options" | rofi -dmenu -i \
 # Handle selection
 case "$selection" in
 *"Input Settings"*)
-  $TERM_APP --title "Input Settings" --class large-floating-term nvim "$HYPR_DIR/input.conf"
+  $TERM_APP --title "Input Settings" --class large-floating-term nvim "$HYPR_DIR/config/input.lua"
   ;;
 *"Key Bindings"*)
-  $TERM_APP --title "Key Bindings" --class large-floating-term nvim "$HYPR_DIR/bindings.conf"
+  $TERM_APP --title "Key Bindings" --class large-floating-term nvim "$HYPR_DIR/config/keybinds/core.lua"
   ;;
 *"Additional Bindings"*)
-  $TERM_APP --title "Additional Bindings" --class large-floating-term nvim "$HYPR_DIR/additional-bindings.conf"
+  $TERM_APP --title "Additional Bindings" --class large-floating-term nvim "$HYPR_DIR/config/keybinds/utilities.lua"
   ;;
 *"Monitor Settings"*)
-  $TERM_APP --title "Monitor Settings" --class large-floating-term nvim "$HYPR_DIR/monitors.conf"
+  $TERM_APP --title "Monitor Settings" --class large-floating-term nvim "$HYPR_DIR/config/monitors.lua"
   ;;
 *"Hypridle Settings"*)
   $TERM_APP --title "Hypridle Settings" --class large-floating-term nvim "$HYPR_DIR/hypridle.conf"
