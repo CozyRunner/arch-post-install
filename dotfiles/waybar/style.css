@@ -42,9 +42,74 @@ window#waybar {
     color: @accent-blue;
 }
 
-#custom-media {
-    padding: 0 15px;
+/* Media Controller */
+#group-media {
+    padding: 0 4px;
     margin: 2px 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#custom-media,
+#mpris {
+    padding: 0 8px;
+    margin: 2px 0;
+    color: @accent-blue;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+#custom-media.playing,
+#mpris.Playing {
+    color: @accent-green;
+}
+
+#custom-media.paused,
+#mpris.Paused {
+    color: @accent-orange;
+}
+
+#custom-media.stopped,
+#mpris.Stopped {
+    color: alpha(@foreground, 0.4);
+}
+
+#custom-media:hover,
+#mpris:hover {
+    color: @accent-purple;
+}
+
+#custom-media-prev,
+#custom-media-play,
+#custom-media-next {
+    padding: 0 6px;
+    margin: 2px 0;
+    color: @foreground;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+#custom-media-prev:hover,
+#custom-media-next:hover {
+    color: @accent-blue;
+    background: alpha(@accent-blue, 0.15);
+    border-radius: 6px;
+}
+
+#custom-media-play:hover {
+    color: @accent-green;
+    background: alpha(@accent-green, 0.15);
+    border-radius: 6px;
+}
+
+#custom-media-text {
+    padding: 0 8px;
+    margin: 2px 0;
+    color: @foreground;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#custom-media-text:hover {
     color: @accent-blue;
 }
 

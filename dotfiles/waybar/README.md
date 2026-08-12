@@ -23,6 +23,7 @@ To ensure all modules and scripts function correctly, please install the followi
 - `systemd`: For power management commands (reboot, shutdown, suspend).
 
 ### Utilities & Scripts
+- `playerctl`: MPRIS media player controller.
 - `jq`: Required for processing keyboard layout data.
 - `pacman-contrib`: Provides `checkupdates` for the update indicator.
 - `yay`: Required for AUR update checking.
@@ -39,7 +40,7 @@ To ensure all modules and scripts function correctly, please install the followi
 ### 🔡 Fonts
 - **Inter**: Main Sans-serif font.
 - **Font Awesome 6 Free**: For generic system icons.
-- **Symbols Nerd Font**: Required for all special icons (e.g., Arch logo, battery, etc.).
+- **Symbols Nerd Font**: Required for all special icons (e.g., Arch logo, media buttons, battery, etc.).
 
 ---
 
@@ -52,7 +53,29 @@ The bar is divided into three sections:
     - `hyprland/workspaces`: Interactive desktop switcher.
     - `hyprland/window`: Currently active window title.
 - **Modules Center**: `clock` (Date & Time).
-- **Modules Right**: `pulseaudio`, `network`, `cpu`, `memory`, `battery`, and `tray`.
+- **Modules Right**: `group/media` (Hover-expanding MPRIS controller), `group/audio`, `pulseaudio#microphone`, `bluetooth`, `network`, `cpu`, `temperature`, `memory`, `custom/clipboard`, `custom/language`, `battery`, `custom/power`, and `group/tray`.
+
+---
+
+## 🎵 Hover Media Controller
+
+The bar features a compact, hover-expanding media player widget with full MPRIS support:
+
+- **Normal State**: Displays a compact status icon (`󰐊` playing, `󰏤` paused, `󰎆` stopped/no player).
+- **Hover State**: Automatically slides open a smooth media controller drawer revealing:
+  - `󰒮` **Previous track**
+  - `󰐊` / `󰏤` **Play/Pause button**
+  - `󰒭` **Next track**
+  - **Song Title — Artist** (with rich tooltip containing Album, Player info, and controls).
+- **Mouse Controls on Indicator**:
+  - `Left Click`: Play / Pause (`playerctl play-pause`)
+  - `Middle Click`: Previous track (`playerctl previous`)
+  - `Right Click`: Next track (`playerctl next`)
+  - `Scroll Up / Down`: Volume adjust (`playerctl volume 5%+/-`)
+- **Hyprland Media Keys**:
+  - `XF86AudioPlay` / `XF86AudioPause`: Play / Pause
+  - `XF86AudioNext`: Next track
+  - `XF86AudioPrev`: Previous track
 
 ---
 
