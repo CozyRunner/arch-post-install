@@ -1,0 +1,344 @@
+#!/usr/bin/env bash
+
+# ──────────────────────────────────────────────────────────────────────────────
+# arch-postinstall
+# Unified CLI for Arch Linux Post-Installation Workbench & Validation Engine
+# ──────────────────────────────────────────────────────────────────────────────
+
+set -uo pipefail
+
+VERSION="2.1.0"
+
+# Resolve directories
+CLI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${CLI_DIR}/.." && pwd)"
+LIB_DIR="${ROOT_DIR}/lib"
+SCRIPTS_DIR="${ROOT_DIR}/scripts"
+CHECK_DIR="${SCRIPTS_DIR}/check"
+CONFIG_DIR="${ROOT_DIR}/config"
+
+# Load core framework libraries
+# shellcheck disable=SC1091
+source "${LIB_DIR}/common.sh"
+# shellcheck disable=SC1091
+source "${LIB_DIR}/output.sh"
+# shellcheck disable=SC1091
+source "${LIB_DIR}/checks.sh"
+# shellcheck disable=SC1091
+source "${LIB_DIR}/doctor.sh"
+
+# Load all check category modules
+for check_script in "${CHECK_DIR}/"*.sh; do
+    if [[ -f "${check_script}" ]]; then
+        # shellcheck disable=SC1090
+        source "${check_script}"
+    fi
+done
+
+# All available validation categories in standard order
+ALL_CATEGORIES=(
+    "base"
+    "boot"
+    "packages"
+    "systemd"
+    "filesystem"
+    "network"
+    "time"
+    "security"
+    "hardware"
+    "desktop"
+    "audio"
+    "bluetooth"
+    "power"
+    "maintenance"
+)
+
+# ── Help ──────────────────────────────────────────────────────────────────────
+
+show_help() {
+    cat << EOF
+Arch Linux Post-Installation & Validation Engine v${VERSION}
+
+Usage:
+  arch-postinstall <command> [category...] [options]
+
+Commands:
+  check [cat...]     Validate system configuration matches declarative specs
+  health [cat...]    Run runtime health, service state, and storage checks
+  doctor [cat...]    Analyze issues and provide copy-paste remediation commands
+  status             Run both configuration checks and runtime health checks
+  install [mode]     Launch the post-installation setup engine (full|base|dotfiles)
+  list [categories]  Display available check categories and system modules
+
+Categories:
+  base               OS, hostname, timezone, locale, microcode, kernel
+  boot               UEFI/BIOS mode, ESP partition, bootloader, initramfs sync
+  packages           Pacman DB integrity, YAML package conformance, orphans, updates
+  systemd            System state, failed units, declarative services, user units
+  filesystem         Mountpoints, disk capacity %, inode %, read-only checks, SMART
+  network            Interfaces, IP assignment, default gateway, DNS, connectivity
+  time               Clock synchronization, timezone conformance, NTP daemons
+  security           User accounts, wheel group, UID 0 accounts, SSH posture, firewall
+  hardware           CPU topology, RAM & swap utilization, GPU controllers
+  desktop            Hyprland configuration, Wayland session, portals, dotfiles
+  audio              PipeWire stack, wireplumber, user audio units, sound sinks
+  bluetooth          Controller detection, bluez daemon, rfkill block state
+  power              Chassis detection, battery health, power profiles, thermals
+  maintenance        Package updates, orphan hygiene, journal size, timers, mirrors
+
+Options:
+  -j, --json         Output results as clean JSON
+  -v, --verbose      Enable detailed diagnostic output
+  -q, --quiet        Quiet mode (show only warnings and failures)
+  -n, --no-color     Disable ANSI color formatting
+  -p, --profile NAME Target desktop profile (default: ${DEFAULT_PROFILE:-hyprland})
+  -c, --config PATH  Custom configuration file path
+  -V, --version      Show version information
+  -h, --help         Show this help message
+
+Exit Codes:
+  0 = All checks passed (or skipped)
+  1 = Warnings detected, zero failures
+  2 = One or more check failures
+  3 = Invalid command-line usage
+  4 = Missing dependency or framework error
+
+Examples:
+  arch-postinstall check
+  arch-postinstall check boot network
+  arch-postinstall health
+  arch-postinstall doctor
+  arch-postinstall status --json
+  arch-postinstall install full
+EOF
+}
+
+# ── Parse Arguments ───────────────────────────────────────────────────────────
+
+COMMAND=""
+declare -a CATEGORIES=()
+JSON_OUTPUT=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -V|--version)
+            echo "arch-postinstall v${VERSION}"
+            exit 0
+            ;;
+        -j|--json)
+            JSON_OUTPUT=true
+            USE_COLOR=false
+            init_output
+            shift
+            ;;
+        -v|--verbose)
+            VERBOSE_MODE=true
+            shift
+            ;;
+        -q|--quiet)
+            QUIET_MODE=true
+            shift
+            ;;
+        -n|--no-color)
+            USE_COLOR=false
+            init_output
+            shift
+            ;;
+        -p|--profile)
+            if [[ -z "${2:-}" ]]; then
+                echo "Error: --profile requires a name argument" >&2
+                exit 3
+            fi
+            PROFILE="$2"
+            shift 2
+            ;;
+        -c|--config)
+            if [[ -z "${2:-}" ]]; then
+                echo "Error: --config requires a file path argument" >&2
+                exit 3
+            fi
+            CUSTOM_CONFIG="$2"
+            shift 2
+            ;;
+        check|health|doctor|status|install|list)
+            if [[ -z "${COMMAND}" ]]; then
+                COMMAND="$1"
+            else
+                CATEGORIES+=("$1")
+            fi
+            shift
+            ;;
+        *)
+            if [[ -z "${COMMAND}" ]]; then
+                echo "Unknown command or option: $1" >&2
+                show_help
+                exit 3
+            else
+                CATEGORIES+=("$1")
+                shift
+            fi
+            ;;
+    esac
+done
+
+# If no command provided, show help
+if [[ -z "${COMMAND}" ]]; then
+    show_help
+    exit 3
+fi
+
+# Set active profile
+export PROFILE="${PROFILE:-${DEFAULT_PROFILE:-hyprland}}"
+
+# Category validation helper
+is_valid_category() {
+    local cat="$1"
+    for valid in "${ALL_CATEGORIES[@]}"; do
+        [[ "${valid}" == "${cat}" ]] && return 0
+    done
+    return 1
+}
+
+# ── Command Handlers ──────────────────────────────────────────────────────────
+
+handle_install() {
+    local mode="${CATEGORIES[0]:-}"
+    if [[ -f "${ROOT_DIR}/install.sh" ]]; then
+        exec bash "${ROOT_DIR}/install.sh" ${mode:+"${mode}"}
+    else
+        echo "Error: install.sh not found at ${ROOT_DIR}/install.sh" >&2
+        exit 4
+    fi
+}
+
+handle_list() {
+    echo -e "${C_BOLD}Available Validation & Health Categories:${C_RESET}\n"
+    for cat in "${ALL_CATEGORIES[@]}"; do
+        printf "  ${C_CYAN}%-14s${C_RESET} scripts/check/%s.sh\n" "${cat}" "${cat}"
+    done
+    echo ""
+    exit 0
+}
+
+# Run selected categories
+run_execution() {
+    local mode="$1" # check | health | doctor | status
+    local -a target_categories=()
+
+    if [[ ${#CATEGORIES[@]} -gt 0 ]]; then
+        for requested in "${CATEGORIES[@]}"; do
+            if is_valid_category "${requested}"; then
+                target_categories+=("${requested}")
+            else
+                echo "Warning: Unknown category '${requested}', skipping" >&2
+            fi
+        done
+        if [[ ${#target_categories[@]} -eq 0 ]]; then
+            echo "Error: No valid categories specified" >&2
+            exit 3
+        fi
+    else
+        target_categories=("${ALL_CATEGORIES[@]}")
+    fi
+
+    # Reset accumulator
+    reset_checks
+
+    local prev_quiet="${QUIET_MODE}"
+    DOCTOR_MODE=false
+    if [[ "${mode}" == "doctor" && "${VERBOSE_MODE}" != true ]]; then
+        QUIET_MODE=true
+        DOCTOR_MODE=true
+    fi
+
+    if [[ "${JSON_OUTPUT}" != true ]]; then
+        case "${mode}" in
+            check)
+                print_banner "Arch Post-Installation Validation" "Validating configuration conformance against declarative repository specs"
+                ;;
+            health)
+                print_banner "Arch Linux System-Health Engine" "Verifying runtime health, daemon states, storage, and networking"
+                ;;
+            doctor)
+                # Doctor banner is printed by run_doctor_analysis
+                ;;
+            status)
+                print_banner "Arch Linux System Status & Health Dashboard" "Full post-installation configuration & runtime health inspection"
+                ;;
+        esac
+    fi
+
+    for cat in "${target_categories[@]}"; do
+        case "${mode}" in
+            check)
+                if declare -f "check_${cat}" &>/dev/null; then
+                    "check_${cat}"
+                fi
+                ;;
+            health)
+                if declare -f "health_${cat}" &>/dev/null; then
+                    "health_${cat}"
+                fi
+                ;;
+            doctor|status)
+                if declare -f "check_${cat}" &>/dev/null; then
+                    "check_${cat}"
+                fi
+                if declare -f "health_${cat}" &>/dev/null; then
+                    "health_${cat}"
+                fi
+                ;;
+        esac
+    done
+
+    # Restore quiet mode
+    QUIET_MODE="${prev_quiet}"
+
+    # Output formatting & exit handling
+    if [[ "${mode}" == "doctor" ]]; then
+        run_doctor_analysis
+    elif [[ "${JSON_OUTPUT}" == true ]]; then
+        render_json
+    else
+        print_summary "${COUNT_PASS}" "${COUNT_WARN}" "${COUNT_FAIL}" "${COUNT_SKIP}" "${COUNT_INFO}"
+    fi
+
+    get_exit_code
+    return $?
+}
+
+# ── Main Entrypoint ───────────────────────────────────────────────────────────
+
+case "${COMMAND}" in
+    install)
+        handle_install
+        ;;
+    list)
+        handle_list
+        ;;
+    check)
+        run_execution "check"
+        exit $?
+        ;;
+    health)
+        run_execution "health"
+        exit $?
+        ;;
+    doctor)
+        run_execution "doctor"
+        exit $?
+        ;;
+    status)
+        run_execution "status"
+        exit $?
+        ;;
+    *)
+        echo "Unknown command: ${COMMAND}" >&2
+        show_help
+        exit 3
+        ;;
+esac

@@ -209,6 +209,13 @@ main() {
     echo -e "  ${GREEN}${BOLD}✔ Mode:${NC}  ${MODE}"
     echo -e "  ${GREEN}${BOLD}✔ Log:${NC}   ${LOG_FILE}"
     echo ""
+    if [[ -x "${SCRIPT_DIR}/bin/arch-postinstall" ]]; then
+        echo -e "  ${CYAN}${BOLD}System Validation & Health:${NC}"
+        echo -e "    Validate setup:    ${BOLD}./bin/arch-postinstall check${NC}"
+        echo -e "    System health:     ${BOLD}./bin/arch-postinstall health${NC}"
+        echo -e "    Diagnose issues:   ${BOLD}./bin/arch-postinstall doctor${NC}"
+        echo ""
+    fi
     echo -e "  ${YELLOW}Reboot recommended:${NC} ${BOLD}sudo reboot${NC}"
     echo ""
 }

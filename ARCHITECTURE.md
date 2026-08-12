@@ -6,13 +6,14 @@ This document provides a comprehensive technical deep-dive into the architectura
 
 ## 1. High-Level Architecture Overview
 
-The system is split into two primary subsystems:
+The system is split into three primary subsystems:
 1. **The Post-Installation Workbench**: A declarative, idempotent shell engine that provisions packages, system daemons, user permissions, and symlinks dotfiles.
-2. **The Modern Desktop Runtime**: A production-ready Wayland environment powered by **Hyprland (Lua Engine)**, Waybar, Rofi, and a centralized multi-scheme theming engine.
+2. **The Post-Installation Validation & Health Framework**: A read-only verification engine that checks configuration conformance against declared state, assesses live runtime health, and provides actionable remediation diagnostics (`arch-postinstall`).
+3. **The Modern Desktop Runtime**: A production-ready Wayland environment powered by **Hyprland (Lua Engine)**, Waybar, Rofi, and a centralized multi-scheme theming engine.
 
 ```mermaid
 graph TD
-    subgraph Workbench ["Post-Installation Engine"]
+    subgraph Workbench ["1. Post-Installation Engine"]
         A[install.sh] --> B(modules/core.sh)
         B --> C{Execution Mode}
         C -->|Packages| D[modules/packages.sh]
@@ -25,7 +26,22 @@ graph TD
         G --> I
     end
 
-    subgraph Runtime ["Desktop Runtime Subsystem"]
+    subgraph Validation ["2. Validation & Health Engine"]
+        V[bin/arch-postinstall] --> LC(lib/common.sh)
+        V --> LK(lib/checks.sh)
+        V --> LD(lib/doctor.sh)
+        V --> LO(lib/output.sh)
+        
+        LK --> SC[scripts/check/*.sh]
+        SC -->|Reads Source of Truth| I
+        SC -->|Inspects Live System| RT(systemd / kernel / pacman / mounts)
+        
+        V -->|check| V1[Declarative Conformance]
+        V -->|health| V2[Runtime System Health]
+        V -->|doctor| V3[Diagnostics & Fix Commands]
+    end
+
+    subgraph Runtime ["3. Desktop Runtime Subsystem"]
         J[~/.config/hypr/hyprland.lua] --> K[config/monitors.lua]
         J --> L[config/looknfeel.lua]
         J --> M[config/input.lua]
@@ -63,7 +79,37 @@ graph TD
 
 ---
 
-## 3. Desktop Runtime & Hyprland Lua Subsystem
+## 3. Post-Installation Validation & Health Framework
+
+The validation engine ensures that post-installation execution leaves the operating system in a 100% verified, production-ready state matching repository specifications without making destructive runtime changes.
+
+```
+bin/arch-postinstall
+├── lib/
+│   ├── common.sh        # System introspection, UEFI/BIOS detection, YAML parser wrappers
+│   ├── output.sh        # TTY detection, colored icons (✓, ⚠, ✗, ○, ℹ), scorecards
+│   ├── checks.sh        # Check accumulator, assertions engine, clean JSON serializer
+│   └── doctor.sh        # Diagnosis engine: expected vs current diffs & copy-paste fixes
+└── scripts/check/       # 14 Modular verification categories
+    ├── base.sh          # OS, hostname, timezone, locale, microcode, kernel
+    ├── boot.sh          # UEFI/BIOS mode, ESP partition, bootloader, initramfs sync
+    ├── packages.sh      # Pacman DB lock, YAML package conformance, orphans, updates
+    ├── systemd.sh       # System state, failed units, declarative services, user units
+    ├── filesystem.sh    # Mountpoints, disk capacity %, inode %, read-only checks, SMART
+    ├── network.sh       # Interfaces, IP assignment, default gateway, DNS, connectivity
+    ├── time.sh          # Clock synchronization, timezone conformance, NTP daemons
+    ├── security.sh      # User accounts, wheel group, UID 0 accounts, SSH posture, firewall
+    ├── hardware.sh      # CPU topology, RAM & swap utilization, GPU controllers
+    ├── desktop.sh       # Hyprland configuration, Wayland session, portals, dotfiles
+    ├── audio.sh         # PipeWire stack, wireplumber, user audio units, sound sinks
+    ├── bluetooth.sh     # Controller detection, bluez daemon, rfkill block state
+    ├── power.sh         # Chassis detection, battery health, power profiles, thermals
+    └── maintenance.sh   # Package updates, orphan hygiene, journal size, timers, mirrors
+```
+
+---
+
+## 4. Desktop Runtime & Hyprland Lua Subsystem
 
 Starting with Hyprland 0.55+, the compositor utilizes a native **Lua configuration engine** (`hyprland.lua`). The workbench structures this environment into an organized, modular hierarchy under `dotfiles/hypr/`:
 

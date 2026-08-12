@@ -24,6 +24,7 @@ A highly modular, automated, and visually polished Arch Linux post-installation 
 
 - [Features](#features)
 - [How it Works](#how-it-works)
+- [Validation & System Health](#validation--system-health)
 - [Requirements](#requirements)
 - [Quick Start](#quick-start)
 - [Usage](#usage)
@@ -43,18 +44,24 @@ A highly modular, automated, and visually polished Arch Linux post-installation 
 | Feature | Description |
 |:---:|:---|
 | 🧱 | **Modular Design**: Packages, services, and dotfiles are decoupled into core modules and environment profiles. |
+| 🛡️ | **Validation & System-Health Engine**: One command (`arch-postinstall check/health/doctor`) to verify configuration conformance and runtime system health. |
+| 🩺 | **Diagnostic Doctor**: Translates warnings and failures into root-cause comparisons with copy-paste remediation commands. |
 | 🧩 | **Plugin-based Profiles**: Easily add new desktop environments (e.g., GNOME, KDE) by dropping a script into `profiles/`. |
 | 🎨 | **Unified Theming**: Dark (Macchiato) and Light (Latte) themes applied via `SUPER + N`. |
 | 👤 | **Profile-Based**: Supports `full`, `base`, or `dotfiles` installation modes. |
-| 🔄 | **Idempotent**: Uses `--needed` flags and pre-flight checks for safe re-runs. |
-| 📜 | **Robust Logging**: Every step is timestamped and logged to `logs/`. |
+| 🔄 | **Idempotent & Safe**: All validation commands are strictly read-only; installation re-runs use safe flags. |
+| 📜 | **Structured Logging & JSON**: Human-readable colorized reports alongside machine-readable JSON (`--json`). |
 | 🔗 | **Symlinked Dotfiles**: Automated deployment with automatic backups of existing configs. |
 
 ---
 
 ## How it Works
 
-The workbench operates as a modular engine that parses YAML configurations to drive the installation.
+The workbench implements a complete lifecycle from initial setup to verified production readiness:
+
+```
+install ──> configure ──> validate (check) ──> health ──> diagnose (doctor) ──> optional fix
+```
 
 ```mermaid
 graph TD
@@ -73,19 +80,64 @@ graph TD
     
     D --> I[(config/*.yaml)]
     G --> I
+
+    V[bin/arch-postinstall] -->|check / health / doctor| I
+    V -->|inspects runtime| RT(System / Services / Kernel / Storage)
 ```
 
-### Installation Lifecycle
+---
 
-1. **Pre-flight**: Verifies Arch Linux, internet connectivity, and sudo privileges.
-2. **Core Setup**: Updates system and ensures `yay` (AUR helper) and `yq` (YAML parser) are available.
-3. **Module Execution**:
-   - **System**: Installs fonts and configures the system shell.
-   - **Packages**: Installs pacman and AUR packages listed in configs.
-   - **Services**: Enables systemd services and timers.
-   - **Users**: Configures shell, groups, locale, and timezone.
-   - **Profiles**: Environment-specific orchestrators (like Hyprland) execute their logic.
-   - **Dotfiles**: Symlinks configurations from `dotfiles/` to `~/.config/` with automatic backups.
+## Validation & System Health
+
+The repository includes a post-installation validation, health, and diagnostics framework via `bin/arch-postinstall` or `make`.
+
+### Commands
+
+```bash
+# 1. Configuration Conformance: Verify installed system matches config/base.yaml and profile YAML
+./bin/arch-postinstall check
+
+# 2. Runtime System Health: Check active daemons, failed units, storage, RAM, and network
+./bin/arch-postinstall health
+
+# 3. Diagnostic Doctor: Root-cause diagnosis with copy-paste fix commands
+./bin/arch-postinstall doctor
+
+# 4. Status Dashboard: Complete configuration + runtime health scorecard
+./bin/arch-postinstall status
+
+# 5. Output pure valid JSON for automation
+./bin/arch-postinstall status --json
+```
+
+### Validation Categories
+
+| Category | Scope | Key Probes |
+|---|---|---|
+| `base` | Core OS & Hardware ID | Arch Linux release, hostname, timezone, locale, CPU microcode, kernel |
+| `boot` | Bootloader & ESP | UEFI/BIOS mode, ESP mount, systemd-boot/GRUB/Limine/rEFInd, vmlinuz/initramfs sync |
+| `packages` | Package Conformance | Pacman DB lock, YAML package conformance, AUR packages, orphan packages, updates |
+| `systemd` | System Daemons | System running state, failed units, declarative services, user audio units |
+| `filesystem` | Storage & Mounts | Root `/`, `/boot`, `/home`, capacity % thresholds, inode limits, ro mounts, SMART |
+| `network` | Networking | Interfaces, IPs, default route, DNS resolution, HTTP/ICMP reachability, net daemons |
+| `time` | Time Sync | Timezone match, clock synchronization, NTP status, timesyncd/chrony |
+| `security` | Access & Posture | Unprivileged user, wheel group, UID 0 accounts, SSH permissions, firewall status |
+| `hardware` | System Resources | CPU topology, RAM/swap pressure, GPU controllers, PCIe/USB devices |
+| `desktop` | Graphical Environment | Hyprland Lua configuration, Wayland session, XDG portals, desktop tools |
+| `audio` | Sound Subsystem | PipeWire stack, wireplumber, user services, audio sinks |
+| `bluetooth` | Wireless Controllers | Bluetooth hardware detection, bluez daemon, rfkill block status (clean skip if unconfigured) |
+| `power` | Chassis & Power | Laptop detection, battery health, power profiles daemon, CPU thermal zones |
+| `maintenance`| Housekeeping | Pending package updates, orphan hygiene, journal disk footprint, trim timers |
+
+### Exit Codes
+
+| Code | Status | Meaning |
+|---|---|---|
+| `0` | `PASS` | All checks passed or skipped |
+| `1` | `WARN` | System has non-critical warnings |
+| `2` | `FAIL` | One or more check failures detected |
+| `3` | `USAGE`| Invalid CLI options or argument syntax |
+| `4` | `DEP`  | Missing critical dependency |
 
 ---
 
@@ -101,9 +153,9 @@ graph TD
 ## Quick Start
 
 ```bash
-git clone https://github.com/beyondSachin/arch-post-install.git
+git clone https://github.com/CozyRunner/arch-post-install.git
 cd arch-post-install
-chmod +x install.sh
+chmod +x install.sh bin/arch-postinstall
 ./install.sh
 ```
 
@@ -125,38 +177,19 @@ chmod +x install.sh
 | `base` | System essentials only (no DE) |
 | `dotfiles` | Deploy configurations only |
 
-### Command Line Options
-
-| Option | Description |
-|--------|-------------|
-| `-v, --verbose` | Enable verbose output |
-| `-d, --dry-run` | Preview actions without executing |
-| `-h, --help` | Show help message |
-
-### Examples
-
-```bash
-./install.sh full           # Full install non-interactively
-./install.sh -v base        # Verbose base install
-./install.sh -d dotfiles    # Preview dotfiles deployment
-```
-
-### Makefile
+### Makefile Shortcuts
 
 ```bash
 make full                   # Full install (base + Hyprland + dotfiles)
 make base                   # Base packages only
 make dotfiles               # Deploy dotfiles
-make fonts                  # Install fonts
-make fish                   # Setup Fish shell
-make check                  # Check prerequisites
+make check                  # Run post-installation configuration validation
+make health                 # Run runtime system-health checks
+make doctor                 # Run automated diagnostics & remediation suggestions
+make status                 # Run full system status scorecard
+make test                   # Execute automated test suite
+make lint                   # Lint scripts with shellcheck
 make help                   # Show all targets
-```
-
-With flags:
-```bash
-make full V=1               # Verbose output
-make dotfiles DRY=1         # Dry-run mode
 ```
 
 ---
@@ -165,12 +198,46 @@ make dotfiles DRY=1         # Dry-run mode
 
 ```
 arch-post-install/
-├── install.sh                 # Main installation entry point
-├── ARCHITECTURE.md            # Technical design documentation
-├── Makefile                   # Development shortcuts & automation
+├── bin/
+│   └── arch-postinstall       # Unified CLI entry point (check, health, doctor, status, install)
+├── lib/
+│   ├── common.sh              # Shared utilities, YAML fallbacks, privilege checks
+│   ├── output.sh              # Formatting, ANSI detection, category headers, scorecards
+│   ├── checks.sh              # Assertions API, check registry, JSON serializer
+│   └── doctor.sh              # Automated diagnosis & fix generator
+├── scripts/
+│   ├── check/                 # 14 validation & health check modules
+│   │   ├── base.sh            # OS, hostname, timezone, locale, microcode, kernel
+│   │   ├── boot.sh            # UEFI/BIOS mode, ESP partition, bootloader, initramfs sync
+│   │   ├── packages.sh        # Pacman DB, YAML package conformance, orphans, updates
+│   │   ├── systemd.sh         # System state, failed units, declarative services, user units
+│   │   ├── filesystem.sh      # Mountpoints, disk capacity, inode, ro checks, SMART
+│   │   ├── network.sh         # Interfaces, IP assignment, default gateway, DNS, connectivity
+│   │   ├── time.sh            # Clock sync, timezone conformance, NTP daemons
+│   │   ├── security.sh        # User accounts, wheel group, UID 0 accounts, SSH, firewall
+│   │   ├── hardware.sh        # CPU topology, RAM & swap utilization, GPU controllers
+│   │   ├── desktop.sh         # Hyprland config, Wayland session, portals, dotfiles
+│   │   ├── audio.sh           # PipeWire stack, wireplumber, user audio units, sound sinks
+│   │   ├── bluetooth.sh       # Controller detection, bluez daemon, rfkill block state
+│   │   ├── power.sh           # Chassis detection, battery health, power profiles, thermals
+│   │   └── maintenance.sh     # Updates, orphan hygiene, journal size, timers, mirrors
+│   ├── install_yay.sh         # AUR helper setup
+│   ├── setup_fish.sh          # Fish + Fisher + plugins
+│   ├── setup_kwallet.sh       # PAM configuration for KWallet auto-unlock
+│   ├── setup_waybar_media.sh  # Waybar media player integration
+│   └── fonts.sh               # Font installation
 ├── config/
 │   ├── base.yaml              # Core packages & system settings
-│   └── hyprland.yaml          # Hyprland packages, services & dotfiles
+│   ├── hyprland.yaml          # Hyprland packages, services & dotfiles
+│   └── checks.conf            # Check thresholds, timeouts, and override rules
+├── docs/
+│   └── check-framework.md     # Developer guide for writing check modules
+├── tests/
+│   ├── test_runner.sh         # Master automated test harness
+│   ├── test_framework.sh      # Framework and assertion unit tests
+│   ├── test_cli.sh            # CLI interface and exit code tests
+│   ├── test_json.sh           # JSON schema and ANSI compliance tests
+│   └── test_categories.sh     # Mocked assertion category tests
 ├── modules/
 │   ├── core.sh                # Engine: YAML parsing, logging, checks
 │   ├── system.sh              # System-wide setup (fonts, shell)
@@ -180,25 +247,10 @@ arch-post-install/
 │   └── dotfiles.sh            # Symlink deployment with backup
 ├── profiles/
 │   └── hyprland.sh            # Hyprland environment orchestrator (plugin)
-├── dotfiles/
-│   ├── hypr/                  # Modern Lua-based Hyprland WM configuration
-│   │   ├── hyprland.lua       # Main Lua entry point
-│   │   ├── config/            # Modular Lua configurations (monitors, rules, input, etc.)
-│   │   │   └── keybinds/      # Dedicated keybinding subsystem
-│   │   ├── themes/presets/    # 14 curated color palette presets (Lua)
-│   │   └── scripts/           # Quick settings, theme switcher, wallpaper picker
-│   ├── waybar/                # Status bar layout, style & dynamic themes
-│   ├── kitty/                 # Kitty GPU terminal emulator config
-│   ├── alacritty/             # Alacritty terminal emulator config
-│   ├── rofi/                  # Modern application launcher & menus
-│   ├── nvim/                  # Preconfigured LazyVim setup
-│   └── ...                    # (See ARCHITECTURE.md for full list)
-├── scripts/
-│   ├── install_yay.sh         # AUR helper setup
-│   ├── setup_fish.sh          # Fish + Fisher + plugins
-│   ├── setup_kwallet.sh       # PAM configuration for KWallet auto-unlock
-│   └── fonts.sh               # Font installation
-├── assets/                    # Repository branding & documentation media
+├── dotfiles/                  # Wayland & desktop configuration directories
+├── install.sh                 # Installation entry point
+├── ARCHITECTURE.md            # Technical architecture documentation
+├── Makefile                   # Development shortcuts & automation
 └── logs/                      # Timestamped installation logs
 ```
 
