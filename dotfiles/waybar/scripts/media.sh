@@ -34,7 +34,7 @@ if ! command -v playerctl &>/dev/null; then
             exit 0
             ;;
         *)
-            echo '{"text":"󰎆","tooltip":"playerctl is not installed\nInstall with: sudo pacman -S playerctl","class":"stopped","alt":"Stopped"}'
+            echo '{"text":"","tooltip":"playerctl is not installed\nInstall with: sudo pacman -S playerctl","class":"stopped","alt":"Stopped"}'
             exit 0
             ;;
     esac
@@ -101,7 +101,7 @@ case "$status" in
         ;;
     *)
         class="stopped"
-        icon="󰎆"
+        icon=""
         play_btn_icon="󰐊"
         play_btn_tooltip="Play"
         ;;

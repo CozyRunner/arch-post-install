@@ -62,7 +62,7 @@ The bar is divided into three sections:
 
 The bar features a compact, hover-expanding media player widget with full MPRIS support:
 
-- **Normal State**: Displays a compact status icon (`󰐊` playing, `󰏤` paused, `󰎆` stopped/no player).
+- **Normal State**: Displays a compact status icon (`󰐊` playing, `󰏤` paused, `` stopped/no player).
 - **Hover State**: Automatically slides open a smooth media controller drawer revealing:
   - `󰒮` **Previous track**
   - `󰐊` / `󰏤` **Play/Pause button**

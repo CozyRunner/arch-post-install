@@ -38,7 +38,13 @@
     "sort-by-id": true,
     "all-outputs": true,
     "active-only": false,
-    "format": "{name}",
+    "format": "{icon}",
+    "format-icons": {
+      "active": "―",
+      "default": "",
+      "empty": "",
+      "urgent": ""
+    },
     "persistent-workspaces": {
       "*": 1,
     },

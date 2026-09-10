@@ -1,12 +1,12 @@
--- Hyprland Theme — Nord (Dark)
+-- Hyprland Theme — Rosé Pine (Dark)
 hl.config({
     general = {
         gaps_in  = 5,
         gaps_out = 10,
         border_size = 2,
         col = {
-            active_border   = { colors = { "rgba(88c0d0ff)", "rgba(81a1c1ff)" }, angle = 45 },
-            inactive_border = "rgba(3b4252aa)",
+            active_border   = { colors = { "rgba(ebbcbaff)", "rgba(c4a7e7ff)" }, angle = 45 },
+            inactive_border = "rgba(26233aaa)",
         },
         resize_on_border = true,
     },
@@ -16,7 +16,7 @@ hl.config({
             enabled      = true,
             range        = 20,
             render_power = 3,
-            color        = "rgba(2e3440aa)",
+            color        = "rgba(191724aa)",
         },
         blur = {
             enabled           = true,
@@ -30,5 +30,3 @@ hl.config({
 
 hl.layer_rule({ match = { namespace = "rofi" }, blur = true })
 hl.layer_rule({ match = { namespace = "wlogout" }, blur = true })
-hl.layer_rule({ match = { namespace = "swaync-control-center" }, blur = true })
-hl.layer_rule({ match = { namespace = "swaync-notification-window" }, blur = true })

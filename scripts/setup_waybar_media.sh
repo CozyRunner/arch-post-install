@@ -427,7 +427,7 @@ main() {
 
     echo ""
     log_success "Waybar Hover Media Controller setup successfully completed!"
-    echo -e "  • ${BOLD}Normal state:${NC} Compact indicator (󰐊 playing / 󰏤 paused / 󰎆 stopped)"
+    echo -e "  • ${BOLD}Normal state:${NC} Compact indicator (󰐊 playing / 󰏤 paused /  stopped)"
     echo -e "  • ${BOLD}Hover state:${NC}  Expanded media drawer (󰒮 Prev | 󰐊 Play/Pause | 󰒭 Next | Title — Artist)"
     echo -e "  • ${BOLD}Mouse clicks:${NC} Left: Play/Pause | Middle: Prev | Right: Next | Scroll: Volume"
     echo ""
