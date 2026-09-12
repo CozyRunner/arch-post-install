@@ -2,7 +2,7 @@
    Rofi Glassmorphism Power Menu — "Lumina"
    Clean centered glass card for system actions
    ============================================================ */
-@import "~/.config/rofi/colors.rasi"
+@import "~/.config/rofi/colors-glassmorphism-dark.rasi"
 
 configuration {
     font:        "JetBrainsMono Nerd Font 14";
