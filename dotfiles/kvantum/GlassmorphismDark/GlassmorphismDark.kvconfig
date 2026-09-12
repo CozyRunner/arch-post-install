@@ -1,0 +1,94 @@
+[%KvantumStyle]
+author=Lumina Dark (Glassmorphism)
+comment=Deep navy glassmorphism theme for Qt apps on Hyprland
+
+[GeneralColors]
+window.color=#08081c
+window.color.alpha=175
+base.color=#0d0d2b
+base.color.alpha=165
+alt.base.color=#0a0a22
+alt.base.color.alpha=170
+text.color=#e2e8f0
+text.color.alpha=255
+disabled.text.color=#6b7280
+disabled.text.color.alpha=200
+highlight.color=#818cf8
+highlight.color.alpha=255
+highlighted.text.color=#e2e8f0
+active.highlight.color=#67e8f9
+active.highlight.color.alpha=255
+inactive.highlight.color=#818cf8
+inactive.highlight.color.alpha=160
+tooltip.base.color=#0d0d2b
+tooltip.base.color.alpha=220
+tooltip.text.color=#e2e8f0
+button.color=#15153c
+button.color.alpha=200
+label.color=#e2e8f0
+
+[GeneralDesign]
+# Rounding
+frame.Rounding=12
+header.Rounding=10
+button.Rounding=8
+menu.Rounding=12
+tooltip.Rounding=10
+progress.Rounding=6
+check.Rounding=5
+combobox.Rounding=8
+entry.Rounding=8
+
+# Borders
+frame.size=1
+frame.color=#ffffff
+frame.color.alpha=26
+
+# Blurring (compositor handles actual blur)
+opaque.apps=gvim,krunner
+
+# Shadows
+menu.shadow.size=10
+menu.shadow.depth=3
+tooltip.shadow.size=6
+tooltip.shadow.depth=2
+
+[StyleOptions]
+# Enable window translucency
+translucent.windows=true
+# Composite menus
+composite.menus=true
+# Blur menus
+blurring.policy=blurring.onlycomponents
+blurring.contrast=1.1
+blurring.intensity=20
+blurring.noise=0.012
+
+[MenuSpec]
+bg.color=#0d0d2b
+bg.color.alpha=185
+separator.color=#ffffff
+separator.color.alpha=20
+item.hover.bg.color=#818cf8
+item.hover.bg.color.alpha=40
+item.text.color=#e2e8f0
+item.disabled.text.color=#6b7280
+
+[ToolbarSpec]
+bg.color=#08081c
+bg.color.alpha=160
+
+[TabSpec]
+tab.text.color=#e2e8f0
+tab.selected.bg.color=#818cf8
+tab.selected.bg.color.alpha=40
+tab.hover.bg.color=#818cf8
+tab.hover.bg.color.alpha=25
+
+[ScrollbarSpec]
+scrollbar.bg.color=#0d0d2b
+scrollbar.bg.color.alpha=140
+scrollbar.slider.color=#818cf8
+scrollbar.slider.color.alpha=80
+scrollbar.slider.hover.color=#818cf8
+scrollbar.slider.hover.color.alpha=130

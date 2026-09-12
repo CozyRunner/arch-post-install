@@ -1,35 +1,50 @@
+/* ============================================================
+   Rofi Spotlight — Enhanced for Glassmorphism "Lumina"
+   macOS Spotlight-style app launcher with frosted glass
+   ============================================================ */
 @import "~/.config/rofi/colors.rasi"
 
 configuration {
-    modi:                "drun";
+    modi:                "drun,run";
     show-icons:          true;
-    icon-theme:          "hicolor";
+    icon-theme:          "Papirus-Dark";
     drun-display-format: "{name}";
-    display-drun:        "";
-    font:                "JetBrainsMono Nerd Font Mono 14";
+    display-drun:        " ";
+    display-run:         " ";
+    font:                "JetBrainsMono Nerd Font 14";
     terminal:            "kitty";
+    hide-scrollbar:      true;
 }
 
 * {
     background-color: transparent;
     text-color:       @fg;
-    border-color:     @bg-alt;
+    border-color:     @border;
     spacing:          0;
     padding:          0;
     margin:           0;
 }
 
+/* ── Main window — the frosted glass card ── */
 window {
     transparency:     "real";
+    /* Glass surface: semi-transparent with blur from compositor */
     background-color: @bg;
+    /* Glassmorphism border: top highlight + all-side subtle border */
     border:           1px;
-    border-radius:    16px;
-    width:            620px;
+    border-color:     @border-glass;
+    border-radius:    20px;
+    width:            640px;
     location:         center;
     anchor:           center;
-    y-offset:         -100px;
+    y-offset:         -80px;
+    /* Depth shadow */
+    box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.50),
+        0 1px 0 rgba(255, 255, 255, 0.15) inset;
 }
 
+/* ── Main content container ── */
 mainbox {
     background-color: transparent;
     children:         [inputbar, listview];
@@ -37,46 +52,59 @@ mainbox {
     spacing:          0;
 }
 
+/* ── Search bar ── */
 inputbar {
     background-color: transparent;
+    /* Separator line between input and results */
     border:           0 0 1px 0;
-    border-color:     #282b24;
-    padding:          16px 18px;
-    spacing:          10px;
-    children:         [entry];
+    border-color:     @border-glass;
+    padding:          18px 22px;
+    spacing:          12px;
+    children:         [prompt, entry];
+}
+
+prompt {
+    background-color: transparent;
+    text-color:       @accent;
+    vertical-align:   0.5;
+    font:             "JetBrainsMono Nerd Font 16";
 }
 
 entry {
     background-color:  transparent;
     text-color:        @fg;
-    placeholder:       "Buscar aplicación...";
+    placeholder:       "Search apps…";
     placeholder-color: @fg-dim;
     vertical-align:    0.5;
-    font:              "JetBrains Mono 15";
+    font:              "JetBrainsMono Nerd Font 15";
     cursor:            text;
 }
 
+/* ── Results list ── */
 listview {
     background-color: transparent;
-    lines:            7;
+    lines:            8;
     columns:          1;
     spacing:          0;
     scrollbar:        false;
-    padding:          6px 0;
+    padding:          6px 8px;
     fixed-height:     false;
 }
 
+/* ── Result rows ── */
 element {
     background-color: transparent;
-    padding:          10px 16px;
-    spacing:          12px;
+    padding:          10px 14px;
+    spacing:          14px;
     children:         [element-icon, element-text];
     cursor:           pointer;
+    border-radius:    12px;
+    margin:           2px 0;
 }
 
 element-icon {
     background-color: transparent;
-    size:             26px;
+    size:             28px;
     vertical-align:   0.5;
 }
 
@@ -86,6 +114,7 @@ element-text {
     vertical-align:   0.5;
 }
 
+/* ── Selection states ── */
 element.normal.normal    { background-color: transparent; }
 element.normal.active    { background-color: transparent; }
 element.normal.urgent    { background-color: transparent; }
@@ -93,12 +122,20 @@ element.alternate.normal { background-color: transparent; }
 element.alternate.active { background-color: transparent; }
 element.alternate.urgent { background-color: transparent; }
 
+/* Active selection — glass shimmer highlight */
 element.selected.normal {
     background-color: @bg-sel;
-    border-radius:    8px;
+    border-radius:    12px;
+    border:           1px;
+    border-color:     @border-glass;
 }
 
 element.selected.normal element-text {
-    text-color: @fg;
-    font:       "JetBrains Mono Bold 14";
+    text-color: @sel;
+    font:       "JetBrainsMono Nerd Font Bold 14";
+}
+
+element:hover {
+    background-color: @bg-hover;
+    border-radius:    12px;
 }

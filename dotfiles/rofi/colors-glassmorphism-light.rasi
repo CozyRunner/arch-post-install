@@ -1,0 +1,33 @@
+/* Rofi Glassmorphism Light Colors — "Lumina Light"
+   Periwinkle/Pink palette, white frost surfaces */
+* {
+    background:     rgba(255, 255, 255, 0.58);
+    background-alt: rgba(243, 244, 246, 0.62);
+    selected:       #6366f1;
+    foreground:     #1e1b4b;
+    foreground-dim: rgba(30, 27, 75, 0.45);
+    accent:         #6366f1;
+    border:         rgba(99, 102, 241, 0.30);
+
+    /* Top-highlight glass border */
+    border-glass:   rgba(255, 255, 255, 0.70);
+
+    /* Hover and active surfaces */
+    bg-hover:       rgba(99, 102, 241, 0.10);
+    bg-card:        rgba(255, 255, 255, 0.65);
+
+    /* Aliases */
+    bg:      @background;
+    bg-alt:  @background-alt;
+    fg:      @foreground;
+    fg-dim:  @foreground-dim;
+    sel:     @selected;
+    bg-sel:  rgba(99, 102, 241, 0.14);
+
+    /* Extended palette */
+    cyan:    #22d3ee;
+    purple:  #a855f7;
+    green:   #16a34a;
+    red:     #dc2626;
+    orange:  #ea580c;
+}

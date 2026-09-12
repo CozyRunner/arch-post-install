@@ -1,0 +1,105 @@
+/* GTK3 Glassmorphism Dark — "Lumina Dark"
+   Applied to ~/.config/gtk-3.0/gtk.css by toggle_theme.sh
+   Gives GTK3 apps a dark glassmorphic headbar/sidebar look  */
+
+/* ── Headerbar (title bar of GTK apps) ── */
+headerbar {
+    background-color: rgba(8, 8, 28, 0.82);
+    background-image: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        transparent 100%
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.40),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    color: #e2e8f0;
+    padding: 6px 12px;
+}
+
+headerbar .title {
+    font-weight: 600;
+    color: #e2e8f0;
+    font-size: 14px;
+}
+
+headerbar button {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #e2e8f0;
+    padding: 4px 8px;
+    transition: all 0.2s ease;
+}
+
+headerbar button:hover {
+    background-color: rgba(129, 140, 248, 0.18);
+    border-color: rgba(129, 140, 248, 0.35);
+    color: #818cf8;
+}
+
+/* ── Window decoration ── */
+window {
+    background-color: rgba(8, 8, 28, 0.85);
+    color: #e2e8f0;
+}
+
+/* ── Sidebar / panel backgrounds ── */
+.sidebar,
+.sidebar-item,
+placessidebar {
+    background-color: rgba(8, 8, 28, 0.75);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+}
+
+.sidebar row:hover,
+placessidebar row:hover {
+    background-color: rgba(129, 140, 248, 0.12);
+}
+
+.sidebar row:selected,
+placessidebar row:selected {
+    background-color: rgba(129, 140, 248, 0.20);
+    color: #818cf8;
+}
+
+/* ── Popovers (dropdowns) ── */
+popover.background {
+    background-color: rgba(15, 15, 40, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.50);
+}
+
+/* ── Entry fields ── */
+entry {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 8px;
+    color: #e2e8f0;
+    padding: 6px 10px;
+}
+
+entry:focus {
+    border-color: rgba(129, 140, 248, 0.60);
+    box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.15);
+}
+
+/* ── Scrollbars ── */
+scrollbar {
+    background-color: transparent;
+    border: none;
+}
+
+scrollbar slider {
+    background-color: rgba(129, 140, 248, 0.30);
+    border-radius: 4px;
+    min-width: 6px;
+    min-height: 6px;
+}
+
+scrollbar slider:hover {
+    background-color: rgba(129, 140, 248, 0.55);
+}

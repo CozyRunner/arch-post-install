@@ -1,118 +1,50 @@
-/* Waybar Style */
+/* ============================================================
+   Waybar Style — Enhanced for Glassmorphism "Lumina"
+   Compatible with ALL color schemes (imports colors.css)
+   ============================================================ */
 @import "colors.css";
 
+/* ── Reset ─────────────────────────────────────────────────── */
 * {
     border: none;
     border-radius: 0;
-    font-family: "JetBrainsMono Nerd Font", "Font Awesome 7 Free", "Symbols Nerd Font", sans-serif;
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", sans-serif;
     font-size: 14px;
     min-height: 0;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ── Root Window ────────────────────────────────────────────── */
 window#waybar {
     background: transparent;
     color: @foreground;
 }
 
-/* The Main Bar Container */
-.modules-left, .modules-center, .modules-right {
+/* ── Module Group Containers (the three pills) ──────────────── */
+/* NOTE: Waybar renders on a GTK layer surface that Hyprland blurs,
+   so these pills let the blurred wallpaper show through their
+   semi-transparent bg — creating the true glassmorphism effect. */
+.modules-left,
+.modules-center,
+.modules-right {
     background-color: @bg-bar;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 2px 8px;
-    margin: 6px 4px;
-    transition: all 0.3s ease;
+    /* Top highlight line — the key glassmorphism detail */
+    border-top:    1px solid rgba(255, 255, 255, 0.18);
+    border-left:   1px solid rgba(255, 255, 255, 0.10);
+    border-right:  1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 16px;
+    /* Floating gap — shows wallpaper above and between pills */
+    padding: 2px 10px;
+    margin: 8px 4px;
+    /* Layered shadow for depth */
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.35),
+        0 1px 0 rgba(255, 255, 255, 0.06) inset,
+        0 -1px 0 rgba(0, 0, 0, 0.15) inset;
 }
 
-/* Module Styling */
-#custom-arch {
-    padding: 0 15px;
-    margin: 2px 0;
-    color: @accent-blue;
-    font-size: 18px;
-}
-
-#custom-arch.pending {
-    color: @accent-orange;
-    background: rgba(255, 158, 100, 0.1);
-    border-radius: 8px;
-}
-
-#custom-arch.updated {
-    color: @accent-blue;
-}
-
-/* Media Controller */
-#group-media {
-    padding: 0 4px;
-    margin: 2px 0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#custom-media,
-#mpris {
-    padding: 0 8px;
-    margin: 2px 0;
-    color: @accent-blue;
-    font-size: 15px;
-    transition: all 0.3s ease;
-}
-
-#custom-media.playing,
-#mpris.Playing {
-    color: @accent-green;
-}
-
-#custom-media.paused,
-#mpris.Paused {
-    color: @accent-orange;
-}
-
-#custom-media.stopped,
-#mpris.Stopped {
-    color: alpha(@foreground, 0.4);
-}
-
-#custom-media:hover,
-#mpris:hover {
-    color: @accent-purple;
-}
-
-#custom-media-prev,
-#custom-media-play,
-#custom-media-next {
-    padding: 0 6px;
-    margin: 2px 0;
-    color: @foreground;
-    font-size: 14px;
-    transition: all 0.2s ease;
-}
-
-#custom-media-prev:hover,
-#custom-media-next:hover {
-    color: @accent-blue;
-    background: alpha(@accent-blue, 0.15);
-    border-radius: 6px;
-}
-
-#custom-media-play:hover {
-    color: @accent-green;
-    background: alpha(@accent-green, 0.15);
-    border-radius: 6px;
-}
-
-#custom-media-text {
-    padding: 0 8px;
-    margin: 2px 0;
-    color: @foreground;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-#custom-media-text:hover {
-    color: @accent-blue;
-}
-
+/* ── Module defaults ────────────────────────────────────────── */
 #workspaces,
 #window,
 #clock,
@@ -131,45 +63,194 @@ window#waybar {
     padding: 0 10px;
     margin: 2px 0;
     color: @foreground;
+    border-radius: 10px;
 }
 
-/* Specific Module Accents */
+/* ── Arch / App Launcher Button ─────────────────────────────── */
+#custom-arch {
+    padding: 0 16px;
+    margin: 2px 2px;
+    color: @accent-blue;
+    font-size: 18px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+#custom-arch:hover {
+    color: @accent-cyan;
+    background: @bg-hover;
+    box-shadow: 0 0 12px rgba(103, 232, 249, 0.25);
+}
+
+#custom-arch.pending {
+    color: @accent-orange;
+    background: rgba(251, 146, 60, 0.10);
+}
+
+#custom-arch.updated {
+    color: @accent-blue;
+}
+
+/* ── Workspaces ─────────────────────────────────────────────── */
 #workspaces button {
-    padding: 0 8px;
-    color: alpha(@foreground, 0.4);
+    padding: 0 9px;
+    color: @foreground-dim;
     font-weight: normal;
-    transition: all 0.3s ease;
+    border-radius: 9px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #workspaces button.active {
     color: @accent-blue;
-    background: alpha(@accent-blue, 0.15);
-    border-radius: 8px;
-    box-shadow: inset 0 -1px @accent-blue;
+    background: @bg-active;
+    border-radius: 9px;
+    /* Glow effect for active workspace — signature glass detail */
+    box-shadow:
+        0 0 10px rgba(129, 140, 248, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -1px 0 rgba(129, 140, 248, 0.15);
     font-weight: 900;
 }
 
 #workspaces button.occupied {
     color: @foreground;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 #workspaces button.urgent {
     color: @accent-red;
+    background: rgba(248, 113, 113, 0.12);
     font-weight: 900;
 }
 
 #workspaces button:hover {
-    background: alpha(@foreground, 0.1);
-    border-radius: 8px;
+    background: @bg-hover;
     color: @foreground;
+    box-shadow: 0 0 8px rgba(129, 140, 248, 0.15);
 }
 
+/* ── Window Title ───────────────────────────────────────────── */
+#window {
+    font-style: italic;
+    font-weight: 500;
+    color: @foreground-dim;
+}
+
+/* ── Clock ──────────────────────────────────────────────────── */
 #clock {
     font-weight: 600;
-    color: @accent-purple;
+    color: @accent-blue;
+    letter-spacing: 0.3px;
 }
 
+#clock:hover {
+    color: @accent-cyan;
+    background: @bg-hover;
+}
+
+/* ── Media Player Group ─────────────────────────────────────── */
+#group-media {
+    padding: 0 4px;
+    margin: 2px 0;
+}
+
+#custom-media,
+#mpris {
+    padding: 0 8px;
+    margin: 2px 0;
+    color: @accent-blue;
+    font-size: 15px;
+}
+
+#custom-media.playing,
+#mpris.Playing {
+    color: @accent-green;
+}
+
+#custom-media.paused,
+#mpris.Paused {
+    color: @accent-orange;
+}
+
+#custom-media.stopped,
+#mpris.Stopped {
+    color: @foreground-dim;
+}
+
+#custom-media:hover,
+#mpris:hover {
+    color: @accent-purple;
+    background: @bg-hover;
+}
+
+#custom-media-prev,
+#custom-media-play,
+#custom-media-next {
+    padding: 0 6px;
+    margin: 2px 0;
+    color: @foreground;
+    font-size: 14px;
+}
+
+#custom-media-prev:hover,
+#custom-media-next:hover {
+    color: @accent-blue;
+    background: @bg-hover;
+    border-radius: 8px;
+}
+
+#custom-media-play:hover {
+    color: @accent-green;
+    background: rgba(134, 239, 172, 0.12);
+    border-radius: 8px;
+}
+
+#custom-media-text {
+    padding: 0 8px;
+    margin: 2px 0;
+    color: @foreground;
+    font-weight: 500;
+}
+
+#custom-media-text:hover {
+    color: @accent-blue;
+}
+
+/* ── Audio Group & Sliders ──────────────────────────────────── */
+#group-audio,
+#group-microphone {
+    padding: 0 10px;
+}
+
+#pulseaudio-slider slider {
+    min-height: 0px;
+    min-width: 0px;
+    opacity: 0;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+}
+
+#pulseaudio-slider trough {
+    min-height: 8px;
+    min-width: 80px;
+    border-radius: 4px;
+    background-color: @bg-hover;
+    margin: 0 5px;
+}
+
+#pulseaudio-slider highlight {
+    min-height: 8px;
+    border-radius: 4px;
+    background-color: @accent-blue;
+    box-shadow: 0 0 6px rgba(129, 140, 248, 0.4);
+}
+
+#pulseaudio-slider.microphone highlight {
+    background-color: @accent-purple;
+}
+
+/* ── Individual Modules ─────────────────────────────────────── */
 #pulseaudio {
     color: @accent-blue;
 }
@@ -186,40 +267,13 @@ window#waybar {
     color: @accent-red;
 }
 
-/* Audio Group & Sliders */
-#group-audio, #group-microphone {
-    padding: 0 10px;
-}
-
-#pulseaudio-slider slider {
-    min-height: 0px;
-    min-width: 0px;
-    opacity: 0;
-    background-image: none;
-    border: none;
-    box-shadow: none;
-}
-
-#pulseaudio-slider trough {
-    min-height: 10px;
-    min-width: 80px;
-    border-radius: 5px;
-    background-color: alpha(@foreground, 0.1);
-    margin: 0 5px;
-}
-
-#pulseaudio-slider highlight {
-    min-height: 10px;
-    border-radius: 5px;
-    background-color: @accent-blue;
-}
-
-#pulseaudio-slider.microphone highlight {
-    background-color: @accent-purple;
-}
-
 #bluetooth {
     color: @accent-blue;
+}
+
+#bluetooth:hover {
+    color: @accent-cyan;
+    background: @bg-hover;
 }
 
 #network {
@@ -248,8 +302,14 @@ window#waybar {
 
 #battery.critical:not(.charging) {
     color: @accent-red;
+    animation: blink 0.5s linear infinite alternate;
 }
 
+@keyframes blink {
+    to { opacity: 0.4; }
+}
+
+/* ── Tray ───────────────────────────────────────────────────── */
 #tray {
     margin-right: 4px;
 }
@@ -258,12 +318,11 @@ window#waybar {
     color: @accent-blue;
     padding: 0 12px;
     margin: 2px 0;
-    transition: all 0.3s ease;
 }
 
 #custom-tray-toggler:hover {
     color: @accent-purple;
-    background: rgba(187, 154, 247, 0.1);
+    background: @bg-hover;
     border-radius: 8px;
 }
 
@@ -272,7 +331,7 @@ window#waybar {
     margin: 0;
 }
 
-
+/* ── Utility Modules ────────────────────────────────────────── */
 #custom-language {
     color: @accent-green;
     padding: 0 10px;
@@ -280,16 +339,15 @@ window#waybar {
 }
 
 #custom-clipboard {
-  color: @accent-orange;
-  padding: 0 10px;
-  margin: 2px 0;
-  transition: all 0.3s ease;
+    color: @accent-orange;
+    padding: 0 10px;
+    margin: 2px 0;
 }
 
 #custom-clipboard:hover {
-  color: @accent-blue;
-  background: alpha(@accent-blue, 0.15);
-  border-radius: 8px;
+    color: @accent-blue;
+    background: @bg-hover;
+    border-radius: 8px;
 }
 
 #custom-notification {
@@ -297,17 +355,23 @@ window#waybar {
     padding: 0 10px;
     margin: 2px 0;
     font-size: 15px;
-    transition: all 0.3s ease;
 }
 
 #custom-notification:hover {
     color: @accent-purple;
-    background: alpha(@accent-purple, 0.15);
+    background: @bg-hover;
     border-radius: 8px;
 }
 
 #custom-notification.notification {
     color: @accent-orange;
+    /* Pulse animation for unread notifications */
+    animation: notif-pulse 2s ease-in-out infinite;
+}
+
+@keyframes notif-pulse {
+    0%, 100% { box-shadow: 0 0 0px rgba(251, 146, 60, 0); }
+    50%       { box-shadow: 0 0 10px rgba(251, 146, 60, 0.4); }
 }
 
 #custom-notification.dnd-notification,
@@ -317,25 +381,29 @@ window#waybar {
 
 #custom-power {
     color: @accent-red;
-    padding: 0 15px;
-    margin: 2px 0;
-}
-
-#window {
-    font-style: italic;
-    font-weight: 500;
-}
-
-/* Tooltips */
-tooltip {
-    background: @bg-bar;
+    padding: 0 16px;
+    margin: 2px 2px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#custom-power:hover {
+    color: white;
+    background: rgba(248, 113, 113, 0.20);
+    box-shadow: 0 0 12px rgba(248, 113, 113, 0.30);
+}
+
+/* ── Tooltips ───────────────────────────────────────────────── */
+tooltip {
+    background: @base;
+    border-radius: 12px;
+    border-top:    1px solid rgba(255, 255, 255, 0.15);
+    border-left:   1px solid rgba(255, 255, 255, 0.10);
+    border-right:  1px solid rgba(0, 0, 0, 0.10);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
 }
 
 tooltip label {
     color: @foreground;
-    padding: 8px;
+    padding: 8px 12px;
 }
-
-/* End of file */

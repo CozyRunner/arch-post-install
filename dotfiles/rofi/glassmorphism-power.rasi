@@ -1,0 +1,112 @@
+/* ============================================================
+   Rofi Glassmorphism Power Menu — "Lumina"
+   Clean centered glass card for system actions
+   ============================================================ */
+@import "~/.config/rofi/colors.rasi"
+
+configuration {
+    font:        "JetBrainsMono Nerd Font 14";
+    show-icons:  false;
+}
+
+* {
+    background-color: transparent;
+    text-color:       @fg;
+    border-color:     @border;
+    spacing:          0;
+    padding:          0;
+    margin:           0;
+}
+
+/* ── Glass card ── */
+window {
+    transparency:     "real";
+    background-color: @bg;
+    border:           1px;
+    border-color:     @border-glass;
+    border-radius:    22px;
+    width:            380px;
+    location:         center;
+    anchor:           center;
+    padding:          0;
+    box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.18) inset;
+}
+
+mainbox {
+    background-color: transparent;
+    children:         [message, listview];
+    padding:          0;
+    spacing:          0;
+}
+
+/* ── Header / username display ── */
+message {
+    background-color: transparent;
+    border:           0 0 1px 0;
+    border-color:     @border-glass;
+    padding:          18px 20px 16px 20px;
+}
+
+textbox {
+    background-color: transparent;
+    text-color:       @fg;
+    font:             "JetBrainsMono Nerd Font Bold 15";
+    horizontal-align: 0.5;
+}
+
+/* ── Action list ── */
+listview {
+    background-color: transparent;
+    lines:            5;
+    columns:          1;
+    spacing:          0;
+    scrollbar:        false;
+    padding:          8px;
+    fixed-height:     true;
+}
+
+element {
+    background-color: transparent;
+    padding:          13px 18px;
+    spacing:          14px;
+    children:         [element-icon, element-text];
+    cursor:           pointer;
+    border-radius:    12px;
+    margin:           2px 0;
+}
+
+element-icon {
+    background-color: transparent;
+    size:             22px;
+    vertical-align:   0.5;
+}
+
+element-text {
+    background-color: transparent;
+    text-color:       @fg;
+    vertical-align:   0.5;
+    font:             "JetBrainsMono Nerd Font 14";
+}
+
+/* States */
+element.normal.normal    { background-color: transparent; }
+element.alternate.normal { background-color: transparent; }
+
+element.selected.normal {
+    background-color: @bg-sel;
+    border-radius:    12px;
+    border:           1px;
+    border-color:     @border-glass;
+}
+
+element.selected.normal element-text {
+    text-color: @sel;
+    font:       "JetBrainsMono Nerd Font Bold 14";
+}
+
+element:hover {
+    background-color: @bg-hover;
+    border-radius:    12px;
+}

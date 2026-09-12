@@ -15,9 +15,15 @@ ICON_SHUTDOWN=""
 # Build menu options
 options="$ICON_LOCK  Lock Session\n$ICON_LOGOUT  Logout ($USER_NAME)\n$ICON_SUSPEND  Suspend System\n$ICON_REBOOT  Reboot System\n$ICON_SHUTDOWN  Power Off"
 
-# Show menu
-# Using rofi in dmenu mode with modern theme and custom overrides
-selection=$(echo -e "$options" | rofi -dmenu -i -p "System Menu" -theme ~/.config/rofi/floating-menu.rasi -theme-str 'window {width: 450px;} listview {lines: 5;}')
+# Show menu — glassmorphic power card
+# Falls back to floating-menu.rasi if glassmorphism-power.rasi is missing
+POWER_THEME="$HOME/.config/rofi/glassmorphism-power.rasi"
+[ ! -f "$POWER_THEME" ] && POWER_THEME="$HOME/.config/rofi/floating-menu.rasi"
+
+selection=$(echo -e "$options" | rofi -dmenu -i \
+  -p "" \
+  -mesg "  $USER_NAME" \
+  -theme "$POWER_THEME")
 
 # Parse selection and execute
 case "$selection" in

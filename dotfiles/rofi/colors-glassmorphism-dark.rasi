@@ -1,0 +1,33 @@
+/* Rofi Glassmorphism Dark Colors — "Lumina Dark"
+   Electric Indigo/Cyan palette, deep navy glass surfaces */
+* {
+    background:     rgba(8, 8, 28, 0.72);
+    background-alt: rgba(20, 20, 50, 0.68);
+    selected:       #818cf8;
+    foreground:     #e2e8f0;
+    foreground-dim: rgba(226, 232, 240, 0.45);
+    accent:         #818cf8;
+    border:         rgba(129, 140, 248, 0.35);
+
+    /* Top-highlight glass border (used in rofi themes) */
+    border-glass:   rgba(255, 255, 255, 0.10);
+
+    /* Hover and active surfaces */
+    bg-hover:       rgba(129, 140, 248, 0.12);
+    bg-card:        rgba(15, 15, 40, 0.65);
+
+    /* Aliases (compatibility) */
+    bg:      @background;
+    bg-alt:  @background-alt;
+    fg:      @foreground;
+    fg-dim:  @foreground-dim;
+    sel:     @selected;
+    bg-sel:  rgba(129, 140, 248, 0.18);
+
+    /* Extended palette */
+    cyan:    #67e8f9;
+    purple:  #c084fc;
+    green:   #86efac;
+    red:     #f87171;
+    orange:  #fb923c;
+}

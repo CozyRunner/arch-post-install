@@ -1,0 +1,235 @@
+/* ============================================================
+   SwayNC Glassmorphism Dark — "Lumina Dark"
+   Frosted navy glass notification center
+   ============================================================ */
+
+/* ── Color tokens ── */
+@define-color cc-bg            rgba(8, 8, 28, 0.72);
+@define-color notif-bg         rgba(15, 15, 45, 0.68);
+@define-color notif-border     rgba(255, 255, 255, 0.09);
+@define-color border-top-glow  rgba(255, 255, 255, 0.18);
+@define-color text-color       #e2e8f0;
+@define-color text-muted       rgba(226, 232, 240, 0.45);
+@define-color accent-blue      #818cf8;
+@define-color accent-cyan      #67e8f9;
+@define-color accent-purple    #c084fc;
+@define-color accent-green     #86efac;
+@define-color accent-red       #f87171;
+@define-color accent-orange    #fb923c;
+
+* {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", sans-serif;
+    font-size: 14px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Control Center Panel ── */
+.control-center {
+    background-color: @cc-bg;
+    /* Glassmorphism border: bright top line, subtle all-around */
+    border-top:    1px solid @border-top-glow;
+    border-left:   1px solid @notif-border;
+    border-right:  1px solid @notif-border;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.20);
+    border-radius: 20px;
+    padding: 16px;
+    /* Layered shadow: main shadow + subtle inner top glow */
+    box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.08) inset;
+    /* Shimmer overlay: very subtle gradient that makes it look like glass */
+    background-image: linear-gradient(
+        160deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        transparent 60%
+    );
+}
+
+/* ── Notification popup (live) ── */
+.notification-row {
+    outline: none;
+    margin: 8px 0;
+}
+
+.notification {
+    background-color: @notif-bg;
+    border-top:    1px solid @border-top-glow;
+    border-left:   1px solid @notif-border;
+    border-right:  1px solid @notif-border;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow:
+        0 6px 24px rgba(0, 0, 0, 0.40),
+        0 1px 0 rgba(255, 255, 255, 0.06) inset;
+    background-image: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        transparent 50%
+    );
+}
+
+.notification-content {
+    margin: 6px;
+}
+
+.summary {
+    font-size: 15px;
+    font-weight: bold;
+    color: @accent-blue;
+}
+
+.time {
+    font-size: 12px;
+    color: @text-muted;
+    margin-right: 12px;
+}
+
+.body {
+    font-size: 13px;
+    color: @text-color;
+    margin-top: 4px;
+}
+
+/* ── Title widget ── */
+.widget-title {
+    margin: 4px;
+}
+
+.widget-title > label {
+    font-size: 18px;
+    font-weight: bold;
+    color: @accent-blue;
+}
+
+.widget-title > button {
+    background: rgba(248, 113, 113, 0.12);
+    color: @accent-red;
+    border: 1px solid rgba(248, 113, 113, 0.25);
+    border-radius: 10px;
+    padding: 4px 14px;
+    font-weight: 600;
+}
+
+.widget-title > button:hover {
+    background: rgba(248, 113, 113, 0.25);
+    box-shadow: 0 0 8px rgba(248, 113, 113, 0.30);
+}
+
+/* ── DND toggle ── */
+.widget-dnd {
+    margin: 8px 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid @notif-border;
+    border-radius: 12px;
+    padding: 6px 14px;
+}
+
+.widget-dnd > label {
+    font-size: 14px;
+    font-weight: 500;
+    color: @text-color;
+}
+
+.widget-dnd > switch {
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.widget-dnd > switch:checked {
+    background: @accent-red;
+}
+
+.widget-dnd > switch slider {
+    border-radius: 14px;
+    background: @text-color;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
+}
+
+/* ── MPRIS media player ── */
+.widget-mpris {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid @notif-border;
+    border-radius: 14px;
+    padding: 14px;
+    margin: 8px 4px;
+}
+
+.widget-mpris-player { padding: 4px; }
+
+.widget-mpris-title {
+    font-weight: bold;
+    font-size: 15px;
+    color: @accent-cyan;
+}
+
+.widget-mpris-subtitle {
+    font-size: 13px;
+    color: @text-muted;
+}
+
+/* ── Volume / Backlight sliders ── */
+.widget-volume,
+.widget-backlight {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid @notif-border;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin: 6px 4px;
+}
+
+.widget-volume > label,
+.widget-backlight > label {
+    font-size: 16px;
+    color: @accent-blue;
+    margin-right: 10px;
+}
+
+scale trough {
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.12);
+    min-height: 8px;
+    min-width: 100px;
+}
+
+scale highlight {
+    border-radius: 6px;
+    background-color: @accent-blue;
+    min-height: 8px;
+    box-shadow: 0 0 6px rgba(129, 140, 248, 0.40);
+}
+
+/* ── Quick-action buttons grid ── */
+.widget-buttons-grid {
+    margin: 8px 4px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid @notif-border;
+    border-radius: 12px;
+    color: @text-color;
+    padding: 12px 16px;
+    margin: 4px;
+    font-size: 13px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+    background: rgba(129, 140, 248, 0.18);
+    border-color: @accent-blue;
+    color: @accent-blue;
+    box-shadow: 0 0 8px rgba(129, 140, 248, 0.25);
+}
+
+/* ── Close & action buttons ── */
+.close-button {
+    background: transparent;
+    color: @text-muted;
+    border-radius: 8px;
+    padding: 2px 8px;
+}
+
+.close-button:hover {
+    background: rgba(248, 113, 113, 0.18);
+    color: @accent-red;
+}

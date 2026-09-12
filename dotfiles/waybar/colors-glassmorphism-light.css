@@ -1,0 +1,33 @@
+/* ============================================================
+   Waybar Glassmorphism Light — "Lumina Light"
+   White frost glass with periwinkle/pink accents
+   ============================================================ */
+
+/* Core bar surface */
+@define-color bg-bar         rgba(255, 255, 255, 0.50);
+@define-color bg-module      rgba(248, 250, 252, 0.55);
+@define-color bg-hover       rgba(99, 102, 241, 0.10);
+@define-color bg-active      rgba(244, 114, 182, 0.08);
+
+/* Glass border */
+@define-color border-glass   rgba(0, 0, 0, 0.07);
+@define-color border-glow    rgba(99, 102, 241, 0.30);
+
+/* Text */
+@define-color foreground     #1e1b4b;
+@define-color foreground-dim rgba(30, 27, 75, 0.50);
+
+/* Accent palette — Periwinkle/Pink/Violet */
+@define-color accent-blue    #6366f1;
+@define-color accent-cyan    #22d3ee;
+@define-color accent-purple  #a855f7;
+@define-color accent-green   #16a34a;
+@define-color accent-red     #dc2626;
+@define-color accent-orange  #ea580c;
+
+/* Extended surface tokens */
+@define-color base    rgba(255, 255, 255, 0.75);
+@define-color mantle  rgba(243, 244, 246, 0.85);
+@define-color crust   rgba(229, 231, 235, 0.90);
+@define-color text    #1e1b4b;
+@define-color subtext0 rgba(30, 27, 75, 0.50);

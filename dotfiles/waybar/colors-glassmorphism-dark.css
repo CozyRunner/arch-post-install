@@ -1,0 +1,33 @@
+/* ============================================================
+   Waybar Glassmorphism Dark — "Lumina Dark"
+   Deep navy glass with electric indigo/cyan accents
+   ============================================================ */
+
+/* Core bar surface */
+@define-color bg-bar         rgba(8, 8, 28, 0.60);
+@define-color bg-module      rgba(15, 15, 40, 0.55);
+@define-color bg-hover       rgba(129, 140, 248, 0.12);
+@define-color bg-active      rgba(103, 232, 249, 0.10);
+
+/* Glass border */
+@define-color border-glass   rgba(255, 255, 255, 0.10);
+@define-color border-glow    rgba(129, 140, 248, 0.35);
+
+/* Text */
+@define-color foreground     #e2e8f0;
+@define-color foreground-dim rgba(226, 232, 240, 0.55);
+
+/* Accent palette — Indigo/Cyan/Violet */
+@define-color accent-blue    #818cf8;
+@define-color accent-cyan    #67e8f9;
+@define-color accent-purple  #c084fc;
+@define-color accent-green   #86efac;
+@define-color accent-red     #f87171;
+@define-color accent-orange  #fb923c;
+
+/* Extended surface tokens (for tooltip / popups) */
+@define-color base    rgba(8, 8, 28, 0.85);
+@define-color mantle  rgba(15, 15, 40, 0.90);
+@define-color crust   rgba(4, 4, 16, 0.95);
+@define-color text    #e2e8f0;
+@define-color subtext0 rgba(226, 232, 240, 0.55);

@@ -42,12 +42,17 @@ hl.config({
 
         blur = {
             enabled           = true,
-            size              = 8,
-            passes            = 3,
+            -- Glassmorphism: higher blur quality for frosted glass effect
+            size              = 10,
+            passes            = 4,
             vibrancy          = 0.1696,
             ignore_opacity    = true,
             new_optimizations = true,
-            xray              = true,
+            -- CRITICAL: xray=false lets blur show the wallpaper through windows
+            -- (xray=true would only blur window content, defeating glassmorphism)
+            xray              = false,
+            noise             = 0.010,
+            popups            = true,
         },
     },
 
@@ -94,3 +99,10 @@ hl.animation({ leaf = "workspaces",    enabled = true, speed = 1.94, bezier = "a
 hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "quick" })
+
+-- Layer Rules — blur all UI surfaces for cohesive glassmorphism
+hl.layer_rule({ match = { namespace = "swaync-control-center" },      blur = true })
+hl.layer_rule({ match = { namespace = "swaync-notification-window" }, blur = true })
+hl.layer_rule({ match = { namespace = "waybar" },                     blur = true })
+hl.layer_rule({ match = { namespace = "rofi" },                       blur = true })
+hl.layer_rule({ match = { namespace = "hyprlock" },                   blur = true })
