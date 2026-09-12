@@ -7,10 +7,12 @@
     accent:         #ebbcba;
     border:         rgba(235, 188, 186, 0.4);
 
-    bg:      @background;
-    bg-alt:  @background-alt;
-    fg:      @foreground;
-    fg-dim:  @foreground-dim;
-    sel:     @selected;
-    bg-sel:  @background-alt;
+    bg:           @background;
+    bg-alt:       @background-alt;
+    fg:           @foreground;
+    fg-dim:       @foreground-dim;
+    sel:          @selected;
+    bg-sel:       @background-alt;
+    bg-hover:     rgba(255, 255, 255, 0.06);
+    border-glass: rgba(255, 255, 255, 0.12);
 }

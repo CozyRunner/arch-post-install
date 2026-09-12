@@ -365,13 +365,8 @@ window#waybar {
 
 #custom-notification.notification {
     color: @accent-orange;
-    /* Pulse animation for unread notifications */
-    animation: notif-pulse 2s ease-in-out infinite;
-}
-
-@keyframes notif-pulse {
-    0%, 100% { box-shadow: 0 0 0px rgba(251, 146, 60, 0); }
-    50%       { box-shadow: 0 0 10px rgba(251, 146, 60, 0.4); }
+    /* GTK CSS does not support @keyframes; use a transition instead */
+    transition: color 0.3s ease;
 }
 
 #custom-notification.dnd-notification,
