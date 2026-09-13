@@ -16,9 +16,11 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("/usr/bin/kwalletd6")
     hl.exec_cmd("/usr/lib/pam_kwallet_init")
     hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
-    hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
-    hl.exec_cmd("gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'")
-    hl.exec_cmd("gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'")
+
+    -- Restore GTK/icon/cursor settings saved by nwg-look (dconf-backed).
+    -- Do NOT hardcode theme names here — that would override nwg-look on every login.
+    hl.exec_cmd("~/.config/hypr/scripts/apply-gtk-settings.sh")
+
     hl.exec_cmd("wl-paste --type text --watch /usr/bin/cliphist store")
     hl.exec_cmd("wl-paste --type image --watch /usr/bin/cliphist store")
 end)

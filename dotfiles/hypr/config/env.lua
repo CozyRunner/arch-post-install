@@ -5,8 +5,8 @@
 -- Dark Mode and Theme
 hl.env("QT_QPA_PLATFORMTHEME", "qt5ct")
 hl.env("QT_STYLE_OVERRIDE", "kvantum")
-hl.env("GTK_THEME", "Adwaita-dark")
-hl.env("COLOR_SCHEME", "prefer-dark")
+-- NOTE: Do NOT set GTK_THEME here — it overrides dconf and nwg-look saved settings.
+--       GTK apps will pick up the theme from ~/.config/gtk-3.0/settings.ini (written by nwg-look).
 hl.env("GSETTINGS_BACKEND", "dconf")
 
 -- Wayland Support

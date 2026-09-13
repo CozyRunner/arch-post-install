@@ -101,6 +101,7 @@ packages:
     - papirus-icon-theme
     - adwaita-icon-theme
     - nwg-look
+    - xsettingsd          # broadcasts nwg-look settings to X11/XWayland apps
 
     # Fonts
     - ttf-jetbrains-mono-nerd
