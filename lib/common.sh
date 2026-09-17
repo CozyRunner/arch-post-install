@@ -9,11 +9,11 @@
 # Resolve root directory of the repository
 LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${LIB_DIR}/.." && pwd)"
-CONFIG_DIR="${ROOT_DIR}/config"
+CONFIG_DIR="${CONFIG_DIR:-${ROOT_DIR}/config}"
 # shellcheck disable=SC2034
-SCRIPTS_DIR="${ROOT_DIR}/scripts"
+SCRIPTS_DIR="${SCRIPTS_DIR:-${ROOT_DIR}/scripts}"
 # shellcheck disable=SC2034
-DOTFILES_DIR="${ROOT_DIR}/dotfiles"
+DOTFILES_DIR="${DOTFILES_DIR:-${ROOT_DIR}/dotfiles}"
 
 # Load checks.conf if available
 CHECKS_CONF="${CONFIG_DIR}/checks.conf"

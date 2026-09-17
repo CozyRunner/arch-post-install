@@ -15,7 +15,7 @@ ROOT_DIR="$(cd "${CLI_DIR}/.." && pwd)"
 LIB_DIR="${ROOT_DIR}/lib"
 SCRIPTS_DIR="${ROOT_DIR}/scripts"
 CHECK_DIR="${SCRIPTS_DIR}/check"
-CONFIG_DIR="${ROOT_DIR}/config"
+CONFIG_DIR="${CONFIG_DIR:-${ROOT_DIR}/config}"
 
 # Load core framework libraries
 # shellcheck disable=SC1091
@@ -26,6 +26,8 @@ source "${LIB_DIR}/output.sh"
 source "${LIB_DIR}/checks.sh"
 # shellcheck disable=SC1091
 source "${LIB_DIR}/doctor.sh"
+# shellcheck disable=SC1091
+source "${LIB_DIR}/planner.sh"
 
 # Load all check category modules
 for check_script in "${CHECK_DIR}/"*.sh; do
@@ -68,6 +70,7 @@ Commands:
   doctor [cat...]    Analyze issues and provide copy-paste remediation commands
   fix [cat...]       Interactively apply suggested remediation commands
   status             Run both configuration checks and runtime health checks
+  plan               Generate a non-modifying dry-run execution plan
   install [mode]     Launch the post-installation setup engine (full|base|dotfiles)
   list [categories]  Display available check categories and system modules
 
@@ -113,6 +116,9 @@ Examples:
   arch-postinstall doctor
   arch-postinstall doctor --fix
   arch-postinstall fix -y
+  arch-postinstall plan
+  arch-postinstall plan --profile hyprland
+  arch-postinstall plan --json
   arch-postinstall status --json
   arch-postinstall install full
 EOF
@@ -179,7 +185,7 @@ while [[ $# -gt 0 ]]; do
             CUSTOM_CONFIG="$2"
             shift 2
             ;;
-        check|health|doctor|fix|status|install|list)
+        check|health|doctor|fix|status|install|list|plan)
             if [[ -z "${COMMAND}" ]]; then
                 COMMAND="$1"
                 if [[ "$1" == "fix" ]]; then
@@ -232,6 +238,11 @@ handle_install() {
         echo "Error: install.sh not found at ${ROOT_DIR}/install.sh" >&2
         exit 4
     fi
+}
+
+handle_plan() {
+    execute_plan
+    return $?
 }
 
 handle_list() {
@@ -357,6 +368,10 @@ case "${COMMAND}" in
         ;;
     status)
         run_execution "status"
+        exit $?
+        ;;
+    plan)
+        handle_plan
         exit $?
         ;;
     *)

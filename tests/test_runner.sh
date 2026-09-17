@@ -20,6 +20,7 @@ SUITES=(
     "test_cli.sh"
     "test_json.sh"
     "test_categories.sh"
+    "test_plan.sh"
 )
 
 TOTAL_SUITES=0

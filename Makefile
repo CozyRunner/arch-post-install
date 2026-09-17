@@ -1,4 +1,4 @@
-.PHONY: help install full base dotfiles packages fonts fish flatpak lint clean check health doctor fix status test restore prereq zram btrfs firewall
+.PHONY: help install full base dotfiles packages fonts fish flatpak lint clean check health doctor fix status plan test restore prereq zram btrfs firewall
 
 help: ## Show this help
 	@echo ""
@@ -56,6 +56,10 @@ fix: ## Interactively apply suggested remediation commands from doctor
 status: ## Run full status dashboard (configuration validation + runtime health)
 	@chmod +x bin/arch-postinstall
 	@./bin/arch-postinstall status $(if $(V),-v,) $(if $(JSON),--json,)
+
+plan: ## Generate dry-run execution plan without modifying system state
+	@chmod +x bin/arch-postinstall
+	@./bin/arch-postinstall plan $(if $(V),-v,) $(if $(JSON),--json,) $(if $(PROFILE),--profile $(PROFILE),) $(if $(CONFIG),--config $(CONFIG),)
 
 test: ## Execute complete test suite
 	@chmod +x tests/test_runner.sh tests/*.sh
