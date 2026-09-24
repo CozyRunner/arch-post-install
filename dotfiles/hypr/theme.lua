@@ -1,12 +1,12 @@
--- Hyprland Theme — Tokyo Night (Dark)
+-- Hyprland Theme — Catppuccin Mocha (Dark)
 hl.config({
     general = {
         gaps_in  = 5,
         gaps_out = 10,
         border_size = 2,
         col = {
-            active_border   = { colors = { "rgba(7aa2f7ff)", "rgba(bb9af7ff)" }, angle = 45 },
-            inactive_border = "rgba(292e42aa)",
+            active_border   = { colors = { "rgba(a6e3a1ff)", "rgba(94e2d5ff)" }, angle = 45 },
+            inactive_border = "rgba(313244aa)",
         },
         resize_on_border = true,
     },
@@ -16,7 +16,7 @@ hl.config({
             enabled      = true,
             range        = 20,
             render_power = 3,
-            color        = "rgba(16161eaa)",
+            color        = "rgba(11111baa)",
         },
         blur = {
             enabled           = true,

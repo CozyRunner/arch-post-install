@@ -113,6 +113,7 @@ hypr/
 │   ├── theme_picker.sh        # 󰸉 Desktop theme scheme picker
 │   ├── wallpaper_picker.sh    # 🖼️ Wallpaper picker with image previews
 │   ├── update_arch.sh         # 📦 System update (pacman -Syu)
+│   ├── os_age.sh              # 󰸗 System installation age calculator
 │   └── about_pc.sh            # 💻 System information display
 │
 ├── assets/                    # Wallpapers and images
@@ -247,6 +248,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | Field | Source |
 |-------|--------|
 | OS | `/etc/os-release` |
+| OS Age | `/var/log/pacman.log` / root creation time (`os_age.sh`) |
 | Kernel | `uname -r` |
 | Resolution | `hyprctl monitors` |
 | DE | `hyprctl version` |
