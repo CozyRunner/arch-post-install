@@ -21,3 +21,8 @@ Thumbs.db
 # Local builds
 build_test/
 dotfiles/hypr/bin/
+
+# Clipse runtime files
+dotfiles/clipse/clipboard_history.json
+dotfiles/clipse/clipse.log
+dotfiles/clipse/tmp_files/

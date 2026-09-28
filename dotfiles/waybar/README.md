@@ -54,7 +54,7 @@ The bar is divided into three sections:
     - `hyprland/workspaces`: Interactive desktop switcher.
     - `hyprland/window`: Currently active window title.
 - **Modules Center**: `clock` (Date & Time).
-- **Modules Right**: `group/media` (Hover-expanding MPRIS controller), `group/audio`, `pulseaudio#microphone`, `bluetooth`, `network`, `cpu`, `temperature`, `memory`, `custom/clipboard`, `custom/language`, `battery`, `custom/notification` (Notification Center & DND toggle), `custom/power`, and `group/tray`.
+- **Modules Right**: `group/audio`, `pulseaudio#microphone`, `bluetooth`, `network`, `cpu`, `temperature`, `memory`, `custom/clipboard`, `custom/language`, `battery`, `custom/notification` (Notification Center & DND toggle), `custom/power`, and `group/tray`.
 
 ---
 

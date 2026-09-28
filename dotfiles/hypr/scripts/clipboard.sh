@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
-# Delegate to unified cliphist manager script
+# Clipse Clipboard Manager Launcher
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WAYBAR_CLIPHIST="${HOME}/.config/waybar/scripts/cliphist.sh"
+WAYBAR_CLIPBOARD="${HOME}/.config/waybar/scripts/clipboard.sh"
 
-if [[ -x "${WAYBAR_CLIPHIST}" ]]; then
-    exec "${WAYBAR_CLIPHIST}" "${1:---list}"
+if [[ -x "${WAYBAR_CLIPBOARD}" ]]; then
+    exec "${WAYBAR_CLIPBOARD}" "${@}"
 else
     # Fallback to repository path if not yet deployed to home
-    REPO_CLIPHIST="$(dirname "${SCRIPT_DIR}")/../waybar/scripts/cliphist.sh"
-    if [[ -x "${REPO_CLIPHIST}" ]]; then
-        exec "${REPO_CLIPHIST}" "${1:---list}"
+    REPO_CLIPBOARD="$(dirname "${SCRIPT_DIR}")/../waybar/scripts/clipboard.sh"
+    if [[ -x "${REPO_CLIPBOARD}" ]]; then
+        exec "${REPO_CLIPBOARD}" "${@}"
     fi
+fi
+
+# Standalone fallback if waybar script is unavailable
+CLIPSE_CMD="$(command -v clipse || echo "/usr/bin/clipse")"
+if hyprctl clients 2>/dev/null | grep -q "class: clipse"; then
+    hyprctl dispatch focuswindow "class:clipse"
+else
+    exec kitty --class clipse -e "$CLIPSE_CMD"
 fi

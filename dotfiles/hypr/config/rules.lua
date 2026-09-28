@@ -92,6 +92,15 @@ hl.window_rule({
 	center = true,
 })
 
+-- Clipse clipboard manager
+hl.window_rule({
+	name = "clipse-floating",
+	match = { class = "^(clipse)$" },
+	float = true,
+	size = { 650, 650 },
+	center = true,
+})
+
 -- Floating terminal (About PC)
 hl.window_rule({
 	name = "medium-floating-term",

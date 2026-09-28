@@ -21,6 +21,6 @@ hl.on("hyprland.start", function()
     -- Do NOT hardcode theme names here — that would override nwg-look on every login.
     hl.exec_cmd("~/.config/hypr/scripts/apply-gtk-settings.sh")
 
-    hl.exec_cmd("wl-paste --type text --watch /usr/bin/cliphist store")
-    hl.exec_cmd("wl-paste --type image --watch /usr/bin/cliphist store")
+    -- Start Clipse clipboard manager daemon
+    hl.exec_cmd("clipse -listen")
 end)
