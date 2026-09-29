@@ -355,22 +355,27 @@ case "${COMMAND}" in
         handle_list
         ;;
     check)
+        require_yaml_parser || exit 4
         run_execution "check"
         exit $?
         ;;
     health)
+        require_yaml_parser || exit 4
         run_execution "health"
         exit $?
         ;;
     doctor)
+        require_yaml_parser || exit 4
         run_execution "doctor"
         exit $?
         ;;
     status)
+        require_yaml_parser || exit 4
         run_execution "status"
         exit $?
         ;;
     plan)
+        require_yaml_parser || exit 4
         handle_plan
         exit $?
         ;;

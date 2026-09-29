@@ -25,8 +25,7 @@ check_systemd() {
     for svc in "${base_services[@]}"; do
         if ! service_exists "${svc}"; then
             warn "systemd" "svc_${svc}" "Unit '${svc}' not installed" \
-                 "Service declared in config/base.yaml is not present" \
-                 "Check packages providing ${svc}"
+                 "Service declared in config/base.yaml is not present. Check which package provides ${svc}."
             continue
         fi
 
@@ -140,7 +139,7 @@ health_systemd() {
             pass "systemd" "failed_user_units" "No failed user units"
         else
             warn "systemd" "failed_user_units" "${#failed_user_units[@]} failed user unit(s): ${failed_user_units[*]}" \
-                 "Inspect with: systemctl --user status ${failed_user_units[0]}"
+                 "" "systemctl --user status ${failed_user_units[0]}"
         fi
     fi
 }

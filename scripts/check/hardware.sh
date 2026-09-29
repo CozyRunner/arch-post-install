@@ -62,8 +62,7 @@ health_hardware() {
 
             if [[ "${used_pct}" -ge "${MEM_FAIL_PERCENT:-95}" ]]; then
                 fail "hardware" "memory_pressure" "Critical memory usage: ${used_pct}%" \
-                     "System under extreme memory pressure" \
-                     "Kill high-memory processes using btop/htop"
+                     "System under extreme memory pressure. Identify and kill high-memory processes (e.g. with btop/htop); there is no safe automated fix."
             elif [[ "${used_pct}" -ge "${MEM_WARN_PERCENT:-85}" ]]; then
                 warn "hardware" "memory_pressure" "High memory usage: ${used_pct}%"
             else

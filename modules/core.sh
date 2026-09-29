@@ -58,6 +58,23 @@ log_error()   { echo -e "${RED}[ERROR]${NC}   $*" | tee -a "${LOG_FILE}"; }
 log_step()    { echo -e "\n${CYAN}${BOLD}▸ $*${NC}\n" | tee -a "${LOG_FILE}"; }
 log_debug()   { [[ "${VERBOSE}" == true ]] && echo -e "${GRAY}[DEBUG]${NC}  $*" | tee -a "${LOG_FILE}" || true; }
 
+# /**
+#  * run_logged()
+#  * Runs a command, appends its combined output to the log, prints it, and
+#  * returns the COMMAND's exit status.
+#  *
+#  * Prefer this over `if some_cmd | tee -a "$LOG_FILE"; then`:
+#  * without `set -o pipefail` a pipeline's status is tee's status, so a failed
+#  * command reads as success. The Makefile targets source core.sh directly and
+#  * do NOT set pipefail, so that pattern silently inverts these decisions.
+#  */
+run_logged() {
+    local output rc=0
+    output="$("$@" 2>&1)" || rc=$?
+    [[ -n "${output}" ]] && printf '%s\n' "${output}" | tee -a "${LOG_FILE}"
+    return "${rc}"
+}
+
 # ── Network check ─────────────────────────────────────────────────────────────
 # /**
 #  * check_internet()
@@ -121,8 +138,32 @@ require_command() {
 }
 
 # ── YAML Parsing ──────────────────────────────────────────────────────────────
-# Uses yq to read YAML config files.
-# Falls back to a basic grep parser if yq is unavailable.
+# `yq` is a HARD dependency. The previous grep-based fallback computed nesting
+# depth with `${key//[^:]}`, which is always 0 for dot-separated keys
+# (packages.pacman, user.groups, ...). It therefore returned EMPTY for every
+# nested list while exiting 0, which on a system without yq meant zero packages
+# installed and zero groups assigned — with no error. See lib/common.sh for the
+# validator-side equivalent.
+#
+# yq is installed by setup_core() during the "full"/"base" flows, before the
+# first config read. require_yaml_parser() guards the paths that skip it.
+YAML_PARSER="yq"
+
+# /**
+#  * require_yaml_parser()
+#  * Verifies the YAML parser is available. Returns non-zero with an actionable
+#  * message if it is not, so callers fail fast instead of acting on an empty
+#  * config that looks valid.
+#  */
+require_yaml_parser() {
+    if ! command -v "${YAML_PARSER}" &>/dev/null; then
+        log_error "Required dependency '${YAML_PARSER}' not found in PATH."
+        log_error "Configuration is read from YAML; refusing to continue with a mis-parsed config."
+        log_error "Install it with: sudo pacman -S --needed ${YAML_PARSER}"
+        return 1
+    fi
+    return 0
+}
 
 # /**
 #  * yaml_list()
@@ -134,11 +175,12 @@ require_command() {
 yaml_list() {
     local file="$1" key="$2"
 
-    if command -v yq &>/dev/null; then
-        yq -r ".${key}[]? // empty" "${file}" 2>/dev/null
-    else
-        _yaml_list_fallback "${file}" "${key}"
+    if [[ ! -f "${file}" ]]; then
+        log_error "Config file not found: ${file}"
+        return 1
     fi
+    require_yaml_parser || return 1
+    yq -r ".${key}[]? // empty" "${file}" 2>/dev/null
 }
 
 # /**
@@ -151,77 +193,12 @@ yaml_list() {
 yaml_value() {
     local file="$1" key="$2"
 
-    if command -v yq &>/dev/null; then
-        yq -r ".${key} // empty" "${file}" 2>/dev/null
-    else
-        _yaml_value_fallback "${file}" "${key}"
+    if [[ ! -f "${file}" ]]; then
+        log_error "Config file not found: ${file}"
+        return 1
     fi
-}
-
-# ── Fallback Parsers (Internal) ───────────────────────────────────────────────
-
-_yaml_list_fallback() {
-    # Simple line-by-line YAML list parser (handles nested `key:\n  - val` format)
-    local file="$1" key="$2"
-    local in_block=false
-    local target_depth="${key//[^:]}"  # Count colons for depth
-    target_depth="${#target_depth}"
-    # shellcheck disable=SC2206
-    local key_segments=(${key//./ })
-    local match_key="${key_segments[-1]}"
-
-    while IFS= read -r line; do
-        # Strip leading whitespace for easier parsing
-        local stripped="${line#"${line%%[![:space:]]*}"}"
-
-        # Track current depth based on leading spaces (2 spaces = 1 level)
-        local line_depth=0
-        if [[ "${line}" =~ ^([[:space:]]*) ]]; then
-            line_depth=$((${#BASH_REMATCH[1]} / 2))
-        fi
-
-        # Skip empty lines and comments
-        [[ -z "${stripped}" || "${stripped}" =~ ^# ]] && continue
-
-        # Parse key-value
-        if [[ "${stripped}" =~ ^([^:]+):[[:space:]]*(.*)$ ]]; then
-            local current_key="${BASH_REMATCH[1]}"
-            local current_val="${BASH_REMATCH[2]}"
-
-            # Handle parent keys for nested structures
-            if [[ "${line_depth}" -eq $((target_depth)) && "${current_key}" == "${match_key}" ]]; then
-                in_block=true
-                continue
-            fi
-
-            # If we're inside our target block and hit a sibling key at same depth, stop
-            if ${in_block} && [[ "${line_depth}" -le $((target_depth)) && -n "${current_val}" ]]; then
-                break
-            fi
-        fi
-
-        if ${in_block}; then
-            if [[ "${stripped}" =~ ^-[[:space:]]+(.*) ]]; then
-                echo "${BASH_REMATCH[1]}"
-            elif [[ "${stripped}" =~ ^-[[:space:]]*$ ]]; then
-                continue
-            else
-                # We left the block
-                if [[ "${line_depth}" -le $((target_depth)) ]]; then
-                   in_block=false
-                fi
-            fi
-        fi
-    done < "${file}"
-}
-
-_yaml_value_fallback() {
-    local file="$1" key="$2"
-    local match_key="${key##*.}"
-
-    grep -E "^[[:space:]]*${match_key}:" "${file}" 2>/dev/null \
-        | head -1 \
-        | sed 's/.*:[[:space:]]*//'
+    require_yaml_parser || return 1
+    yq -r ".${key} // empty" "${file}" 2>/dev/null
 }
 
 # ── System Update ─────────────────────────────────────────────────────────────

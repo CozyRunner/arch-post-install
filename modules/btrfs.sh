@@ -40,21 +40,66 @@ setup_btrfs_snapshots() {
 
     if [[ ${#pkgs_to_install[@]} -gt 0 ]]; then
         log_info "Installing Snapper utilities: ${pkgs_to_install[*]}"
-        sudo pacman -S --needed --noconfirm "${pkgs_to_install[@]}" 2>&1 | tee -a "${LOG_FILE}"
+        if ! run_logged pacman -S --needed --noconfirm "${pkgs_to_install[@]}"; then
+            log_error "Failed to install Snapper utilities. Aborting snapshot setup."
+            return 1
+        fi
+    fi
+
+    # Verify the tooling actually exists before relying on it. Previously the
+    # guard below ran even when snapper was missing: `snapper list-configs` would
+    # fail, `!` inverted the result, and the code concluded "no root config
+    # exists" and deleted /.snapshots.
+    if ! command -v snapper &>/dev/null; then
+        log_error "snapper is not installed. Install it with: sudo pacman -S --needed snapper"
+        return 1
     fi
 
     # Initialize Snapper config for root if not already configured
-    if ! sudo snapper list-configs 2>/dev/null | grep -qw "root"; then
+    local snapper_configs=""
+    if ! snapper_configs="$(sudo snapper list-configs 2>/dev/null)"; then
+        log_error "'snapper list-configs' failed; refusing to modify /.snapshots on an unknown state."
+        return 1
+    fi
+
+    if ! grep -qw "root" <<< "${snapper_configs}"; then
         log_info "Creating Snapper configuration for root (/)"
-        
-        # If /.snapshots exists as a subvolume or regular dir, handle safely
-        if [[ -d "/.snapshots" ]]; then
-            sudo umount /.snapshots 2>/dev/null || true
-            sudo rm -rf /.snapshots 2>/dev/null || true
+
+        # /.snapshots may pre-exist as a btrfs subvolume or a plain directory.
+        # `rm -rf` cannot delete a subvolume root (unlink returns ENOTEMPTY), so
+        # the old code silently failed there while appearing to succeed. Probe the
+        # type and handle each case explicitly; never issue an unverified rm -rf.
+        if [[ -e "/.snapshots" ]]; then
+            local fs_type=""
+            fs_type="$(findmnt -n -o FSTYPE /.snapshots 2>/dev/null || echo "")"
+
+            if [[ "${fs_type}" == "btrfs" ]] && command -v btrfs &>/dev/null; then
+                log_warn "/.snapshots is a mounted btrfs subvolume; removing via btrfs subvolume delete"
+                sudo umount /.snapshots 2>/dev/null || true
+                if ! run_logged btrfs subvolume delete /.snapshots; then
+                    log_error "Failed to remove existing /.snapshots subvolume. Aborting to avoid data loss."
+                    return 1
+                fi
+            else
+                # Plain directory: only remove it when it is empty, so real
+                # user data can never be destroyed by this code path.
+                if [[ -d "/.snapshots" ]] && [[ -z "$(sudo ls -A /.snapshots 2>/dev/null)" ]]; then
+                    log_info "/.snapshots is an empty directory; removing it"
+                    sudo rmdir /.snapshots 2>/dev/null || true
+                else
+                    log_warn "/.snapshots exists and is not an empty Snapper store."
+                    log_warn "Refusing to remove it automatically. Resolve it manually, then re-run:"
+                    log_warn "  sudo rm -rf /.snapshots   # only if you are certain it is not a live subvolume"
+                    return 1
+                fi
+            fi
         fi
-        
-        sudo snapper -c root create-config / 2>&1 | tee -a "${LOG_FILE}"
-        
+
+        if ! run_logged snapper -c root create-config /; then
+            log_error "Failed to create Snapper configuration for root"
+            return 1
+        fi
+
         # Configure standard snapshot retention limits
         if [[ -f "/etc/snapper/configs/root" ]]; then
             sudo sed -i 's/^TIMELINE_CREATE=".*"/TIMELINE_CREATE="yes"/' /etc/snapper/configs/root

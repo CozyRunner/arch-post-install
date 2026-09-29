@@ -150,12 +150,29 @@ confirm_install() {
     esac
 }
 
-# ── Dry-run wrapper ────────────────────────────
-run_cmd() {
-    if [[ "${DRY_RUN}" == true ]]; then
-        log_info "[DRY RUN] $*"
+# ── Dry-run: delegate to the planner ───────────
+# The previous implementation printed the 14 function names it *would* call
+# without performing any state discovery, and it disagreed with the planner
+# (e.g. it implied dotfile backups that deploy_dotfiles_from_config never
+# performed). `arch-postinstall plan` is the real desired-vs-current
+# implementation, so it is now the single source of truth for previews.
+# This also means a dry run needs no sudo and makes no changes at all.
+show_execution_plan() {
+    local planner="${SCRIPT_DIR}/bin/arch-postinstall"
+
+    if [[ ! -x "${planner}" ]]; then
+        log_error "Planner not found at ${planner}"
+        return 4
+    fi
+
+    log_warn "DRY RUN MODE — no changes will be made"
+    log_info "Delegating to the planner for real desired-vs-current state"
+    echo ""
+
+    if [[ "${MODE}" == "dotfiles" ]]; then
+        "${planner}" plan --config "${CONFIG_DIR}/hyprland.yaml"
     else
-        "$@"
+        "${planner}" plan
     fi
 }
 
@@ -165,52 +182,60 @@ main() {
 
     # Pre-flight checks
     require_arch
-    require_root
 
     # Mode selection (can be overridden via CLI arg)
     if [[ -z "${MODE:-}" ]]; then
         select_mode
     fi
 
-    if [[ "${DRY_RUN}" != true ]]; then
-        confirm_install
-    else
-        log_warn "DRY RUN MODE - No changes will be made"
+    # Dry-run short-circuits before any privileged or mutating step.
+    if [[ "${DRY_RUN}" == true ]]; then
+        show_execution_plan
+        exit $?
     fi
+
+    require_root
+    confirm_install
 
     log_step "Starting '${MODE}' installation"
 
     case "${MODE}" in
         full)
-            run_cmd tune_pacman
-            run_cmd apply_system_updates
-            run_cmd install_base_packages
-            run_cmd enable_base_services
-            run_cmd setup_users
-            run_cmd setup_zram
-            run_cmd setup_firewall
-            run_cmd setup_btrfs_snapshots
-            run_cmd tune_bluetooth
-            run_cmd ensure_yay
-            run_cmd setup_system_fonts
-            run_cmd setup_system_shell
-            run_cmd setup_flatpak
-            run_cmd setup_hyprland
+            tune_pacman
+            apply_system_updates
+            # setup_core() installs yq; verify before the first config read.
+            require_yaml_parser || exit 4
+            install_base_packages
+            enable_base_services
+            setup_users
+            setup_zram
+            setup_firewall
+            setup_btrfs_snapshots
+            tune_bluetooth
+            ensure_yay
+            setup_system_fonts
+            setup_system_shell
+            setup_flatpak
+            setup_hyprland
             ;;
         base)
-            run_cmd tune_pacman
-            run_cmd apply_system_updates
-            run_cmd install_base_packages
-            run_cmd enable_base_services
-            run_cmd setup_users
-            run_cmd setup_zram
-            run_cmd setup_firewall
-            run_cmd setup_btrfs_snapshots
-            run_cmd setup_system_fonts
-            run_cmd setup_system_shell
+            tune_pacman
+            apply_system_updates
+            # setup_core() installs yq; verify before the first config read.
+            require_yaml_parser || exit 4
+            install_base_packages
+            enable_base_services
+            setup_users
+            setup_zram
+            setup_firewall
+            setup_btrfs_snapshots
+            setup_system_fonts
+            setup_system_shell
             ;;
         dotfiles)
-            run_cmd deploy_dotfiles_from_config "${CONFIG_DIR}/hyprland.yaml"
+            # This mode skips setup_core, so yq may not be installed yet.
+            require_yaml_parser || exit 4
+            deploy_dotfiles_from_config "${CONFIG_DIR}/hyprland.yaml"
             ;;
         *)
             log_error "Unknown mode: ${MODE}"

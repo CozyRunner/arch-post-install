@@ -8,6 +8,10 @@ is_flatpak_installed() {
 }
 
 install_flatpaks_from_config() {
+
+    # Config-driven step: refuse to run on a mis-parsed config rather
+    # than silently operating on an empty one.
+    require_yaml_parser || return 1
     local config="$1"
 
     if [[ ! -f "${config}" ]]; then
@@ -52,7 +56,7 @@ install_flatpaks_from_config() {
 
     if [[ ${#to_install[@]} -gt 0 ]]; then
         log_info "Flatpaks to install: ${to_install[*]}"
-        if flatpak install -y flathub "${to_install[@]}" 2>&1 | tee -a "${LOG_FILE}"; then
+        if run_logged flatpak install -y flathub "${to_install[@]}"; then
             log_success "Flatpak packages installed"
         else
             log_warn "Some Flatpak packages may have failed"

@@ -112,6 +112,7 @@ EOF
 #  * Configures and enables UFW firewall with secure defaults.
 #  */
 setup_firewall() {
+    local config="${1:-${CONFIG_DIR}/base.yaml}"
     log_step "Configuring UFW Firewall"
 
     if ! pacman -Q ufw &>/dev/null; then
@@ -119,11 +120,75 @@ setup_firewall() {
         sudo pacman -S --needed --noconfirm ufw 2>&1 | tee -a "${LOG_FILE}"
     fi
 
-    sudo ufw default deny incoming 2>&1 | tee -a "${LOG_FILE}"
-    sudo ufw default allow outgoing 2>&1 | tee -a "${LOG_FILE}"
-    sudo ufw --force enable 2>&1 | tee -a "${LOG_FILE}"
-    sudo systemctl enable --now ufw 2>&1 | tee -a "${LOG_FILE}"
+    # ── Preserve SSH access BEFORE applying the deny policy ───────────────────
+    # `config/base.yaml` enables sshd. Applying `default deny incoming` with no
+    # allow rule severs the current session and locks the user out on the next
+    # boot, so any SSH-based service must be allowed first. This ordering is
+    # load-bearing, not cosmetic.
+    local -a ssh_services=()
+    if [[ -f "${config}" ]] && require_yaml_parser &>/dev/null; then
+        local svc
+        while IFS= read -r svc; do
+            [[ -n "${svc}" ]] && ssh_services+=("${svc}")
+        done < <(yaml_list "${config}" "services" 2>/dev/null)
+    fi
+
+    local -a opened=()
+    for svc in "${ssh_services[@]}"; do
+        case "${svc}" in
+            sshd|openssh|ssh|dropbear)
+                if ufw_has_rule_ssh; then
+                    log_info "SSH already allowed by an existing UFW rule"
+                else
+                    # run_logged, not `cmd | tee`: the decision must not depend
+                    # on pipefail, which the Makefile targets do not set.
+                    if run_logged sudo ufw allow OpenSSH; then
+                        opened+=("OpenSSH")
+                    elif run_logged sudo ufw allow 22/tcp; then
+                        # Some systems have no OpenSSH profile registered.
+                        opened+=("22/tcp")
+                    else
+                        log_error "Could not add an SSH allow rule to UFW."
+                        log_error "Refusing to enable the firewall: 'deny incoming' would cut SSH access."
+                        return 1
+                    fi
+                fi
+                ;;
+        esac
+    done
+
+    if [[ ${#opened[@]} -gt 0 ]]; then
+        log_success "Preserved SSH access: allow ${opened[*]}"
+    fi
+
+    if [[ -n "${SSH_CONNECTION:-}" ]]; then
+        log_warn "This session is over SSH — 'deny incoming' will apply to new connections."
+        log_warn "Keep this session open until you have confirmed you can reconnect."
+    fi
+
+    run_logged sudo ufw default deny incoming
+    run_logged sudo ufw default allow outgoing
+
+    # Re-verify SSH is still reachable under the new policy before enabling.
+    if [[ ${#ssh_services[@]} -gt 0 ]] && ! ufw_has_rule_ssh; then
+        log_error "No SSH allow rule present after applying defaults. Aborting before enabling UFW."
+        return 1
+    fi
+
+    run_logged sudo ufw --force enable
+    run_logged sudo systemctl enable --now ufw
     log_success "UFW firewall active with default deny incoming posture"
+}
+
+# /**
+#  * ufw_has_rule_ssh()
+#  * Reports whether UFW currently permits inbound SSH, by profile or by port.
+#  * Safe to call when UFW is not yet enabled.
+#  */
+ufw_has_rule_ssh() {
+    local rules
+    rules="$(sudo ufw status 2>/dev/null || true)"
+    grep -qiE '(^|[[:space:]])(OpenSSH|22/tcp)([[:space:]]|$)' <<< "${rules}"
 }
 
 # /**

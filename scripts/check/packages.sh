@@ -127,7 +127,7 @@ health_packages() {
         else
             warn "packages" "orphan_packages" "${#orphans[@]} orphan package(s) detected" \
                  "Orphaned packages: ${orphans[*]}" \
-                 "sudo pacman -Rns \$(pacman -Qdtq)" \
+                 "pacman -Qdtq | xargs -r sudo pacman -Rns --noconfirm" \
                  "0 orphans" "${#orphans[@]} orphans"
         fi
     fi

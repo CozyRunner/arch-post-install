@@ -12,7 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y jq
+        # yq is a hard runtime dependency: every configuration read goes through
+        # it, and the tool now aborts rather than parsing YAML incorrectly.
+        # jq is required for the validator's JSON output.
+        run: sudo apt-get update && sudo apt-get install -y jq yq
       - name: Run Test Suite
         run: make test
 

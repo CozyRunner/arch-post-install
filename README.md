@@ -154,7 +154,24 @@ The repository includes a post-installation validation, health, and diagnostics 
 - Arch Linux (fresh installation)
 - Non-root user with `sudo` privileges
 - Active internet connection
-- Git installed (`pacman -S git`)
+
+Required packages:
+
+| Package | Why |
+|---|---|
+| `git` | Cloning the repository |
+| `yq` | **Hard dependency** — all configuration is read through it |
+| `jq` | JSON rendering in the validator output |
+
+```bash
+sudo pacman -S --needed git yq jq
+```
+
+> **Note:** `yq` is not optional. The `full` and `base` flows install it automatically during
+> `apply_system_updates`, before any configuration is read. The `dotfiles` flow and the
+> standalone module/`make` targets do **not**, so it must already be present — otherwise the tool
+> aborts rather than proceeding on an empty configuration. If you see
+> `Required dependency 'yq' not found`, install it with the command above.
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 

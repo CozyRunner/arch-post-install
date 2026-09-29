@@ -31,7 +31,7 @@ check_audio() {
             pass "audio" "pkg_${pkg}" "Audio package '${pkg}' is installed"
         else
             warn "audio" "pkg_${pkg}" "Audio package '${pkg}' is not installed" \
-                 "sudo pacman -S --needed ${pkg}"
+                 "" "sudo pacman -S --needed ${pkg}"
         fi
     done
 }
@@ -52,7 +52,7 @@ health_audio() {
         else
             if [[ -n "${WAYLAND_DISPLAY:-}" || -n "${DISPLAY:-}" ]]; then
                 warn "audio" "user_svc_${svc}" "User service '${svc}' is inactive" \
-                     "systemctl --user restart ${svc}"
+                     "" "systemctl --user restart ${svc}"
             else
                 info "audio" "user_svc_${svc}" "User service '${svc}' inactive (session not active)"
             fi

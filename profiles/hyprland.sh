@@ -13,6 +13,10 @@
 #  * Calls packages, services, and dotfiles modules using config/hyprland.yaml.
 #  */
 setup_hyprland() {
+
+    # Config-driven step: refuse to run on a mis-parsed config rather
+    # than silently operating on an empty one.
+    require_yaml_parser || return 1
     local config="${CONFIG_DIR}/hyprland.yaml"
 
     log_step "Setting up Hyprland environment"

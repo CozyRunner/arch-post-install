@@ -21,6 +21,10 @@ is_installed() {
 #  * @param {string} config - Path to the YAML config file.
 #  */
 install_packages_from_config() {
+
+    # Config-driven step: refuse to run on a mis-parsed config rather
+    # than silently operating on an empty one.
+    require_yaml_parser || return 1
     local config="$1"
 
     if [[ ! -f "${config}" ]]; then
@@ -48,7 +52,7 @@ install_packages_from_config() {
 
         if [[ ${#to_install[@]} -gt 0 ]]; then
             log_info "Packages to install: ${to_install[*]}"
-            if sudo pacman -S --needed --noconfirm "${to_install[@]}" 2>&1 | tee -a "${LOG_FILE}"; then
+            if run_logged sudo pacman -S --needed --noconfirm "${to_install[@]}"; then
                 log_success "Pacman packages installed"
                 
                 # Enable corepack if nodejs was installed
@@ -88,7 +92,7 @@ install_packages_from_config() {
 
         if [[ ${#to_install[@]} -gt 0 ]]; then
             log_info "Packages to install: ${to_install[*]}"
-            if yay -S --needed --noconfirm "${to_install[@]}" 2>&1 | tee -a "${LOG_FILE}"; then
+            if run_logged yay -S --needed --noconfirm "${to_install[@]}"; then
                 log_success "AUR packages installed"
             else
                 log_warn "Some AUR packages may have failed"

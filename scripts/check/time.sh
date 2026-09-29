@@ -12,7 +12,9 @@ check_time() {
     print_category_header "Time & NTP Service Configuration"
 
     # 1. Timezone matching config
-    local expected_tz current_tz
+    # current_tz MUST be initialised: it is dereferenced below under
+    # `set -u`, and stays unset when timedatectl is absent (chroot/container).
+    local expected_tz="" current_tz=""
     expected_tz="$(yaml_value_get "${CONFIG_DIR}/base.yaml" "system.timezone")"
     if command_exists timedatectl; then
         current_tz="$(timedatectl show --property=Timezone --value 2>/dev/null || true)"

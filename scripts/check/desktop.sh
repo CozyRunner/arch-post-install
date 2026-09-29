@@ -38,8 +38,8 @@ check_desktop() {
         pass "desktop" "hyprland_config" "Hyprland conf present (~/.config/hypr/hyprland.conf)"
     else
         warn "desktop" "hyprland_config" "No Hyprland configuration found in ~/.config/hypr/" \
-             "Deploy dotfiles: ./install.sh dotfiles" \
-             "./install.sh dotfiles"
+             "Deploy dotfiles" \
+             "sudo ./install.sh dotfiles"
     fi
 
     # 3. Essential desktop ecosystem tools
@@ -49,7 +49,7 @@ check_desktop() {
             pass "desktop" "tool_${tool}" "Desktop component '${tool}' is installed"
         else
             warn "desktop" "tool_${tool}" "Desktop component '${tool}' is missing" \
-                 "sudo pacman -S --needed ${tool}"
+                 "" "sudo pacman -S --needed ${tool}"
         fi
     done
 
@@ -65,7 +65,7 @@ check_desktop() {
             pass "desktop" "dotfile_${df}" "Config directory ~/.config/${df} exists"
         else
             warn "desktop" "dotfile_${df}" "Config ~/.config/${df} not deployed" \
-                 "Deploy dotfiles: ./install.sh dotfiles"
+                 "" "sudo ./install.sh dotfiles"
         fi
     done
 }

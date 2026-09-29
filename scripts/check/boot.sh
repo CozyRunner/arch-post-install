@@ -39,8 +39,7 @@ check_boot() {
                 info "boot" "esp_mount" "UEFI mode with unpartitioned /boot or systemd EFI mount"
             else
                 warn "boot" "esp_mount" "EFI partition (/boot or /boot/efi) is not mounted" \
-                     "ESP should be mounted to ensure kernel updates correctly install" \
-                     "Check /etc/fstab for EFI partition mount definition"
+                     "ESP should be mounted to ensure kernel updates correctly install. Check /etc/fstab for the EFI partition mount definition."
             fi
         fi
     else

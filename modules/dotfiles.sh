@@ -15,6 +15,10 @@ BACKUP_DIR="${HOME}/.config-backup-$(date +%Y%m%d-%H%M%S)"
 #  * @param {string} config - Path to the YAML config file.
 #  */
 deploy_dotfiles_from_config() {
+
+    # Config-driven step: refuse to run on a mis-parsed config rather
+    # than silently operating on an empty one.
+    require_yaml_parser || return 1
     local config="$1"
 
     if [[ ! -f "${config}" ]]; then
@@ -34,6 +38,9 @@ deploy_dotfiles_from_config() {
 
     log_step "Deploying ${#dotfile_entries[@]} dotfile configs"
 
+    # ~/.config must exist before we can link into it.
+    mkdir -p "${HOME}/.config"
+
     for entry in "${dotfile_entries[@]}"; do
         local src="${DOTFILES_DIR}/${entry}"
         local dest="${HOME}/.config/${entry}"
@@ -43,19 +50,34 @@ deploy_dotfiles_from_config() {
             continue
         fi
 
-        # Backup existing config if it's a real directory (not already a symlink)
-        if [[ -d "${dest}" && ! -L "${dest}" ]]; then
-            mkdir -p "${BACKUP_DIR}"
-            log_info "Backing up existing ${dest} → ${BACKUP_DIR}/${entry}"
-            mv "${dest}" "${BACKUP_DIR}/${entry}"
-        elif [[ -L "${dest}" ]]; then
-            # Remove old symlink
+        # Remove an existing symlink first. -L must be tested before -e/-d so
+        # symlinked directories are not mistaken for real ones.
+        if [[ -L "${dest}" ]]; then
+            log_debug "Removing existing symlink: ${dest}"
             rm -f "${dest}"
+        elif [[ -e "${dest}" ]]; then
+            # Anything else that exists here — a real directory OR a regular file
+            # — is user-owned state and must be preserved before it is replaced.
+            # Previously a plain file matched neither branch and was silently
+            # destroyed by `ln -sfn` below.
+            mkdir -p "${BACKUP_DIR}"
+            if [[ -d "${dest}" ]]; then
+                log_info "Backing up existing directory ${dest} → ${BACKUP_DIR}/${entry}"
+            else
+                log_info "Backing up existing file ${dest} → ${BACKUP_DIR}/${entry}"
+            fi
+            if ! mv "${dest}" "${BACKUP_DIR}/${entry}"; then
+                log_error "Failed to back up ${dest} — skipping ${entry} to avoid data loss"
+                continue
+            fi
         fi
 
         # Create symlink (-n treats dest symlink as a file, preventing nesting)
-        ln -sfn "${src}" "${dest}"
-        log_success "Linked: ${src} → ${dest}"
+        if ln -sfn "${src}" "${dest}"; then
+            log_success "Linked: ${src} → ${dest}"
+        else
+            log_error "Failed to link ${dest} → ${src}"
+        fi
     done
 
     # Make configured executables executable

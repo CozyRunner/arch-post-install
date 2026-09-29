@@ -16,6 +16,7 @@ echo "============================================================"
 echo ""
 
 SUITES=(
+    "test_regressions.sh"
     "test_framework.sh"
     "test_cli.sh"
     "test_json.sh"

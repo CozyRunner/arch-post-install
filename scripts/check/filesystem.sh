@@ -113,9 +113,8 @@ health_filesystem() {
 
     if [[ ${#ro_mounts[@]} -gt 0 ]]; then
         fail "filesystem" "readonly_mounts" "Writable filesystem remounted as read-only: ${ro_mounts[*]}" \
-             "Indicates underlying storage errors or filesystem corruption" \
-             "Inspect dmesg: sudo dmesg -T | grep -iE '(error|remount-ro)'" \
-             "read-write" "read-only (${ro_mounts[*]})"
+             "Indicates underlying storage errors or filesystem corruption. Inspect with: sudo dmesg -T | grep -iE '(error|remount-ro)'. There is no safe automated fix — this needs human investigation." \
+             "" "read-write" "read-only (${ro_mounts[*]})"
     else
         pass "filesystem" "readonly_mounts" "No corrupted read-only remounts detected"
     fi

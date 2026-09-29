@@ -16,13 +16,20 @@ if ! declare -f print_category_header &>/dev/null; then
     # shellcheck disable=SC1091
     source "${LIB_DIR}/output.sh"
 fi
+# doctor consumes CHECKS_RESULTS and its field delimiter. This dependency was
+# previously implicit: it only worked because bin/arch-postinstall happens to
+# source checks.sh first, so sourcing this file alone left CHECK_FIELD_SEP unset.
+if ! declare -f register_check &>/dev/null; then
+    # shellcheck disable=SC1091
+    source "${LIB_DIR}/checks.sh"
+fi
 
 run_doctor_analysis() {
     local issues_found=0
 
     # Count issues
     for record in "${CHECKS_RESULTS[@]}"; do
-        IFS='|' read -r cat name status msg details fix exp cur <<< "${record}"
+        IFS="${CHECK_FIELD_SEP}" read -r cat name status msg details fix exp cur <<< "${record}"
         if [[ "${status}" == "FAIL" || "${status}" == "WARN" ]]; then
             issues_found=$((issues_found + 1))
         fi
@@ -47,7 +54,7 @@ run_doctor_analysis() {
     local num=0
 
     for record in "${CHECKS_RESULTS[@]}"; do
-        IFS='|' read -r cat name status msg details fix exp cur <<< "${record}"
+        IFS="${CHECK_FIELD_SEP}" read -r cat name status msg details fix exp cur <<< "${record}"
         if [[ "${status}" != "FAIL" && "${status}" != "WARN" ]]; then
             continue
         fi
@@ -96,7 +103,7 @@ run_doctor_fix() {
     local -a fixable_records=()
 
     for record in "${CHECKS_RESULTS[@]}"; do
-        IFS='|' read -r cat name status msg details fix exp cur <<< "${record}"
+        IFS="${CHECK_FIELD_SEP}" read -r cat name status msg details fix exp cur <<< "${record}"
         if [[ ("${status}" == "FAIL" || "${status}" == "WARN") && -n "${fix}" ]]; then
             fixable_records+=("${record}")
         fi
@@ -117,7 +124,7 @@ run_doctor_fix() {
     local failed=0
 
     for record in "${fixable_records[@]}"; do
-        IFS='|' read -r cat name status msg details fix exp cur <<< "${record}"
+        IFS="${CHECK_FIELD_SEP}" read -r cat name status msg details fix exp cur <<< "${record}"
 
         echo -e "${C_GRAY}────────────────────────────────────────────────────────────${C_RESET}"
         echo -e "  ${C_BOLD}Issue:${C_RESET}       ${msg}"
@@ -144,12 +151,27 @@ run_doctor_fix() {
         fi
 
         if ${execute}; then
+            # The fix string is executed with `eval` under `sudo`. It is built
+            # by interpolating config-derived and system-derived values, so it
+            # MUST be validated before execution: a group name such as
+            #   'wheel`id >/tmp/pwned`'
+            # becomes arbitrary root code execution without this check.
+            if ! fix_cmd_is_safe "${fix}"; then
+                echo -e "  ${C_RED}✖ Refused: command failed the safety check.${C_RESET}"
+                echo -e "    ${C_GRAY}${fix}${C_RESET}"
+                echo -e "    ${C_GRAY}Only plain allowlisted commands may be remediated.${C_RESET}"
+                failed=$((failed + 1))
+                echo ""
+                continue
+            fi
             echo -e "  ${C_BLUE}Running:${C_RESET} ${fix}"
-            if eval "${fix}"; then
+            local fix_rc=0
+            eval "${fix}" || fix_rc=$?
+            if [[ ${fix_rc} -eq 0 ]]; then
                 echo -e "  ${C_GREEN}✔ Fix applied successfully.${C_RESET}"
                 applied=$((applied + 1))
             else
-                echo -e "  ${C_RED}✖ Fix failed with exit code $?.${C_RESET}"
+                echo -e "  ${C_RED}✖ Fix failed with exit code ${fix_rc}.${C_RESET}"
                 failed=$((failed + 1))
             fi
         fi
@@ -162,4 +184,13 @@ run_doctor_fix() {
     echo -e "  ${C_YELLOW}Skipped:${C_RESET} ${skipped}"
     echo -e "  ${C_RED}Failed:${C_RESET}  ${failed}"
     echo ""
+
+    # Propagate the result. Previously this function ended on a bare `echo`,
+    # so it always returned 0 — `doctor --fix` and `make fix` reported success
+    # even when every remediation failed, breaking the documented exit-code
+    # contract used for automation.
+    if [[ ${failed} -gt 0 ]]; then
+        return 1
+    fi
+    return 0
 }

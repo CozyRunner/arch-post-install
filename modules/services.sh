@@ -12,6 +12,10 @@
 #  * @param {string} config - Path to the YAML config file.
 #  */
 enable_services_from_config() {
+
+    # Config-driven step: refuse to run on a mis-parsed config rather
+    # than silently operating on an empty one.
+    require_yaml_parser || return 1
     local config="$1"
 
     if [[ ! -f "${config}" ]]; then
@@ -31,28 +35,61 @@ enable_services_from_config() {
 
     log_step "Enabling ${#services[@]} services"
 
+    local -a failed=()
     for svc in "${services[@]}"; do
-    # Probe unit existence: systemctl cat exits non-zero if unit is not found,
-    # unlike list-unit-files which exits 0 even for missing units.
-    if systemctl cat "${svc}" &>/dev/null; then
-            sudo systemctl enable --now "${svc}" 2>&1 | tee -a "${LOG_FILE}"
-            log_success "Enabled: ${svc}"
+        # Probe unit existence: systemctl cat exits non-zero if unit is not found,
+        # unlike list-unit-files which exits 0 even for missing units.
+        #
+        # A failing `enable` must NOT abort the run. Under `set -e` a failing
+        # pipeline in an if-BODY is fatal, which previously left ZRAM, UFW,
+        # snapper, fonts, fish, flatpak and every dotfile unconfigured — all
+        # reported as one generic trap message. run_logged keeps the real exit
+        # status without that hazard, and one bad unit (docker routinely fails)
+        # no longer takes the rest of the install with it.
+        if systemctl cat "${svc}" &>/dev/null; then
+            if run_logged sudo systemctl enable --now "${svc}"; then
+                log_success "Enabled: ${svc}"
+            else
+                log_warn "Failed to enable: ${svc} (continuing)"
+                failed+=("${svc}")
+            fi
         elif systemctl cat "${svc}.service" &>/dev/null; then
-            sudo systemctl enable --now "${svc}.service" 2>&1 | tee -a "${LOG_FILE}"
-            log_success "Enabled: ${svc}"
+            if run_logged sudo systemctl enable --now "${svc}.service"; then
+                log_success "Enabled: ${svc}"
+            else
+                log_warn "Failed to enable: ${svc} (continuing)"
+                failed+=("${svc}")
+            fi
         elif systemctl cat "${svc}.timer" &>/dev/null; then
-            sudo systemctl enable --now "${svc}.timer" 2>&1 | tee -a "${LOG_FILE}"
-            log_success "Enabled timer: ${svc}"
+            if run_logged sudo systemctl enable --now "${svc}.timer"; then
+                log_success "Enabled timer: ${svc}"
+            else
+                log_warn "Failed to enable timer: ${svc} (continuing)"
+                failed+=("${svc}")
+            fi
         elif systemctl --user cat "${svc}" &>/dev/null; then
-            systemctl --user enable --now "${svc}" 2>&1 | tee -a "${LOG_FILE}"
-            log_success "Enabled (user): ${svc}"
+            if run_logged systemctl --user enable --now "${svc}"; then
+                log_success "Enabled (user): ${svc}"
+            else
+                log_warn "Failed to enable (user): ${svc} (continuing)"
+                failed+=("${svc}")
+            fi
         elif systemctl --user cat "${svc}.service" &>/dev/null; then
-            systemctl --user enable --now "${svc}.service" 2>&1 | tee -a "${LOG_FILE}"
-            log_success "Enabled (user): ${svc}"
+            if run_logged systemctl --user enable --now "${svc}.service"; then
+                log_success "Enabled (user): ${svc}"
+            else
+                log_warn "Failed to enable (user): ${svc} (continuing)"
+                failed+=("${svc}")
+            fi
         else
             log_warn "Unit not found: ${svc} (skipped)"
         fi
     done
+
+    if [[ ${#failed[@]} -gt 0 ]]; then
+        log_warn "${#failed[@]} unit(s) failed to enable: ${failed[*]}"
+        log_warn "Re-run 'systemctl enable --now <unit>' once the cause is fixed."
+    fi
 }
 
 # /**

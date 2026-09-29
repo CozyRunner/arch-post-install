@@ -67,14 +67,23 @@ test: ## Execute complete test suite
 
 prereq: ## Check for missing prerequisites
 	@echo "Checking required commands..."
-	@for cmd in sudo pacman git curl yq; do \
+	@missing=0; \
+	for cmd in sudo pacman git curl yq; do \
 		if command -v $$cmd &>/dev/null; then \
 			echo "  [OK] $$cmd"; \
 		else \
 			echo "  [MISSING] $$cmd"; \
+			missing=1; \
 		fi \
-	done
-	@echo "Done."
+	done; \
+	echo "Done."; \
+	if [ $$missing -ne 0 ]; then \
+		echo ""; \
+		echo "Install the missing packages before running the engine:"; \
+		echo "  sudo pacman -S --needed git yq"; \
+		echo "(yq is a hard dependency — configuration is read only through it)"; \
+		exit 1; \
+	fi
 
 zram: ## Setup ZRAM swap
 	@bash -c 'source modules/core.sh && source modules/system.sh && setup_zram'
@@ -99,6 +108,8 @@ fish: ## Setup Fish + Fisher
 lint: ## Lint all shell scripts with shellcheck
 	@echo "Running shellcheck..."
 	@shellcheck bin/arch-postinstall lib/*.sh scripts/check/*.sh tests/*.sh install.sh modules/*.sh scripts/*.sh 2>/dev/null || echo "shellcheck not installed. Install with: sudo pacman -S shellcheck"
+	@echo "Checking check-script remediation slots..."
+	@bash tests/lint_check_slots.sh
 	@echo "Done."
 
 flatpak: ## Install Flatpak and Flathub apps

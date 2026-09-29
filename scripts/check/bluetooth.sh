@@ -42,7 +42,7 @@ check_bluetooth() {
             pass "bluetooth" "pkg_${pkg}" "Bluetooth package '${pkg}' is installed"
         else
             warn "bluetooth" "pkg_${pkg}" "Bluetooth package '${pkg}' is missing" \
-                 "sudo pacman -S --needed ${pkg}"
+                 "" "sudo pacman -S --needed ${pkg}"
         fi
     done
 
@@ -52,7 +52,7 @@ check_bluetooth() {
             pass "bluetooth" "service_enabled" "bluetooth.service is enabled"
         else
             warn "bluetooth" "service_enabled" "bluetooth.service is not enabled" \
-                 "sudo systemctl enable --now bluetooth"
+                 "" "sudo systemctl enable --now bluetooth"
         fi
     fi
 }
@@ -70,14 +70,14 @@ health_bluetooth() {
         pass "bluetooth" "service_active" "bluetooth.service is active (running)"
     else
         warn "bluetooth" "service_active" "bluetooth.service is inactive" \
-             "sudo systemctl start bluetooth"
+             "" "sudo systemctl start bluetooth"
     fi
 
     # 2. RFKILL block status
     if command_exists rfkill; then
         if rfkill list bluetooth 2>/dev/null | grep -q "Soft blocked: yes"; then
             warn "bluetooth" "rfkill_status" "Bluetooth is soft-blocked by rfkill" \
-                 "Unblock Bluetooth: sudo rfkill unblock bluetooth"
+                 "" "sudo rfkill unblock bluetooth"
         elif rfkill list bluetooth 2>/dev/null | grep -q "Hard blocked: yes"; then
             warn "bluetooth" "rfkill_status" "Bluetooth is hard-blocked by hardware switch"
         elif rfkill list bluetooth 2>/dev/null | grep -q "bluetooth"; then

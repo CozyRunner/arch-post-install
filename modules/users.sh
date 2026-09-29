@@ -11,6 +11,10 @@
 #  * Configures the current user and system-wide settings from config/base.yaml.
 #  */
 setup_users() {
+
+    # Config-driven step: refuse to run on a mis-parsed config rather
+    # than silently operating on an empty one.
+    require_yaml_parser || return 1
     local config="${CONFIG_DIR}/base.yaml"
 
     log_step "Configuring user account"

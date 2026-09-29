@@ -29,10 +29,16 @@ COUNT_SKIP=0
 # shellcheck disable=SC2034
 COUNT_INFO=0
 
-# Array of check records formatted as TSV or internal delimited string
-# Format: CATEGORY|NAME|STATUS|MESSAGE|DETAILS|FIX_CMD|EXPECTED|CURRENT
+# Array of check records. Format (US-delimited, see CHECK_FIELD_SEP):
+#   CATEGORY <US> NAME <US> STATUS <US> MESSAGE <US> DETAILS <US> FIX_CMD <US> EXPECTED <US> CURRENT
 # shellcheck disable=SC2034
 CHECKS_RESULTS=()
+
+# Field delimiter for CHECKS_RESULTS records: ASCII Unit Separator (0x1F).
+# Chosen because it is a control character that cannot appear in YAML-derived
+# values, unlike '|' which is both legal data and a shell pipeline operator.
+# Read records with: IFS="${CHECK_FIELD_SEP}" read -r a b c d e f g h <<< "$rec"
+CHECK_FIELD_SEP=$'\x1f'
 
 reset_checks() {
     # shellcheck disable=SC2034
@@ -47,6 +53,81 @@ reset_checks() {
     COUNT_INFO=0
     # shellcheck disable=SC2034
     CHECKS_RESULTS=()
+}
+
+# ── Fix-command safety ────────────────────────────────────────────────────────
+# Fix commands are stored as strings and executed with `eval` under `sudo`. The
+# strings are built by interpolating values that ultimately come from YAML
+# config and from system state, so a config-supplied value containing shell
+# metacharacters becomes arbitrary code execution as root:
+#
+#   groups: [ 'wheel`id >/tmp/pwned`' ]
+#   → fix string "usermod -aG wheel`id >/tmp/pwned`"  → eval runs `id >/tmp/pwned`
+#
+# `fix_cmd_is_safe` rejects the constructs that enable this. It is an
+# allowlist, not a blocklist: anything not positively recognised is refused.
+
+# Commands permitted to start a segment of a remediation command.
+FIX_CMD_ALLOWED_CMDS="sudo pacman yay paru pikaur systemctl journalctl ufw
+    timedatectl hostnamectl locale-gen locale-conf localectl tee chmod chown
+    rm cp mv mkdir ln install sed awk grep cat find head tail wc sort uniq
+    usermod gpasswd groupadd useradd chpasswd passwd visudo mkinitcpio
+    paccache efibootmgr grub-mkconfig dracupgrub blkid lsblk findmnt ip
+    rfkill bluetoothctl modprobe sysctl hwclock nmcli resolvectl fstrim
+    systemctl-sysusers bootctl update-grub echo printf xargs
+    ./install.sh"
+
+# /**
+#  * fix_cmd_is_safe()
+#  * Returns 0 if a remediation command is safe to `eval`, non-zero otherwise.
+#  *
+#  * Rejects: backticks, `;`, `<`/`>` redirection, newlines, and ALL `$`
+#  * expansion — including `$(...)`. A config value that reaches the fix string
+#  * therefore cannot introduce a substitution of any kind. Quote balance is
+#  * enforced so a stray quote cannot swallow the remainder of the command.
+#  */
+fix_cmd_is_safe() {
+    local cmd="$1"
+
+    # Empty is not a runnable command.
+    [[ -z "${cmd//[[:space:]]/}" ]] && return 1
+
+    # Hard denials — these are the injection primitives.
+    # Built with ANSI-C quoting: a literal backtick inside [[ =~ ]] would
+    # otherwise be parsed as the start of a command substitution.
+    local danger=$'[\x60;<>$]'
+    [[ "${cmd}" =~ ${danger} ]] && return 1
+    [[ "${cmd}" == *$'\n'* || "${cmd}" == *$'\r'* ]] && return 1
+    # `&` is only ever valid as the `&&` operator here.
+    [[ "${cmd}" == *'&'* && "${cmd}" != *'&&'* ]] && return 1
+
+    # Quotes must be balanced, else a trailing quote can swallow the rest.
+    local single="${cmd//[^\']/}" double="${cmd//[^\"]/}"
+    (( ${#single} % 2 == 0 )) || return 1
+    (( ${#double} % 2 == 0 )) || return 1
+
+    # Every command segment must start with an allowlisted command.
+    local segment
+    while IFS= read -r segment; do
+        segment="${segment#"${segment%%[![:space:]]*}"}"
+        [[ -z "${segment}" ]] && continue
+        local first="${segment%%[[:space:]]*}"
+        _fix_cmd_allowed "${first}" || return 1
+    done < <(sed -e 's/&&/\n/g' -e 's/||/\n/g' -e 's/|/\n/g' <<< "${cmd}")
+
+    return 0
+}
+
+# /**
+#  * _fix_cmd_allowed()
+#  * Returns 0 if a word is in the remediation command allowlist.
+#  */
+_fix_cmd_allowed() {
+    local word="$1" allowed
+    for allowed in ${FIX_CMD_ALLOWED_CMDS}; do
+        [[ "${word}" == "${allowed}" ]] && return 0
+    done
+    return 1
 }
 
 # ── Check Registration ────────────────────────────────────────────────────────
@@ -69,15 +150,29 @@ register_check() {
         INFO) COUNT_INFO=$((COUNT_INFO + 1)) ;;
     esac
 
-    # Store in check results array
-    # We replace pipe characters in fields to prevent splitting errors
-    local clean_msg="${message//|/ - }"
-    local clean_details="${details//|/ - }"
-    local clean_fix="${fix_cmd//|/ && }"
-    local clean_exp="${expected//|/ - }"
-    local clean_cur="${current//|/ - }"
+    # Store in check results array.
+    #
+    # Records are US-delimited ($'\x1f', ASCII unit separator), NOT '|'.
+    # A pipe is a legal character in every one of these fields — most of all in
+    # fix_cmd, where "a | tee file" is a normal shell pipeline. The old code
+    # rewrote those pipes to '&&', so the fix printed to stdout instead of
+    # writing the file, and then reported success.
+    #
+    # US cannot appear in YAML-derived values, so no rewriting is needed and
+    # fix_cmd is stored verbatim. Any stray US is still stripped defensively,
+    # from EVERY field — the old code sanitised only 5 of 8, so a '|' in
+    # category or name silently shifted every later field (which could move a
+    # message into the fix slot, i.e. straight into `eval`).
+    local clean_cat="${category//$'\x1f'/}"
+    local clean_name="${name//$'\x1f'/}"
+    local clean_status="${status//$'\x1f'/}"
+    local clean_msg="${message//$'\x1f'/}"
+    local clean_details="${details//$'\x1f'/}"
+    local clean_fix="${fix_cmd//$'\x1f'/}"
+    local clean_exp="${expected//$'\x1f'/}"
+    local clean_cur="${current//$'\x1f'/}"
 
-    CHECKS_RESULTS+=("${category}|${name}|${status}|${clean_msg}|${clean_details}|${clean_fix}|${clean_exp}|${clean_cur}")
+    CHECKS_RESULTS+=("${clean_cat}${CHECK_FIELD_SEP}${clean_name}${CHECK_FIELD_SEP}${clean_status}${CHECK_FIELD_SEP}${clean_msg}${CHECK_FIELD_SEP}${clean_details}${CHECK_FIELD_SEP}${clean_fix}${CHECK_FIELD_SEP}${clean_exp}${CHECK_FIELD_SEP}${clean_cur}")
 
     # Output to terminal if not in json-only or doctor-silent mode
     if [[ "${JSON_OUTPUT:-false}" != true && "${DOCTOR_MODE:-false}" != true ]]; then
@@ -288,7 +383,7 @@ render_json() {
 
     for record in "${CHECKS_RESULTS[@]}"; do
         i=$((i + 1))
-        IFS='|' read -r cat name status msg details fix exp cur <<< "${record}"
+        IFS="${CHECK_FIELD_SEP}" read -r cat name status msg details fix exp cur <<< "${record}"
 
         local esc_cat esc_name esc_stat esc_msg esc_det esc_fix esc_exp esc_cur
         esc_cat="$(json_escape "${cat}")"

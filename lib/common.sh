@@ -238,17 +238,41 @@ is_virtual_machine() {
 }
 
 # ── YAML Parsing Wrappers ──────────────────────────────────────────────────────
+# `yq` is a HARD dependency. The previous grep-based fallback parser computed
+# nesting depth with `${key//[^:]}`, which yields 0 for every dot-separated key
+# (packages.pacman, user.groups, ...), so it returned EMPTY for every nested
+# list while exiting 0. That silently provisioned zero packages and zero group
+# memberships on any system without yq. A loud failure is strictly better than
+# silent corruption, so there is no fallback path by design.
+#
+# Install with: sudo pacman -S --needed yq
+
+YAML_PARSER="yq"
+
+# /**
+#  * require_yaml_parser()
+#  * Verifies the YAML parser is available. Returns non-zero if it is not, so
+#  * callers can fail fast with an actionable message instead of reading an
+#  * empty config.
+#  */
+require_yaml_parser() {
+    if ! command_exists "${YAML_PARSER}"; then
+        echo "Error: required dependency '${YAML_PARSER}' not found in PATH." >&2
+        echo "       This tool reads its declarative state from YAML and will" >&2
+        echo "       refuse to run rather than operate on a mis-parsed config." >&2
+        echo "       Install it with: sudo pacman -S --needed ${YAML_PARSER}" >&2
+        return 1
+    fi
+    return 0
+}
 
 yaml_list_get() {
     local file="$1" key="$2"
     if [[ ! -f "${file}" ]]; then
         return 0
     fi
-    if command_exists yq; then
-        yq -r ".${key}[]? // empty" "${file}" 2>/dev/null
-    else
-        _yaml_list_fallback "${file}" "${key}"
-    fi
+    require_yaml_parser || return 1
+    yq -r ".${key}[]? // empty" "${file}" 2>/dev/null
 }
 
 yaml_value_get() {
@@ -256,66 +280,20 @@ yaml_value_get() {
     if [[ ! -f "${file}" ]]; then
         return 0
     fi
-    if command_exists yq; then
-        yq -r ".${key} // empty" "${file}" 2>/dev/null
-    else
-        _yaml_value_fallback "${file}" "${key}"
-    fi
+    require_yaml_parser || return 1
+    yq -r ".${key} // empty" "${file}" 2>/dev/null
 }
 
 _yaml_list_fallback() {
-    local file="$1" key="$2"
-    local in_block=false
-    local target_depth="${key//[^:]}"
-    target_depth="${#target_depth}"
-    # shellcheck disable=SC2206
-    local key_segments=(${key//./ })
-    local match_key="${key_segments[-1]}"
-
-    while IFS= read -r line; do
-        local stripped="${line#"${line%%[![:space:]]*}"}"
-        local line_depth=0
-        if [[ "${line}" =~ ^([[:space:]]*) ]]; then
-            line_depth=$((${#BASH_REMATCH[1]} / 2))
-        fi
-
-        [[ -z "${stripped}" || "${stripped}" =~ ^# ]] && continue
-
-        if [[ "${stripped}" =~ ^([^:]+):[[:space:]]*(.*)$ ]]; then
-            local current_key="${BASH_REMATCH[1]}"
-            local current_val="${BASH_REMATCH[2]}"
-
-            if [[ "${line_depth}" -eq $((target_depth)) && "${current_key}" == "${match_key}" ]]; then
-                in_block=true
-                continue
-            fi
-
-            if ${in_block} && [[ "${line_depth}" -le $((target_depth)) && -n "${current_val}" ]]; then
-                break
-            fi
-        fi
-
-        if ${in_block}; then
-            if [[ "${stripped}" =~ ^-[[:space:]]+(.*) ]]; then
-                echo "${BASH_REMATCH[1]}"
-            elif [[ "${stripped}" =~ ^-[[:space:]]*$ ]]; then
-                continue
-            else
-                if [[ "${line_depth}" -le $((target_depth)) ]]; then
-                   in_block=false
-                fi
-            fi
-        fi
-    done < "${file}"
+    # Deprecated: retained only to give a clear error to anything that still
+    # calls it. See require_yaml_parser() for why the fallback was removed.
+    echo "Error: _yaml_list_fallback was removed — 'yq' is a hard dependency." >&2
+    return 1
 }
 
 _yaml_value_fallback() {
-    local file="$1" key="$2"
-    local match_key="${key##*.}"
-
-    grep -E "^[[:space:]]*${match_key}:" "${file}" 2>/dev/null \
-        | head -1 \
-        | sed 's/.*:[[:space:]]*//'
+    echo "Error: _yaml_value_fallback was removed — 'yq' is a hard dependency." >&2
+    return 1
 }
 
 # ── JSON String Escaping ───────────────────────────────────────────────────────
