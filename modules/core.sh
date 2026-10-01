@@ -75,6 +75,48 @@ run_logged() {
     return "${rc}"
 }
 
+# /**
+#  * set_etc_key()
+#  * Sets a single KEY=value entry in a shell-style /etc configuration file,
+#  * preserving every other key and the file's comments.
+#  *
+#  * `echo "KEY=value" | sudo tee /etc/file` replaces the ENTIRE file. For
+#  * /etc/locale.conf that destroyed any LC_* the user had set (LC_TIME,
+#  * LC_COLLATE, …); for /etc/vconsole.conf it destroyed FONT. This rewrites
+#  * only the named key: an existing assignment is replaced in place, a new one
+#  * is appended.
+#  *
+#  * @param {string} key     Key to set (e.g. LANG)
+#  * @param {string} value   Value to assign
+#  * @param {string} file    Target file
+#  */
+set_etc_key() {
+    local key="$1"
+    local value="$2"
+    local file="$3"
+
+    # Reject a value that could inject a second entry via a newline.
+    if [[ "${key}" == *$'\n'* || "${value}" == *$'\n'* ]]; then
+        log_error "Refusing multi-line value for ${key} in ${file}"
+        return 1
+    fi
+
+    # awk reads the file, replaces the matching key in place, passes every
+    # other line through verbatim (comments and all), and appends the key if
+    # it was absent. `NR==FNR` distinguishes an existing file from stdin.
+    printf '%s\n' "${key}=${value}" \
+        | sudo awk -v key="${key}" -v repl="${key}=${value}" '
+            NR==FNR {
+                if ($0 ~ "^[[:space:]]*" key "=") { print repl; seen=1 }
+                else { print }
+                next
+            }
+            { if (!seen) { print repl; seen=1 } }
+        ' "${file}" - > "${file}.set_etc_key.tmp" \
+        || { log_error "Failed to update ${key} in ${file}"; return 1; }
+    sudo mv "${file}.set_etc_key.tmp" "${file}"
+}
+
 # ── Network check ─────────────────────────────────────────────────────────────
 # /**
 #  * check_internet()

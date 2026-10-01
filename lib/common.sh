@@ -306,11 +306,22 @@ json_escape() {
     elif command_exists python3; then
         python3 -c 'import json, sys; print(json.dumps(sys.argv[1])[1:-1])' "${str}"
     else
-        # Fallback sed escaping for quotes, backslashes, tabs, newlines
+        # Fallback sed escaping for quotes, backslashes, tabs, newlines.
+        #
+        # The join MUST happen first. sed applies each `-e` script to one line
+        # at a time, so the previous order escaped only the FIRST line and
+        # emitted every later line raw — quotes, backslashes and tabs on lines
+        # 2+ reached the JSON document unescaped, producing invalid JSON.
+        #
+        # Escape order matters within the joined text too: backslashes first,
+        # so the backslashes introduced by the quote/tab substitutions are not
+        # themselves re-escaped; newlines last, so they become `\n` rather than
+        # being seen by an earlier substitution.
         printf '%s' "${str}" | sed \
+            -e ':a' -e '$!{N;ba}' \
             -e 's/\\/\\\\/g' \
             -e 's/"/\\"/g' \
             -e 's/\t/\\t/g' \
-            -e ':a;N;$!ba;s/\n/\\n/g'
+            -e 's/\n/\\n/g'
     fi
 }

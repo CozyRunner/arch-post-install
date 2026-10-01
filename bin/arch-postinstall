@@ -30,11 +30,29 @@ source "${LIB_DIR}/doctor.sh"
 source "${LIB_DIR}/planner.sh"
 
 # Load all check category modules
+#
+# An unmatched glob yields the pattern itself, so the loop body would try to
+# source a path that does not exist and, with no `-f` match, load nothing at
+# all — every category would silently report zero checks and the CLI would
+# exit 0. A missing or empty check directory is a framework error (exit 4),
+# not a clean bill of health.
+CHECK_SCRIPTS=()
 for check_script in "${CHECK_DIR}/"*.sh; do
     if [[ -f "${check_script}" ]]; then
-        # shellcheck disable=SC1090
-        source "${check_script}"
+        CHECK_SCRIPTS+=("${check_script}")
     fi
+done
+
+if [[ ${#CHECK_SCRIPTS[@]} -eq 0 ]]; then
+    echo "Error: no check modules found in ${CHECK_DIR}" >&2
+    echo "       The validation engine has nothing to run; refusing to report" >&2
+    echo "       a clean system from zero checks." >&2
+    exit 4
+fi
+
+for check_script in "${CHECK_SCRIPTS[@]}"; do
+    # shellcheck disable=SC1090
+    source "${check_script}"
 done
 
 # All available validation categories in standard order
@@ -192,6 +210,13 @@ while [[ $# -gt 0 ]]; do
                     COMMAND="doctor"
                     DOCTOR_FIX=true
                 fi
+            elif [[ "$1" == "fix" && "${COMMAND}" == "doctor" ]]; then
+                # `doctor fix` is a documented alias for `doctor --fix`
+                # (bin:117). It used to be appended to CATEGORIES instead,
+                # so it warned "Unknown category 'fix'" and then aborted with
+                # "No valid categories specified" (exit 3) — the remediation
+                # could never run.
+                DOCTOR_FIX=true
             else
                 CATEGORIES+=("$1")
             fi
@@ -232,12 +257,19 @@ is_valid_category() {
 
 handle_install() {
     local mode="${CATEGORIES[0]:-}"
-    if [[ -f "${ROOT_DIR}/install.sh" ]]; then
-        exec bash "${ROOT_DIR}/install.sh" ${mode:+"${mode}"}
-    else
+    # Validate the mode up front. Previously an unknown mode was forwarded to
+    # install.sh, which rejected it and exited 1 — the CLI documents 3 for
+    # invalid usage (bin:105-110), and a dispatch error is not an install
+    # failure.
+    if [[ -n "${mode}" && "${mode}" != "full" && "${mode}" != "base" && "${mode}" != "dotfiles" ]]; then
+        echo "Error: unknown install mode '${mode}' (expected: full, base, dotfiles)" >&2
+        exit 3
+    fi
+    if [[ ! -f "${ROOT_DIR}/install.sh" ]]; then
         echo "Error: install.sh not found at ${ROOT_DIR}/install.sh" >&2
         exit 4
     fi
+    exec bash "${ROOT_DIR}/install.sh" ${mode:+"${mode}"}
 }
 
 handle_plan() {
@@ -246,8 +278,35 @@ handle_plan() {
 }
 
 handle_list() {
+    # `list categories` is a documented idiom for "show me everything", so it
+    # is a keyword rather than a category filter. Any other arguments are
+    # category names and are validated, so `list bogus` reports invalid usage
+    # (3) instead of silently printing the full list and exiting 0.
+    local -a filters=()
+    local requested
+    for requested in "${CATEGORIES[@]}"; do
+        if [[ "${requested}" == "categories" ]]; then
+            filters=()
+            break
+        fi
+        if ! is_valid_category "${requested}"; then
+            echo "Error: unknown category '${requested}'" >&2
+            exit 3
+        fi
+        filters+=("${requested}")
+    done
+
     echo -e "${C_BOLD}Available Validation & Health Categories:${C_RESET}\n"
+    local cat
     for cat in "${ALL_CATEGORIES[@]}"; do
+        # With explicit filters, print only what was asked for.
+        if [[ ${#filters[@]} -gt 0 ]]; then
+            local wanted=0 filter
+            for filter in "${filters[@]}"; do
+                [[ "${filter}" == "${cat}" ]] && wanted=1
+            done
+            [[ ${wanted} -eq 0 ]] && continue
+        fi
         printf "  ${C_CYAN}%-14s${C_RESET} scripts/check/%s.sh\n" "${cat}" "${cat}"
     done
     echo ""
@@ -262,7 +321,14 @@ run_execution() {
     if [[ ${#CATEGORIES[@]} -gt 0 ]]; then
         for requested in "${CATEGORIES[@]}"; do
             if is_valid_category "${requested}"; then
-                target_categories+=("${requested}")
+                # De-duplicate. `check base base` used to run the category
+                # twice, double-counting every result in the summary and
+                # emitting a duplicate record per check in the JSON.
+                local already=0 existing
+                for existing in "${target_categories[@]}"; do
+                    [[ "${existing}" == "${requested}" ]] && already=1
+                done
+                [[ ${already} -eq 0 ]] && target_categories+=("${requested}")
             else
                 echo "Warning: Unknown category '${requested}', skipping" >&2
             fi

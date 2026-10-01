@@ -253,9 +253,16 @@ assert_aur_package_installed() {
     local name="aur:${pkg}"
 
     if aur_package_installed "${pkg}"; then
-        local ver
-        ver="$(yay -Q "${pkg}" 2>/dev/null | awk '{print $2}' || pacman -Qm "${pkg}" 2>/dev/null | awk '{print $2}')"
-        pass "${category}" "${name}" "Installed (${ver})"
+        local ver=""
+        # The fallback must be keyed on the PIPELINE, not appended to it with
+        # `||`: `cmd | awk || other` binds `||` to the whole pipeline, and awk
+        # exits 0 even on empty input, so `pacman -Qm` never ran. AUR packages
+        # therefore reported "Installed ()" whenever yay was absent.
+        ver="$(yay -Q "${pkg}" 2>/dev/null | awk '{print $2}')"
+        if [[ -z "${ver}" ]]; then
+            ver="$(pacman -Qm "${pkg}" 2>/dev/null | awk '{print $2}')"
+        fi
+        pass "${category}" "${name}" "Installed (${ver:-unknown version})"
         return 0
     else
         warn "${category}" "${name}" "AUR package '${pkg}' is not installed" \

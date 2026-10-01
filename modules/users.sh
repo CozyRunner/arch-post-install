@@ -80,14 +80,18 @@ setup_users() {
     if [[ -n "${locale}" ]]; then
         log_info "Setting locale to ${locale}"
         sudo sed -i "s/^#\(${locale}.*\)/\1/" /etc/locale.gen 2>/dev/null
-        sudo locale-gen 2>&1 | tee -a "${LOG_FILE}"
-        echo "LANG=${locale}" | sudo tee /etc/locale.conf >/dev/null
+        run_logged sudo locale-gen
+        # Preserve every existing key. `echo LANG=… | sudo tee` truncated
+        # /etc/locale.conf, destroying any LC_* the user had already set (LC_TIME,
+        # LC_COLLATE, …). Only the managed LANG key is written.
+        set_etc_key "LANG" "${locale}" /etc/locale.conf
         log_success "Locale: ${locale}"
     fi
 
     if [[ -n "${keymap}" ]]; then
         log_info "Setting keymap to ${keymap}"
-        echo "KEYMAP=${keymap}" | sudo tee /etc/vconsole.conf >/dev/null
+        # Same for /etc/vconsole.conf: FONT and other keys must survive.
+        set_etc_key "KEYMAP" "${keymap}" /etc/vconsole.conf
         log_success "Keymap: ${keymap}"
     fi
 }

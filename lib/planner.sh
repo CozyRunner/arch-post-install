@@ -15,17 +15,28 @@ if ! declare -f print_check_result &>/dev/null; then
     # shellcheck disable=SC1091
     source "${LIB_DIR}/output.sh"
 fi
+# CHECK_FIELD_SEP is defined in checks.sh. Sourcing it explicitly avoids
+# depending on bin/arch-postinstall happening to source checks.sh first — the
+# same implicit-ordering trap fixed for doctor.sh in item 10.
+if [[ -z "${CHECK_FIELD_SEP:-}" ]]; then
+    # shellcheck disable=SC1091
+    source "${LIB_DIR}/checks.sh"
+fi
 
 # ── Planner State Accumulator ──────────────────────────────────────────────────
 
 PLAN_TOTAL=0
 PLAN_CHANGES=0
 PLAN_SATISFIED=0
+PLAN_SKIPPED=0
 PLAN_SAFE=0
 PLAN_CAUTION=0
 PLAN_DESTRUCTIVE=0
 
-# Format: OPERATION|SUBSYSTEM|RESOURCE|CURRENT_STATE|DESIRED_STATE|REASON|RISK_LEVEL
+# Plan records use the same field delimiter as CHECKS_RESULTS so that a value
+# containing '|' round-trips intact. See lib/checks.sh for the rationale: a
+# pipe is legal data (and a normal shell operator), so the planner must never
+# rewrite one into ' - ' or split on it.
 PLAN_RECORDS=()
 
 declare -g -A PLAN_PACMAN_CACHE=()
@@ -38,6 +49,7 @@ plan_reset() {
     PLAN_TOTAL=0
     PLAN_CHANGES=0
     PLAN_SATISFIED=0
+    PLAN_SKIPPED=0
     PLAN_SAFE=0
     PLAN_CAUTION=0
     PLAN_DESTRUCTIVE=0
@@ -72,13 +84,16 @@ plan_register() {
 
     PLAN_TOTAL=$((PLAN_TOTAL + 1))
 
-    if [[ "${op}" == "NOOP" || "${op}" == "SKIP" ]]; then
-        if [[ "${op}" == "NOOP" ]]; then
-            PLAN_SATISFIED=$((PLAN_SATISFIED + 1))
-        fi
-    else
-        PLAN_CHANGES=$((PLAN_CHANGES + 1))
-    fi
+    # Every record increments exactly one of changes / already_satisfied /
+    # skipped, so `changes + already_satisfied + skipped == total_operations`
+    # always holds in the emitted JSON. SKIP previously incremented only the
+    # total, so the three fields silently failed to sum whenever a check was
+    # skipped.
+    case "${op}" in
+        NOOP) PLAN_SATISFIED=$((PLAN_SATISFIED + 1)) ;;
+        SKIP) PLAN_SKIPPED=$((PLAN_SKIPPED + 1)) ;;
+        *)    PLAN_CHANGES=$((PLAN_CHANGES + 1)) ;;
+    esac
 
     case "${risk}" in
         safe) PLAN_SAFE=$((PLAN_SAFE + 1)) ;;
@@ -87,16 +102,18 @@ plan_register() {
         *) PLAN_SAFE=$((PLAN_SAFE + 1)) ;;
     esac
 
-    # Sanitize pipe characters
-    local c_op="${op//|/ - }"
-    local c_sub="${sub//|/ - }"
-    local c_res="${res//|/ - }"
-    local c_cur="${cur//|/ - }"
-    local c_des="${des//|/ - }"
-    local c_reason="${reason//|/ - }"
-    local c_risk="${risk//|/ - }"
+    # Strip only the field delimiter, not every pipe. A pipe is valid data in
+    # all seven fields, so rewriting it to ' - ' corrupted the display of any
+    # resource whose name contained one.
+    local c_op="${op//${CHECK_FIELD_SEP}/}"
+    local c_sub="${sub//${CHECK_FIELD_SEP}/}"
+    local c_res="${res//${CHECK_FIELD_SEP}/}"
+    local c_cur="${cur//${CHECK_FIELD_SEP}/}"
+    local c_des="${des//${CHECK_FIELD_SEP}/}"
+    local c_reason="${reason//${CHECK_FIELD_SEP}/}"
+    local c_risk="${risk//${CHECK_FIELD_SEP}/}"
 
-    PLAN_RECORDS+=("${c_op}|${c_sub}|${c_res}|${c_cur}|${c_des}|${c_reason}|${c_risk}")
+    PLAN_RECORDS+=("${c_op}${CHECK_FIELD_SEP}${c_sub}${CHECK_FIELD_SEP}${c_res}${CHECK_FIELD_SEP}${c_cur}${CHECK_FIELD_SEP}${c_des}${CHECK_FIELD_SEP}${c_reason}${CHECK_FIELD_SEP}${c_risk}")
 }
 
 # ── Read-Only State Discovery Functions ────────────────────────────────────────
@@ -483,9 +500,24 @@ plan_discover_users_and_shell() {
 }
 
 # 6. Profile-specific configuration (Hyprland)
+#
+# Takes the profile NAME only. A second `profile_config` parameter used to be
+# accepted and never read, which made it look as though an arbitrary profile
+# YAML could influence this section. It cannot: only a profile whose name
+# matches this function's case branch produces any records, so `plan -p sway`
+# yields an empty profile section by design. Unknown profiles are reported as
+# unsupported rather than silently producing nothing.
 plan_discover_profile() {
     local profile_name="$1"
-    local profile_config="$2"
+
+    case "${profile_name}" in
+        hyprland) ;;
+        *)
+            plan_register "SKIP" "profile" "${profile_name}" "unsupported" "unsupported" \
+                "No profile rules defined for '${profile_name}'" "safe"
+            return 0
+            ;;
+    esac
 
     if [[ "${profile_name}" == "hyprland" ]]; then
         # GTK dark mode
@@ -528,7 +560,7 @@ render_plan_text() {
     for target_sub in "${subsystems[@]}"; do
         local found=false
         for record in "${PLAN_RECORDS[@]}"; do
-            IFS='|' read -r op sub res cur des reason risk <<< "${record}"
+            IFS="${CHECK_FIELD_SEP}" read -r op sub res cur des reason risk <<< "${record}"
             if [[ "${sub}" == "${target_sub}" ]]; then
                 if ! ${found}; then
                     # Capitalize subsystem header
@@ -589,6 +621,7 @@ render_plan_json() {
     printf '    "total_operations": %d,\n' "${PLAN_TOTAL}"
     printf '    "changes": %d,\n' "${PLAN_CHANGES}"
     printf '    "already_satisfied": %d,\n' "${PLAN_SATISFIED}"
+    printf '    "skipped": %d,\n' "${PLAN_SKIPPED}"
     printf '    "safe": %d,\n' "${PLAN_SAFE}"
     printf '    "caution": %d,\n' "${PLAN_CAUTION}"
     printf '    "destructive": %d\n' "${PLAN_DESTRUCTIVE}"
@@ -600,7 +633,7 @@ render_plan_json() {
 
     for record in "${PLAN_RECORDS[@]}"; do
         i=$((i + 1))
-        IFS='|' read -r op sub res cur des reason risk <<< "${record}"
+        IFS="${CHECK_FIELD_SEP}" read -r op sub res cur des reason risk <<< "${record}"
 
         local esc_op esc_sub esc_res esc_cur esc_des esc_reason esc_risk
         esc_op="$(json_escape "${op}")"
@@ -652,6 +685,12 @@ execute_plan() {
         plan_discover_services "${base_config}"
         plan_discover_system "${base_config}"
         plan_discover_users_and_shell "${base_config}"
+        # A `dotfiles:` list in base.yaml is a valid declaration and must be
+        # planned like any other. It was only discovered on the profile path,
+        # so a dotfile declared in base.yaml was silently never planned.
+        if yq -e '.dotfiles' "${base_config}" &>/dev/null; then
+            plan_discover_dotfiles "${base_config}"
+        fi
     fi
 
     # 2. Profile configuration discovery
@@ -659,7 +698,7 @@ execute_plan() {
         plan_discover_packages "${profile_config}"
         plan_discover_services "${profile_config}"
         plan_discover_dotfiles "${profile_config}"
-        plan_discover_profile "${target_profile}" "${profile_config}"
+        plan_discover_profile "${target_profile}"
     elif [[ -n "${CUSTOM_CONFIG:-}" && "${CUSTOM_CONFIG}" == "${base_config}" ]]; then
         # Custom config pointed directly to base or custom file
         plan_discover_dotfiles "${base_config}"

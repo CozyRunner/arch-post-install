@@ -64,21 +64,52 @@ tune_pacman() {
     log_step "Optimizing Pacman configuration"
     local pacman_conf="/etc/pacman.conf"
 
-    if [[ -f "${pacman_conf}" ]]; then
-        # Enable Color
-        sudo sed -i 's/^#Color/Color/' "${pacman_conf}"
-        # Enable VerbosePkgLists
-        sudo sed -i 's/^#VerbosePkgLists/VerbosePkgLists/' "${pacman_conf}"
-        # Enable ParallelDownloads = 5
-        sudo sed -i 's/^#ParallelDownloads = .*/ParallelDownloads = 5/' "${pacman_conf}"
-        # Add ILoveCandy under Color if not present
-        if ! grep -q "ILoveCandy" "${pacman_conf}"; then
-            sudo sed -i '/^Color/a ILoveCandy' "${pacman_conf}"
-        fi
-        log_success "Pacman settings optimized (Color, ILoveCandy, ParallelDownloads=5)"
-    else
+    if [[ ! -f "${pacman_conf}" ]]; then
         log_warn "Pacman config not found: ${pacman_conf}"
+        return 0
     fi
+
+    # Only claim what was actually applied. Each `sed` below matches the
+    # STOCK commented form, so a user who had already uncommented and set a
+    # value kept their value while the old code still printed
+    # "optimized (... ParallelDownloads=5)". Check the desired state first and
+    # skip what is already satisfied.
+    local applied=()
+
+    if grep -qE "^[[:space:]]*Color[[:space:]]*$" "${pacman_conf}"; then
+        applied+=("Color")
+    else
+        sudo sed -i 's/^#Color/Color/' "${pacman_conf}"
+        applied+=("Color")
+    fi
+
+    if grep -qE "^[[:space:]]*VerbosePkgLists[[:space:]]*$" "${pacman_conf}"; then
+        applied+=("VerbosePkgLists")
+    else
+        sudo sed -i 's/^#VerbosePkgLists/VerbosePkgLists/' "${pacman_conf}"
+        applied+=("VerbosePkgLists")
+    fi
+
+    if grep -qE "^[[:space:]]*ParallelDownloads[[:space:]]*=[[:space:]]*5[[:space:]]*$" "${pacman_conf}"; then
+        applied+=("ParallelDownloads=5")
+    else
+        # Matches both the commented stock form and an existing non-5 value.
+        if grep -qE "^[[:space:]]*ParallelDownloads[[:space:]]*=" "${pacman_conf}"; then
+            sudo sed -i -E 's/^[[:space:]]*ParallelDownloads[[:space:]]*=.*/ParallelDownloads = 5/' "${pacman_conf}"
+        else
+            sudo sed -i 's/^#ParallelDownloads = .*/ParallelDownloads = 5/' "${pacman_conf}"
+        fi
+        applied+=("ParallelDownloads=5")
+    fi
+
+    if grep -q "^ILoveCandy" "${pacman_conf}"; then
+        applied+=("ILoveCandy")
+    else
+        sudo sed -i '/^Color/a ILoveCandy' "${pacman_conf}"
+        applied+=("ILoveCandy")
+    fi
+
+    log_success "Pacman settings verified/applied: ${applied[*]}"
 }
 
 # /**
@@ -94,16 +125,42 @@ setup_zram() {
     fi
 
     local zram_conf="/etc/systemd/zram-generator.conf"
-    log_info "Writing ZRAM generator configuration to ${zram_conf}"
-    cat << 'EOF' | sudo tee "${zram_conf}" > /dev/null
-[zram0]
+    local zram_body='[zram0]
 zram-size = min(ram / 2, 8192)
-compression-algorithm = zstd
-EOF
+compression-algorithm = zstd'
 
-    # Start ZRAM device
-    sudo systemctl daemon-reload 2>&1 | tee -a "${LOG_FILE}"
-    sudo systemctl restart systemd-zram-setup@zram0.service 2>/dev/null || true
+    # Only rewrite the config when it differs. An unconditional write followed
+    # by a restart made every re-run discard live swapped data: the swap device
+    # is torn down and re-created, so anything the kernel had paged out to it
+    # is lost. Check both the config and the unit's active state first.
+    #
+    # Compare the file content to the desired body directly. `grep -qF` with a
+    # multi-line pattern is line-oriented: it matches if ANY line matches, so
+    # it cannot detect a changed compression-algorithm and would report the
+    # config as already correct for ever after the first run.
+    local needs_restart=0
+    local current_body=""
+    if [[ -f "${zram_conf}" ]]; then
+        current_body="$(cat "${zram_conf}")"
+    fi
+    if [[ "${current_body}" != "${zram_body}" ]]; then
+        log_info "Writing ZRAM generator configuration to ${zram_conf}"
+        printf '%s\n' "${zram_body}" | sudo tee "${zram_conf}" > /dev/null
+        run_logged sudo systemctl daemon-reload
+        needs_restart=1
+    fi
+
+    if systemctl is-active --quiet systemd-zram-setup@zram0.service; then
+        if [[ ${needs_restart} -eq 1 ]]; then
+            log_info "ZRAM config changed; restarting swap device"
+            run_logged sudo systemctl restart systemd-zram-setup@zram0.service
+        else
+            log_success "ZRAM already active with the desired configuration"
+            return 0
+        fi
+    else
+        run_logged sudo systemctl start systemd-zram-setup@zram0.service
+    fi
     log_success "ZRAM swap configured (zstd, min(RAM/2, 8GB))"
 }
 
@@ -197,14 +254,41 @@ ufw_has_rule_ssh() {
 #  */
 tune_bluetooth() {
     local bt_conf="/etc/bluetooth/main.conf"
-    if [[ -f "${bt_conf}" ]]; then
-        log_step "Configuring Bluetooth AutoEnable"
-        if grep -q "^#AutoEnable" "${bt_conf}"; then
-            sudo sed -i 's/^#AutoEnable[[:space:]]*=.*/AutoEnable = true/' "${bt_conf}"
-            log_success "Bluetooth AutoEnable set to true"
-        elif ! grep -q "^AutoEnable" "${bt_conf}"; then
-            echo -e "\n[Policy]\nAutoEnable = true" | sudo tee -a "${bt_conf}" > /dev/null
-            log_success "Bluetooth AutoEnable configured"
-        fi
+    if [[ ! -f "${bt_conf}" ]]; then
+        log_warn "${bt_conf} not found (skipping Bluetooth AutoEnable)"
+        return 0
     fi
+
+    log_step "Configuring Bluetooth AutoEnable"
+
+    # Already uncommented and true? Nothing to do.
+    if grep -qE "^[[:space:]]*AutoEnable[[:space:]]*=[[:space:]]*true" "${bt_conf}"; then
+        log_success "Bluetooth AutoEnable already set to true"
+        return 0
+    fi
+
+    # Uncomment the stock commented-out line (the common case).
+    if grep -q "^[[:space:]]*#AutoEnable" "${bt_conf}"; then
+        sudo sed -i 's/^[[:space:]]*#AutoEnable[[:space:]]*=.*/AutoEnable = true/' "${bt_conf}"
+        log_success "Bluetooth AutoEnable set to true"
+        return 0
+    fi
+
+    # An explicit `AutoEnable = false` (or a value we do not recognise) exists.
+    # Edit it in place rather than appending, which is what created a SECOND
+    # `[Policy]` section on every re-run.
+    if grep -qE "^[[:space:]]*AutoEnable[[:space:]]*=" "${bt_conf}"; then
+        sudo sed -i -E 's/^[[:space:]]*AutoEnable[[:space:]]*=.*/AutoEnable = true/' "${bt_conf}"
+        log_success "Bluetooth AutoEnable updated to true"
+        return 0
+    fi
+
+    # No AutoEnable key at all: add one under the existing [Policy] section if
+    # there is one, otherwise create the section exactly once.
+    if grep -qE "^[[:space:]]*\[Policy\]" "${bt_conf}"; then
+        sudo sed -i -E '0,/^[[:space:]]*\[Policy\]/s//[Policy]\nAutoEnable = true/' "${bt_conf}"
+    else
+        printf '\n[Policy]\nAutoEnable = true\n' | sudo tee -a "${bt_conf}" > /dev/null
+    fi
+    log_success "Bluetooth AutoEnable configured"
 }

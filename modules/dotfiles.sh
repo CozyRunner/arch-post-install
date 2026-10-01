@@ -90,11 +90,31 @@ deploy_dotfiles_from_config() {
         for entry in "${exec_entries[@]}"; do
             local exec_path="${DOTFILES_DIR}/${entry}"
             if [[ -d "${exec_path}" ]]; then
-                find "${exec_path}" -type f -exec chmod +x {} \;
-                log_success "Marked files in ${entry} as executable"
+                # Only chmod what is not already executable. The previous
+                # unconditional `find … -exec chmod +x` rewrote the mode of
+                # every tracked file on every run, permanently dirtying the git
+                # working tree even when nothing had changed. lib/planner.sh
+                # already models this step as NOOP when the state is desired.
+                local changed=0
+                while IFS= read -r -d '' f; do
+                    if [[ ! -x "${f}" ]]; then
+                        chmod +x "${f}"
+                        changed=$((changed + 1))
+                    fi
+                done < <(find "${exec_path}" -type f -print0)
+
+                if [[ ${changed} -gt 0 ]]; then
+                    log_success "Marked ${changed} file(s) in ${entry} as executable"
+                else
+                    log_success "Files in ${entry} already executable (unchanged)"
+                fi
             elif [[ -f "${exec_path}" ]]; then
-                chmod +x "${exec_path}"
-                log_success "Marked ${entry} as executable"
+                if [[ -x "${exec_path}" ]]; then
+                    log_success "Already executable: ${entry}"
+                else
+                    chmod +x "${exec_path}"
+                    log_success "Marked ${entry} as executable"
+                fi
             else
                 log_warn "Executables entry not found: ${exec_path} (skipped)"
             fi
