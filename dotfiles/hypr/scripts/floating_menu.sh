@@ -109,6 +109,7 @@ menu_system() {
 󰣇  Update Arch Linux
 󰚙  Update AUR Packages
 󰚰  Update Device Firmware
+󰋊  Disk Analyzer (ncdu)
 󰍹  About This PC"
 
   local choice
@@ -129,6 +130,9 @@ menu_system() {
       ;;
     *"Update Device Firmware"*)
       $TERM_APP --title "Firmware Update" --class floating-term bash "$SCRIPTS_DIR/firmware_update.sh"
+      ;;
+    *"Disk Analyzer"*|*"Disk Analyser"*|*"ncdu"*)
+      $TERM_APP --title "Disk Analyzer (ncdu)" --class large-floating-term ncdu --exclude-kernfs /
       ;;
     *"About This PC"*)
       $TERM_APP --title "About This PC" --class medium-floating-term bash "$SCRIPTS_DIR/about_pc.sh"

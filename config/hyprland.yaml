@@ -112,6 +112,7 @@ packages:
     - impala              # network TUI
     - bluetui             # bluetooth TUI
     - tui-journal         # terminal journal
+    - ncdu                # disk usage analyzer TUI
 
   aur:
     - grimblast-git

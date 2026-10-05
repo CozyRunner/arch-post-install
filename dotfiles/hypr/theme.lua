@@ -1,12 +1,12 @@
--- Hyprland Theme — Everforest (Dark)
+-- Hyprland Theme — Tokyo Night (Dark)
 hl.config({
     general = {
         gaps_in  = 5,
         gaps_out = 10,
         border_size = 2,
         col = {
-            active_border   = { colors = { "rgba(a7c080ff)", "rgba(83c092ff)" }, angle = 45 },
-            inactive_border = "rgba(374145aa)",
+            active_border   = { colors = { "rgba(7aa2f7ff)", "rgba(bb9af7ff)" }, angle = 45 },
+            inactive_border = "rgba(292e42aa)",
         },
         resize_on_border = true,
     },
@@ -16,7 +16,7 @@ hl.config({
             enabled      = true,
             range        = 20,
             render_power = 3,
-            color        = "rgba(232a2eaa)",
+            color        = "rgba(16161eaa)",
         },
         blur = {
             enabled           = true,
