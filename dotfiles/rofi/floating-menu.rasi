@@ -1,6 +1,6 @@
 /**
  * Floating Quick Menu — Rofi Theme
- * Compact, centered floating panel with icon-style items
+ * Glassmorphic, centered floating panel with icon-style items
  * Author: Sachin
  */
 
@@ -9,7 +9,7 @@
 * {
     background-color: transparent;
     text-color:       @foreground;
-    border-color:     transparent;
+    border-color:     @border;
     spacing:          0;
     padding:          0;
     margin:           0;
@@ -27,8 +27,9 @@ configuration {
 }
 
 window {
-    width:            380px;
-    border:           2px solid;
+    transparency:     "real";
+    width:            440px;
+    border:           1px;
     border-radius:    20px;
     border-color:     @border;
     padding:          0;
@@ -40,29 +41,55 @@ window {
 }
 
 mainbox {
-    padding:          24px;
-    spacing:          16px;
+    padding:          20px;
+    spacing:          12px;
     background-color: transparent;
-    children:         [ "message", "listview" ];
+    children:         [ "inputbar", "message", "listview" ];
+}
+
+inputbar {
+    enabled:          true;
+    padding:          10px 14px;
+    border-radius:    12px;
+    background-color: @background-alt;
+    text-color:       @foreground;
+    children:         [ "prompt", "entry" ];
+    spacing:          10px;
+}
+
+prompt {
+    font:             "JetBrainsMono Nerd Font Bold 13";
+    text-color:       @accent;
+    vertical-align:   0.5;
+}
+
+entry {
+    font:             "JetBrainsMono Nerd Font 12";
+    text-color:       @foreground;
+    placeholder:      "Type to filter…";
+    placeholder-color: @foreground-dim;
+    vertical-align:   0.5;
+    cursor:           text;
 }
 
 message {
-    padding:          12px 16px;
-    border-radius:    14px;
-    background-color: @background-alt;
+    padding:          6px 14px;
+    border-radius:    10px;
+    background-color: transparent;
 }
 
 textbox {
+    markup:           false;
     background-color: transparent;
-    text-color:       @accent;
-    font:             "JetBrainsMono Nerd Font Bold 13";
-    horizontal-align: 0.5;
+    text-color:       @foreground-dim;
+    font:             "JetBrainsMono Nerd Font 11";
+    horizontal-align: 0.0;
 }
 
 listview {
     columns:          1;
-    lines:            8;
-    spacing:          8px;
+    lines:            9;
+    spacing:          6px;
     padding:          0;
     fixed-height:     false;
     fixed-columns:    true;
@@ -75,14 +102,19 @@ listview {
 
 element {
     orientation:      horizontal;
-    padding:          14px 18px;
-    spacing:          14px;
-    border-radius:    14px;
+    padding:          12px 16px;
+    spacing:          12px;
+    border-radius:    12px;
     background-color: @background-alt;
     cursor:           pointer;
 }
 
 element normal.normal {
+    background-color: @background-alt;
+    text-color:       @foreground;
+}
+
+element alternate.normal {
     background-color: @background-alt;
     text-color:       @foreground;
 }
@@ -97,6 +129,7 @@ element-icon {
 }
 
 element-text {
+    markup:           false;
     background-color: transparent;
     text-color:       inherit;
     font:             "JetBrainsMono Nerd Font 13";
