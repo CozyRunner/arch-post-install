@@ -32,6 +32,20 @@ CURSOR_SIZE="${CURSOR_SIZE:-24}"
 FONT_NAME="${FONT_NAME:-Adwaita Sans 11}"
 COLOR_SCHEME="${COLOR_SCHEME:-prefer-dark}"
 
+# Validate icon theme exists on disk; fall back to an installed theme if missing
+if [[ ! -d "/usr/share/icons/${ICON_THEME}" && ! -d "${HOME}/.local/share/icons/${ICON_THEME}" ]]; then
+    local_gtk_icon=$(grep -E '^gtk-icon-theme-name=' "${HOME}/.config/gtk-3.0/settings.ini" 2>/dev/null | cut -d'=' -f2 | tr -d ' "')
+    if [[ -n "${local_gtk_icon}" && ( -d "/usr/share/icons/${local_gtk_icon}" || -d "${HOME}/.local/share/icons/${local_gtk_icon}" ) ]]; then
+        ICON_THEME="${local_gtk_icon}"
+    elif [[ -d "/usr/share/icons/Pop" ]]; then
+        ICON_THEME="Pop"
+    elif [[ -d "/usr/share/icons/breeze-dark" ]]; then
+        ICON_THEME="breeze-dark"
+    elif [[ -d "/usr/share/icons/Adwaita" ]]; then
+        ICON_THEME="Adwaita"
+    fi
+fi
+
 # ── Re-apply via gsettings (no-op if already set, but ensures ─
 # ── all dconf keys are consistent with settings.ini)         ─
 gsettings set org.gnome.desktop.interface gtk-theme     "${GTK_THEME_NAME}"

@@ -64,7 +64,9 @@ if [ "$TARGET_MODE" == "light" ]; then
   # GTK color scheme
   gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
   gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
-  gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Light'
+  if [ -d "/usr/share/icons/Papirus-Light" ] || [ -d "$HOME/.local/share/icons/Papirus-Light" ]; then
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Light'
+  fi
   gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'
   gsettings set org.gnome.desktop.interface cursor-size 24
 
@@ -168,7 +170,9 @@ else
   # GTK color scheme
   gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
   gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
-  gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+  if [ -d "/usr/share/icons/Papirus-Dark" ] || [ -d "$HOME/.local/share/icons/Papirus-Dark" ]; then
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+  fi
   gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'
   gsettings set org.gnome.desktop.interface cursor-size 24
 

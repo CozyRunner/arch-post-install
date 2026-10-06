@@ -69,7 +69,7 @@
           "command": "~/.config/hypr/scripts/wallpaper_picker.sh"
         },
         {
-          "label": "󱘖 Clipboard",
+          "label": "󰅍 Clipboard",
           "type": "normal",
           "command": "~/.config/hypr/scripts/clipboard.sh"
         },
@@ -84,7 +84,7 @@
           "command": "~/.config/hypr/scripts/floating_menu.sh"
         },
         {
-          "label": "⏻ Power",
+          "label": " Power",
           "type": "normal",
           "command": "~/.config/hypr/scripts/power_menu.sh"
         }

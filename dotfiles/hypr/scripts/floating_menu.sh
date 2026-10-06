@@ -119,7 +119,7 @@ menu_controls() {
 󰖩  Network Manager (Impala)
 󰂯  Bluetooth Devices (Bluetui)
 󰓃  Audio Mixer (WireMix)
-󱘖  Clipboard History"
+󰅍  Clipboard History"
 
     local choice
     choice=$(rofi_menu "📡 Controls" "Control Center › Quick Controls" "$options")
@@ -289,7 +289,7 @@ menu_power() {
 󰍃  Logout ($USER_NAME)"
 
     local choice
-    choice=$(rofi_menu "⏻ Power" "Control Center › Power & Session" "$options")
+    choice=$(rofi_menu " Power" "Control Center › Power & Session" "$options")
     [[ -z "$choice" ]] && exit 0
 
     case "$choice" in
@@ -322,7 +322,7 @@ main_menu() {
 📡  Quick Controls & Devices
 📦  System & Maintenance
   Configuration & Dotfiles
-⏻  Power & Session"
+  Power & Session"
 
     local selection
     selection=$(rofi_menu "⚡ Quick Settings" "Hyprland Control Center" "$root_options")

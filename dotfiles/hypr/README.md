@@ -144,7 +144,7 @@ Super + D / Super + I
 | **Quick Controls & Devices** | 📡 | Notification Center (SwayNC), Wi-Fi (Impala), Bluetooth (Bluetui), Audio Mixer (WireMix), Clipboard History | `notification_center.sh`, `impala`, `bluetui`, `wiremix`, `clipboard.sh` |
 | **System & Maintenance** | 📦 | Update Checker, Arch pacman update, AUR update, Device Firmware, Disk Analyzer (ncdu), About This PC | `check_updates.sh`, `update_arch.sh`, `aur_update.sh`, `firmware_update.sh`, `ncdu`, `about_pc.sh` |
 | **Configuration & Dotfiles** |  | Input/Touchpad, Core Keybindings, Utility Bindings, Monitors, Hypridle, Hyprlock, SwayNC | Config editors via `nvim` in floating terminals |
-| **Power & Session** | ⏻ | Lock Session, Suspend, Reboot, Power Off, Logout | `hyprlock`, `systemctl`, `hyprctl dispatch exit` |
+| **Power & Session** |  | Lock Session, Suspend, Reboot, Power Off, Logout | `hyprlock`, `systemctl`, `hyprctl dispatch exit` |
 
 ### How It Works
 
@@ -156,7 +156,7 @@ Super + D / Super + I  →  rofi (floating-menu.rasi)
                            ├─ 📡 Quick Controls & Devices →  Notifications · Wi-Fi · Bluetooth · Audio · Clips
                            ├─ 📦 System & Maintenance     →  Updates (Arch, AUR, Firmware) · ncdu · About PC
                            ├─  Configuration & Dotfiles  →  Keybinds · Monitors · Input · Rules · Daemons
-                           └─ ⏻ Power & Session           →  Lock · Suspend · Reboot · Power Off · Logout
+                           └─  Power & Session           →  Lock · Suspend · Reboot · Power Off · Logout
 ```
 
 Terminal-based actions spawn a **floating kitty window** (classes `floating-term`, `medium-floating-term`, or `large-floating-term`) that is automatically floated, centered, and sized via window rules in `rules.lua`.

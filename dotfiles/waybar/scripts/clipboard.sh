@@ -29,7 +29,7 @@ ensure_daemon() {
 case "$1" in
     --tooltip)
         if ! command -v "$CLIPSE_CMD" &>/dev/null && [[ ! -x "$CLIPSE_CMD" ]]; then
-            jq -nc --arg text "󱘖" --arg tooltip "clipse is not installed" '{text: $text, tooltip: $tooltip, class: "disabled"}'
+            jq -nc --arg text "󰅍" --arg tooltip "clipse is not installed" '{text: $text, tooltip: $tooltip, class: "disabled"}'
             exit 0
         fi
 
@@ -43,12 +43,12 @@ case "$1" in
         fi
 
         if [[ "$count" -eq 0 || -z "$count" ]]; then
-            tooltip_msg="󱘖 Clipboard History (Clipse)\nStatus: Empty\n\n󰍽 Left-Click: Open Clipse\n󰍾 Right-Click: Clear History"
+            tooltip_msg="󰅍 Clipboard History (Clipse)\nStatus: Empty\n\n󰍽 Left-Click: Open Clipse\n󰍾 Right-Click: Clear History"
         else
-            tooltip_msg="󱘖 Clipboard History (Clipse) (${count} items)\nLatest: ${latest}\n\n󰍽 Left-Click: Open Clipse\n󰍿 Middle-Click: Menu\n󰍾 Right-Click: Clear All History"
+            tooltip_msg="󰅍 Clipboard History (Clipse) (${count} items)\nLatest: ${latest}\n\n󰍽 Left-Click: Open Clipse\n󰍿 Middle-Click: Menu\n󰍾 Right-Click: Clear All History"
         fi
 
-        jq -nc --arg text "󱘖" --arg tooltip "$tooltip_msg" '{text: $text, tooltip: $tooltip, class: "active"}'
+        jq -nc --arg text "󰅍" --arg tooltip "$tooltip_msg" '{text: $text, tooltip: $tooltip, class: "active"}'
         ;;
 
     --list)
@@ -80,12 +80,12 @@ case "$1" in
         ;;
 
     --delete|--menu)
-        menu_items="󱘖 Open Clipse Clipboard Manager\n󰗨 Clear All History"
+        menu_items="󰅍 Open Clipse Clipboard Manager\n󰗨 Clear All History"
         action=""
         if command -v rofi &>/dev/null && [[ -f "$ROFI_THEME" ]]; then
-            action=$(echo -e "$menu_items" | rofi -dmenu -theme "$ROFI_THEME" -p "󱘖 Clipboard Menu")
+            action=$(echo -e "$menu_items" | rofi -dmenu -theme "$ROFI_THEME" -p "󰅍 Clipboard Menu")
         elif command -v rofi &>/dev/null; then
-            action=$(echo -e "$menu_items" | rofi -dmenu -p "󱘖 Clipboard Menu")
+            action=$(echo -e "$menu_items" | rofi -dmenu -p "󰅍 Clipboard Menu")
         fi
 
         case "$action" in
