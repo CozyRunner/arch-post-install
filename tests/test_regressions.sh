@@ -651,6 +651,43 @@ EOF
     fi
 }
 
+# ── Screenshot tool & Notification Center integration ─────────────────────────
+{
+    # 1. screenshot.sh exists and is executable
+    if [[ -x "${ROOT_DIR}/dotfiles/hypr/scripts/screenshot.sh" ]]; then
+        ok
+    else
+        fail "screenshot.sh exists and is executable"
+    fi
+
+    # 2. screenshot.sh --help outputs all 4 required modes
+    help_out="$("${ROOT_DIR}/dotfiles/hypr/scripts/screenshot.sh" --help 2>&1 || true)"
+    for mode in screen display area window; do
+        if grep -q "${mode}" <<< "${help_out}"; then
+            ok
+        else
+            fail "screenshot.sh help mentions mode '${mode}'"
+        fi
+    done
+
+    # 3. swaync config.json contains screenshot tool widget and actions
+    swaync_cfg="${ROOT_DIR}/dotfiles/swaync/config.json"
+    if jq -e '.widgets | index("buttons-grid#screenshot") != null' "${swaync_cfg}" >/dev/null 2>&1; then
+        ok
+    else
+        fail "swaync config includes buttons-grid#screenshot in widgets list"
+    fi
+
+    actions="$(jq -r '."widget-config"["buttons-grid#screenshot"].actions[]?.command // empty' "${swaync_cfg}" 2>/dev/null)"
+    for mode in screen display area window; do
+        if grep -q "screenshot.sh ${mode}" <<< "${actions}"; then
+            ok
+        else
+            fail "swaync buttons-grid#screenshot config includes action for '${mode}'"
+        fi
+    done
+}
+
 # ── Summary ──────────────────────────────────────────────────────────────────
 
 if [[ ${#FAILED_NAMES[@]} -gt 0 ]]; then

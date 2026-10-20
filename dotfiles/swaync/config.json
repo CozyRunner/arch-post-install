@@ -35,6 +35,8 @@
     "volume",
     "backlight",
     "buttons-grid",
+    "label#screenshot",
+    "buttons-grid#screenshot",
     "notifications"
   ],
   "widget-config": {
@@ -87,6 +89,33 @@
           "label": " Power",
           "type": "normal",
           "command": "~/.config/hypr/scripts/power_menu.sh"
+        }
+      ]
+    },
+    "label#screenshot": {
+      "text": "Screenshot Tool"
+    },
+    "buttons-grid#screenshot": {
+      "actions": [
+        {
+          "label": "󰹑 Screen",
+          "type": "normal",
+          "command": "~/.config/hypr/scripts/screenshot.sh screen"
+        },
+        {
+          "label": "󰍹 Display",
+          "type": "normal",
+          "command": "~/.config/hypr/scripts/screenshot.sh display"
+        },
+        {
+          "label": "󰒅 Area",
+          "type": "normal",
+          "command": "~/.config/hypr/scripts/screenshot.sh area"
+        },
+        {
+          "label": "󰖯 Window",
+          "type": "normal",
+          "command": "~/.config/hypr/scripts/screenshot.sh window"
         }
       ]
     }

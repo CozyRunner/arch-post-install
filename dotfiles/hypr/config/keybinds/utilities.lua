@@ -40,15 +40,21 @@ hl.bind(mainMod .. " + F2", hl.dsp.exec_cmd("brightnessctl set 5%+"), { locked =
 hl.bind(mainMod .. " + F5", hl.dsp.exec_cmd("~/.config/hypr/scripts/firmware_update.sh"))
 
 -- ------------------------------------------------------------------------------
--- --- SCREENSHOTS (via grimblast) ---
+-- --- SCREENSHOTS (via ~/.config/hypr/scripts/screenshot.sh) ---
 -- ------------------------------------------------------------------------------
 
--- Save area to file and clipboard (Print or Win + Shift + S Snipping Tool)
-hl.bind("Print",                   hl.dsp.exec_cmd("grimblast --notify copysave area"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("grimblast --notify copysave area"))
+-- Save selection area to file and clipboard (Print or Win + Shift + S Snipping Tool)
+hl.bind("Print",                   hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh area"))
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh area"))
 
--- Save active window to file and clipboard
-hl.bind("ALT + Print",             hl.dsp.exec_cmd("grimblast --notify copysave active"))
+-- Select and save specific application window
+hl.bind("ALT + Print",             hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh window"))
 
--- Save current monitor to file and clipboard
-hl.bind("SHIFT + Print",           hl.dsp.exec_cmd("grimblast --notify copysave output"))
+-- Save active display (cursor monitor) to file and clipboard
+hl.bind("SHIFT + Print",           hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh display"))
+
+-- Save entire screen (all monitors) to file and clipboard
+hl.bind("CTRL + Print",            hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh screen"))
+
+-- Open interactive screenshot menu
+hl.bind(mainMod .. " + Print",     hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh menu"))

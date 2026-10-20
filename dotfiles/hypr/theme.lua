@@ -1,12 +1,12 @@
--- Hyprland Theme — Tokyo Night (Dark)
+-- Hyprland Theme — Rosé Pine (Dark)
 hl.config({
     general = {
         gaps_in  = 5,
         gaps_out = 10,
         border_size = 2,
         col = {
-            active_border   = { colors = { "rgba(7aa2f7ff)", "rgba(bb9af7ff)" }, angle = 45 },
-            inactive_border = "rgba(292e42aa)",
+            active_border   = { colors = { "rgba(ebbcbaff)", "rgba(c4a7e7ff)" }, angle = 45 },
+            inactive_border = "rgba(26233aaa)",
         },
         resize_on_border = true,
     },
@@ -16,7 +16,7 @@ hl.config({
             enabled      = true,
             range        = 20,
             render_power = 3,
-            color        = "rgba(16161eaa)",
+            color        = "rgba(191724aa)",
         },
         blur = {
             enabled           = true,

@@ -329,9 +329,12 @@ Displays detailed system information in a styled floating terminal panel with Ne
 
 | Keybind | Action |
 |---------|--------|
-| `Print` / `Super + Shift + S` | Snipping Tool / Screenshot area → clipboard + file |
-| `Alt + Print` | Screenshot active window |
-| `Shift + Print` | Screenshot current monitor |
+| `Print` / `Super + Shift + S` | Snipping Tool / Selection area → clipboard + file |
+| `Alt + Print` | Select & capture specific application window |
+| `Shift + Print` | Capture active display where cursor is positioned |
+| `Ctrl + Print` | Capture entire screen (all connected displays) |
+| `Super + Print` | Interactive Screenshot Tool menu (Rofi) |
+| *Notification Center* | Integrated Screenshot Tool buttons (`Screen`, `Display`, `Area`, `Window`) |
 
 ### Media (media.conf)
 

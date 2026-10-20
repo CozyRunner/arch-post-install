@@ -115,6 +115,7 @@ $theme_label
 # ------------------------------------------------------------------------------
 menu_controls() {
     local options="󰌍  Back to Main Menu
+󰄀  Screenshot Tool
 󰂚  Notification Center
 󰖩  Network Manager (Impala)
 󰂯  Bluetooth Devices (Bluetui)
@@ -128,6 +129,9 @@ menu_controls() {
     case "$choice" in
         *"Back to Main Menu"*)
             main_menu
+            ;;
+        *"Screenshot Tool"*)
+            bash "$SCRIPTS_DIR/screenshot.sh" menu
             ;;
         *"Notification Center"*)
             bash "$SCRIPTS_DIR/notification_center.sh" toggle
