@@ -59,6 +59,7 @@
       "label": "󰃟"
     },
     "buttons-grid": {
+      "buttons-per-row": 2,
       "actions": [
         {
           "label": "󰖙 Theme",
@@ -96,24 +97,25 @@
       "text": "Screenshot Tool"
     },
     "buttons-grid#screenshot": {
+      "buttons-per-row": 2,
       "actions": [
         {
-          "label": "󰹑 Screen",
+          "label": "󰹑 Entire Screen",
           "type": "normal",
           "command": "~/.config/hypr/scripts/screenshot.sh screen"
         },
         {
-          "label": "󰍹 Display",
+          "label": "󰍹 Active Display",
           "type": "normal",
           "command": "~/.config/hypr/scripts/screenshot.sh display"
         },
         {
-          "label": "󰒅 Area",
+          "label": "󰒅 Selection Area",
           "type": "normal",
           "command": "~/.config/hypr/scripts/screenshot.sh area"
         },
         {
-          "label": "󰖯 Window",
+          "label": "󰖯 App Window",
           "type": "normal",
           "command": "~/.config/hypr/scripts/screenshot.sh window"
         }
