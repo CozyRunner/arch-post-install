@@ -58,3 +58,23 @@ hl.bind("CTRL + Print",            hl.dsp.exec_cmd("~/.config/hypr/scripts/scree
 
 -- Open interactive screenshot menu
 hl.bind(mainMod .. " + Print",     hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh menu"))
+
+-- ------------------------------------------------------------------------------
+-- --- SCREEN RECORDING (via ~/.config/hypr/scripts/screenrecord.sh) ---
+-- ------------------------------------------------------------------------------
+
+-- Record selection area
+hl.bind(mainMod .. " + SHIFT + R",       hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecord.sh area"))
+
+-- Record entire screen
+hl.bind(mainMod .. " + CTRL + R",        hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecord.sh screen"))
+
+-- Record active display
+hl.bind(mainMod .. " + ALT + SHIFT + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecord.sh display"))
+
+-- Stop active recording
+hl.bind(mainMod .. " + ALT + S",         hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecord.sh stop"))
+
+-- Open interactive screen recording menu
+hl.bind(mainMod .. " + ALT + R",         hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecord.sh menu"))
+

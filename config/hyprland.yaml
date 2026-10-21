@@ -62,10 +62,11 @@ packages:
     - feh
     - evince
 
-    # Screenshot
+    # Screenshot & Screen Recording
     - grim
     - slurp
     - wl-clipboard
+    - gpu-screen-recorder
 
     # Graphics & Hardware Acceleration (AMD/Mesa)
     - vulkan-radeon

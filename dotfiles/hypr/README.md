@@ -109,6 +109,8 @@ hypr/
 ├── scripts/                   # Automation scripts
 │   ├── floating_menu.sh       # ⚡ Quick Settings floating menu
 │   ├── notification_center.sh # 󰂚 Notification Center controller (SwayNC/Dunst)
+│   ├── screenrecord.sh        # 󰑋 GPU Screen Recorder controller
+│   ├── screenshot.sh          # 󰄀 Screenshot Tool controller
 │   ├── toggle_theme.sh        # 🌗 Light/Dark theme toggle
 │   ├── theme_picker.sh        # 󰸉 Desktop theme scheme picker
 │   ├── wallpaper_picker.sh    # 🖼️ Wallpaper picker with image previews
@@ -141,7 +143,7 @@ Super + D / Super + I
 | Category Hub | Icon | Contents & Tools | Implementation |
 |--------------|------|-------------------|----------------|
 | **Appearance & Theming** | 🎨 | Light/Dark Toggle, Theme Scheme Picker, Wallpaper Grid, GTK (nwg-look) | `toggle_theme.sh`, `theme_picker.sh`, `wallpaper_picker.sh`, `nwg-look` |
-| **Quick Controls & Devices** | 📡 | Notification Center (SwayNC), Wi-Fi (Impala), Bluetooth (Bluetui), Audio Mixer (WireMix), Clipboard History | `notification_center.sh`, `impala`, `bluetui`, `wiremix`, `clipboard.sh` |
+| **Quick Controls & Devices** | 📡 | Notification Center (SwayNC), Screen Recorder, Wi-Fi (Impala), Bluetooth (Bluetui), Audio Mixer (WireMix), Clipboard History | `notification_center.sh`, `screenrecord.sh`, `impala`, `bluetui`, `wiremix`, `clipboard.sh` |
 | **System & Maintenance** | 📦 | Update Checker, Arch pacman update, AUR update, Device Firmware, Disk Analyzer (ncdu), About This PC | `check_updates.sh`, `update_arch.sh`, `aur_update.sh`, `firmware_update.sh`, `ncdu`, `about_pc.sh` |
 | **Configuration & Dotfiles** |  | Input/Touchpad, Core Keybindings, Utility Bindings, Monitors, Hypridle, Hyprlock, SwayNC | Config editors via `nvim` in floating terminals |
 | **Power & Session** |  | Lock Session, Suspend, Reboot, Power Off, Logout | `hyprlock`, `systemctl`, `hyprctl dispatch exit` |
@@ -334,7 +336,18 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Shift + Print` | Capture active display where cursor is positioned |
 | `Ctrl + Print` | Capture entire screen (all connected displays) |
 | `Super + Print` | Interactive Screenshot Tool menu (Rofi) |
-| *Notification Center* | Integrated Screenshot Tool buttons (`Screen`, `Display`, `Area`, `Window`) |
+| *Notification Center* | Integrated Tab Controls: Screenshot tab (`Entire Screen`, `Active Display`, `Selection Area`, `App Window`) |
+
+### Screen Recording (GPU Screen Recorder)
+
+| Keybind | Action |
+|---------|--------|
+| `Super + Shift + R` | Record selection area |
+| `Super + Ctrl + R` | Record entire screen (all monitors) |
+| `Super + Alt + Shift + R` | Record active display (cursor monitor) |
+| `Super + Alt + S` | Stop active screen recording session |
+| `Super + Alt + R` | Interactive Screen Recording menu (Rofi) |
+| *Notification Center* | Integrated Tab Controls: Screen Recorder tab (`Entire Screen`, `Active Display`, `Selection Area`, `App Window`, `Stop Recording`, `Recording Menu`) |
 
 ### Media (media.conf)
 

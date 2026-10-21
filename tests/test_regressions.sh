@@ -672,21 +672,72 @@ EOF
 
     # 3. swaync config.json contains screenshot tool widget and actions
     swaync_cfg="${ROOT_DIR}/dotfiles/swaync/config.json"
-    if jq -e '.widgets | index("buttons-grid#screenshot") != null' "${swaync_cfg}" >/dev/null 2>&1; then
+    if jq -e '.widgets | (index("menubar#tools") != null or index("buttons-grid#screenshot") != null)' "${swaync_cfg}" >/dev/null 2>&1; then
         ok
     else
-        fail "swaync config includes buttons-grid#screenshot in widgets list"
+        fail "swaync config includes screenshot widget in widgets list"
     fi
 
-    actions="$(jq -r '."widget-config"["buttons-grid#screenshot"].actions[]?.command // empty' "${swaync_cfg}" 2>/dev/null)"
+    actions="$(jq -r '."widget-config" | (."menubar#tools"["menu#screenshot"].actions[]?.command // ."buttons-grid#screenshot".actions[]?.command // empty)' "${swaync_cfg}" 2>/dev/null)"
     for mode in screen display area window; do
         if grep -q "screenshot.sh ${mode}" <<< "${actions}"; then
             ok
         else
-            fail "swaync buttons-grid#screenshot config includes action for '${mode}'"
+            fail "swaync config includes action for 'screenshot.sh ${mode}'"
         fi
     done
 }
+
+# ── GPU Screen Recorder & Notification Center integration ────────────────────
+{
+    # 1. screenrecord.sh exists and is executable
+    if [[ -x "${ROOT_DIR}/dotfiles/hypr/scripts/screenrecord.sh" ]]; then
+        ok
+    else
+        fail "screenrecord.sh exists and is executable"
+    fi
+
+    # 2. screenrecord.sh --help outputs all required modes
+    rec_help="$("${ROOT_DIR}/dotfiles/hypr/scripts/screenrecord.sh" --help 2>&1 || true)"
+    for mode in screen display area window stop; do
+        if grep -q "${mode}" <<< "${rec_help}"; then
+            ok
+        else
+            fail "screenrecord.sh help mentions mode '${mode}'"
+        fi
+    done
+
+    # 3. swaync config.json contains recording tool widgets
+    swaync_cfg="${ROOT_DIR}/dotfiles/swaync/config.json"
+    if jq -e '.widgets | (index("menubar#tools") != null or index("buttons-grid#record") != null)' "${swaync_cfg}" >/dev/null 2>&1; then
+        ok
+    else
+        fail "swaync config includes recording widget in widgets list"
+    fi
+
+    if jq -e '.widgets | (index("label#tools") != null or index("label#record") != null)' "${swaync_cfg}" >/dev/null 2>&1; then
+        ok
+    else
+        fail "swaync config includes tools label in widgets list"
+    fi
+
+    rec_actions="$(jq -r '."widget-config" | (."menubar#tools"["menu#record"].actions[]?.command // ."buttons-grid#record".actions[]?.command // empty)' "${swaync_cfg}" 2>/dev/null)"
+    for mode in screen display area window stop menu; do
+        if grep -q "screenrecord.sh ${mode}" <<< "${rec_actions}"; then
+            ok
+        else
+            fail "swaync config includes action for 'screenrecord.sh ${mode}'"
+        fi
+    done
+
+    # 4. gpu-screen-recorder declared in config/hyprland.yaml
+    if grep -q "gpu-screen-recorder" "${ROOT_DIR}/config/hyprland.yaml"; then
+        ok
+    else
+        fail "gpu-screen-recorder declared in config/hyprland.yaml"
+    fi
+}
+
 
 # ── Summary ──────────────────────────────────────────────────────────────────
 

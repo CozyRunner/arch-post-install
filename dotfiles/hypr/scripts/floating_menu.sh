@@ -116,6 +116,7 @@ $theme_label
 menu_controls() {
     local options="󰌍  Back to Main Menu
 󰄀  Screenshot Tool
+󰑋  Screen Recorder (GPU)
 󰂚  Notification Center
 󰖩  Network Manager (Impala)
 󰂯  Bluetooth Devices (Bluetui)
@@ -132,6 +133,9 @@ menu_controls() {
             ;;
         *"Screenshot Tool"*)
             bash "$SCRIPTS_DIR/screenshot.sh" menu
+            ;;
+        *"Screen Recorder"*)
+            bash "$SCRIPTS_DIR/screenrecord.sh" menu
             ;;
         *"Notification Center"*)
             bash "$SCRIPTS_DIR/notification_center.sh" toggle

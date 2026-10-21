@@ -35,8 +35,8 @@
     "volume",
     "backlight",
     "buttons-grid",
-    "label#screenshot",
-    "buttons-grid#screenshot",
+    "label#tools",
+    "menubar#tools",
     "notifications"
   ],
   "widget-config": {
@@ -49,8 +49,7 @@
       "text": "Do Not Disturb"
     },
     "mpris": {
-      "image-size": 80,
-      "image-radius": 10
+      "image-size": 80
     },
     "volume": {
       "label": "󰕾"
@@ -93,33 +92,76 @@
         }
       ]
     },
-    "label#screenshot": {
-      "text": "Screenshot Tool"
+    "label#tools": {
+      "text": "Screen & Recording Tools"
     },
-    "buttons-grid#screenshot": {
-      "buttons-per-row": 2,
-      "actions": [
-        {
-          "label": "󰹑 Entire Screen",
-          "type": "normal",
-          "command": "~/.config/hypr/scripts/screenshot.sh screen"
-        },
-        {
-          "label": "󰍹 Active Display",
-          "type": "normal",
-          "command": "~/.config/hypr/scripts/screenshot.sh display"
-        },
-        {
-          "label": "󰒅 Selection Area",
-          "type": "normal",
-          "command": "~/.config/hypr/scripts/screenshot.sh area"
-        },
-        {
-          "label": "󰖯 App Window",
-          "type": "normal",
-          "command": "~/.config/hypr/scripts/screenshot.sh window"
-        }
-      ]
+    "menubar#tools": {
+      "menu#screenshot": {
+        "label": "󰄀  Screenshot",
+        "position": "left",
+        "animation-type": "slide_down",
+        "animation-duration": 200,
+        "actions": [
+          {
+            "label": "󰹑 Entire Screen",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenshot.sh screen"
+          },
+          {
+            "label": "󰍹 Active Display",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenshot.sh display"
+          },
+          {
+            "label": "󰒅 Selection Area",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenshot.sh area"
+          },
+          {
+            "label": "󰖯 App Window",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenshot.sh window"
+          }
+        ]
+      },
+      "menu#record": {
+        "label": "󰑋  Screen Recorder",
+        "position": "right",
+        "animation-type": "slide_down",
+        "animation-duration": 200,
+        "actions": [
+          {
+            "label": "󰑋 Entire Screen",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenrecord.sh screen"
+          },
+          {
+            "label": "󰍹 Active Display",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenrecord.sh display"
+          },
+          {
+            "label": "󰒅 Selection Area",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenrecord.sh area"
+          },
+          {
+            "label": "󰖯 App Window",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenrecord.sh window"
+          },
+          {
+            "label": "󰙧 Stop Recording",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenrecord.sh stop"
+          },
+          {
+            "label": "󱂬 Recording Menu",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenrecord.sh menu"
+          }
+        ]
+      }
     }
   }
 }

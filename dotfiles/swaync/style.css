@@ -245,6 +245,76 @@ scale highlight {
     box-shadow: 0 0 8px rgba(129, 140, 248, 0.25);
 }
 
+/* ── Tab format Menubar (Screen & Recording Tools) ── */
+.widget-menubar {
+    margin: 4px;
+    padding: 0;
+}
+
+.widget-menubar > box {
+    padding: 0;
+    margin: 0;
+}
+
+.widget-menubar > box > .menu-button-bar {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid @notif-border;
+    border-radius: 14px;
+    padding: 3px;
+    margin: 2px 4px;
+}
+
+.widget-menubar > box > .menu-button-bar > button {
+    background: transparent;
+    border: none;
+    border-radius: 11px;
+    color: @text-color;
+    padding: 7px 18px;
+    margin: 2px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.widget-menubar > box > .menu-button-bar > button:hover,
+.widget-menubar > box > .menu-button-bar > button.active {
+    background: rgba(129, 140, 248, 0.18);
+    color: @accent-blue;
+    box-shadow: 0 0 8px rgba(129, 140, 248, 0.25);
+}
+
+/* Menubar dropdown / popover menus */
+.widget-menubar popover,
+.widget-menubar popover.background,
+.menu-button-bar menu {
+    background-color: @cc-bg;
+    border: 1px solid @notif-border;
+    border-top: 1px solid @border-top-glow;
+    border-radius: 14px;
+    padding: 6px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+}
+
+.widget-menubar popover button,
+.widget-menubar popover modelbutton,
+.menu-button-bar menuitem {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid @notif-border;
+    border-radius: 10px;
+    color: @text-color;
+    padding: 8px 12px;
+    margin: 3px 2px;
+    font-size: 13px;
+}
+
+.widget-menubar popover button:hover,
+.widget-menubar popover modelbutton:hover,
+.menu-button-bar menuitem:hover {
+    background: rgba(129, 140, 248, 0.20);
+    border-color: @accent-blue;
+    color: @accent-blue;
+    box-shadow: 0 0 8px rgba(129, 140, 248, 0.25);
+}
+
 /* ── Close & action buttons ── */
 .close-button {
     background: transparent;
