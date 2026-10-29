@@ -292,3 +292,32 @@ tune_bluetooth() {
     fi
     log_success "Bluetooth AutoEnable configured"
 }
+
+# /**
+#  * tune_reflector()
+#  * Configures reflector mirror ranking configuration for fast and reliable mirrors.
+#  */
+tune_reflector() {
+    if ! command -v reflector &>/dev/null; then
+        return 0
+    fi
+
+    local reflector_conf="/etc/xdg/reflector/reflector.conf"
+    local reflector_dir="/etc/xdg/reflector"
+
+    log_step "Configuring Reflector mirror ranking"
+
+    local desired_body="--save /etc/pacman.d/mirrorlist
+--protocol https
+--latest 20
+--sort rate"
+
+    if [[ -f "${reflector_conf}" ]] && [[ "$(cat "${reflector_conf}")" == "${desired_body}" ]]; then
+        log_success "Reflector configuration already up to date"
+        return 0
+    fi
+
+    sudo mkdir -p "${reflector_dir}"
+    printf '%s\n' "${desired_body}" | sudo tee "${reflector_conf}" > /dev/null
+    log_success "Reflector mirror configuration updated (latest 20 HTTPS, sorted by rate)"
+}

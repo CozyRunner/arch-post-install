@@ -7,6 +7,24 @@
 set -euo pipefail
 
 # ------------------------------------------------------------------------------
+# Early Help Display (read-only, no dependencies or side effects needed)
+# ------------------------------------------------------------------------------
+case "${1:-}" in
+    -h|--help|help)
+        echo "Usage: $0 [screen|display|area|window|active|menu]"
+        echo ""
+        echo "Modes:"
+        echo "  screen   - Capture entire screen (all connected displays)"
+        echo "  display  - Capture active display where cursor is positioned"
+        echo "  area     - Capture user-defined selection area (drag region)"
+        echo "  window   - Capture specific application window (interactive click)"
+        echo "  active   - Capture currently focused application window"
+        echo "  menu     - Launch interactive Rofi screenshot selector"
+        exit 0
+        ;;
+esac
+
+# ------------------------------------------------------------------------------
 # Dependencies Check
 # ------------------------------------------------------------------------------
 for cmd in grim slurp wl-copy notify-send jq hyprctl; do

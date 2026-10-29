@@ -8,6 +8,29 @@
 set -euo pipefail
 
 # ------------------------------------------------------------------------------
+# Early Help Display (read-only, no dependencies or side effects needed)
+# ------------------------------------------------------------------------------
+case "${1:-}" in
+    -h|--help|help)
+        echo "Usage: $0 [screen|display|area|window|portal|toggle|stop|status|menu]"
+        echo ""
+        echo "GPU Screen Recorder Controller (Hyprland / Wayland)"
+        echo ""
+        echo "Modes:"
+        echo "  screen   - Record entire screen (all monitors)"
+        echo "  display  - Record active display where cursor is positioned"
+        echo "  area     - Record user-defined selection area (drag region)"
+        echo "  window   - Record application window (interactive click)"
+        echo "  portal   - Record screen/window via desktop portal picker"
+        echo "  toggle   - Toggle recording (stop active session or start screen recording)"
+        echo "  stop     - Stop active screen recording and finalize output"
+        echo "  status   - Print current recording state (recording/idle)"
+        echo "  menu     - Launch interactive Rofi screen recording selector"
+        exit 0
+        ;;
+esac
+
+# ------------------------------------------------------------------------------
 # Configuration & Paths
 # ------------------------------------------------------------------------------
 VIDEOS_DIR="$(xdg-user-dir VIDEOS 2>/dev/null || echo "$HOME/Videos")"

@@ -59,9 +59,4 @@ user:
   shell: /usr/bin/fish
   groups:
     - wheel
-    - video
-    - input
-    - audio
-    - storage
-    - network
     - docker

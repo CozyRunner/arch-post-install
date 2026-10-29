@@ -381,13 +381,13 @@ Also fixed: `filesystem.sh` passed `expected` (`"read-write"`) into the `fix_cmd
 
 ### 19. Desktop layer — missing glassmorphism alacritty theme
 
-- [ ] `dotfiles/alacritty/themes/` has no `glassmorphism-{dark,light}.toml`, so the active scheme falls back to `dark.toml`, which is **Catppuccin Mocha** (`#1e1e2e`/`#cdd6f4`) while kitty, waybar, rofi and hypr are glassmorphism. Add both files.
+- [x] `dotfiles/alacritty/themes/` has no `glassmorphism-{dark,light}.toml`, so the active scheme falls back to `dark.toml`, which is **Catppuccin Mocha** (`#1e1e2e`/`#cdd6f4`) while kitty, waybar, rofi and hypr are glassmorphism. Added both `glassmorphism-dark.toml` and `glassmorphism-light.toml`.
 
 ### 20. Documentation drift
 
-- [ ] `ARCHITECTURE.md:155` — duplicate `## 4.` heading (two sections numbered 4).
-- [ ] `ARCHITECTURE.md:141` — claims 14 Lua presets; 16 exist.
-- [ ] `ARCHITECTURE.md` lists 7 theme schemes; 8 families (16 variants) ship.
+- [x] `ARCHITECTURE.md:155` — duplicate `## 4.` heading (two sections numbered 4) resolved.
+- [x] `ARCHITECTURE.md:141` — claims 14 Lua presets; 16 exist (updated).
+- [x] `ARCHITECTURE.md` lists 7 theme schemes; 8 families (16 variants) ship (updated).
 - [ ] `yq` — the tool that decides whether the engine works — is documented as a dependency **nowhere** in `README.md`, `ARCHITECTURE.md`, `docs/`, or `CONTRIBUTING.md`, and `Makefile:70` lists it only as a soft prereq check.
 
 ---

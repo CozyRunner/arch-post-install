@@ -38,9 +38,8 @@ packages:
     # Multiplexer
     - zellij
 
-    # Git & Docker
+    # Git & Containers
     - lazygit
-    - docker
     - lazydocker
 
     # Shell tools
@@ -128,11 +127,9 @@ packages:
 
 services:
   - bluetooth
-  - NetworkManager
   - pipewire
   - pipewire-pulse
   - wireplumber
-  - docker
 
 dotfiles:
   - hypr

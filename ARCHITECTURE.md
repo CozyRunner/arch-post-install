@@ -138,11 +138,10 @@ dotfiles/hypr/
 │       └── personal.lua          # Personal tool hotkeys
 │
 ├── themes/
-│   └── presets/                  # 14 curated color palette presets (Lua)
+│   └── presets/                  # 16 curated color palette presets (Lua)
 │
 ├── scripts/                      # Desktop automation scripts
-├── assets/                       # Backgrounds, logos, and icons
-└── archive/                      # Preserved legacy .conf & backup files
+└── assets/                       # Backgrounds, logos, and icons
 ```
 
 ### Lua Configuration Architecture & Lifecycle
@@ -152,9 +151,9 @@ dotfiles/hypr/
 
 ---
 
-## 4. Unified Theming Engine
+## 5. Unified Theming Engine
 
-The theming system enables seamless dark/light switching and full palette transitions across 7 curated theme schemes:
+The theming system enables seamless dark/light switching and full palette transitions across 8 curated theme families (16 presets):
 
 ```mermaid
 sequenceDiagram
@@ -181,11 +180,12 @@ sequenceDiagram
 - **Everforest** (Dark / Light)
 - **Nord** (Dark / Light Snow)
 - **Rosé Pine** (Main / Dawn)
+- **Glassmorphism** (Lumina Dark / Light)
 - **Default Dark / Light**
 
 ---
 
-## 5. Adding New Features
+## 6. Adding New Features
 
 ### Adding a New Package
 1. For core system tools: Add package name to `config/base.yaml` under `packages.pacman` or `packages.aur`.

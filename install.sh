@@ -202,6 +202,7 @@ main() {
     case "${MODE}" in
         full)
             tune_pacman
+            tune_reflector
             apply_system_updates
             # setup_core() installs yq; verify before the first config read.
             require_yaml_parser || exit 4
@@ -220,6 +221,7 @@ main() {
             ;;
         base)
             tune_pacman
+            tune_reflector
             apply_system_updates
             # setup_core() installs yq; verify before the first config read.
             require_yaml_parser || exit 4

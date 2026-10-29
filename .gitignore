@@ -1,5 +1,10 @@
 # Logs
 logs/*.log
+dotfiles/calcure/*.log
+*.log
+
+# Runtime and state files
+dotfiles/fish/fish_variables
 
 # Config backups
 .config-backup-*/

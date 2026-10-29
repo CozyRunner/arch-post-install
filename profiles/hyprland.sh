@@ -30,19 +30,6 @@ setup_hyprland() {
     # Deploy dotfiles listed in hyprland.yaml
     deploy_dotfiles_from_config "${config}"
 
-    # Build hypridle and hyprlock from source if system binaries are missing
-    local hypr_scripts="${DOTFILES_DIR}/hypr/scripts"
-    if ! command -v hypridle &>/dev/null && [[ -x "${hypr_scripts}/build_hypridle.sh" ]]; then
-        log_info "hypridle package not found. Building from source..."
-        bash "${hypr_scripts}/build_hypridle.sh"
-        log_success "hypridle built successfully"
-    fi
-    if ! command -v hyprlock &>/dev/null && [[ -x "${hypr_scripts}/build_hyprlock.sh" ]]; then
-        log_info "hyprlock package not found. Building from source..."
-        bash "${hypr_scripts}/build_hyprlock.sh"
-        log_success "hyprlock built successfully"
-    fi
-
     # ── Hyprland-specific post-setup ──────────────────────────────────────────
 
     # Set GTK dark mode defaults

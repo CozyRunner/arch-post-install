@@ -39,7 +39,7 @@ check_desktop() {
     else
         warn "desktop" "hyprland_config" "No Hyprland configuration found in ~/.config/hypr/" \
              "Deploy dotfiles" \
-             "sudo ./install.sh dotfiles"
+             "./install.sh dotfiles"
     fi
 
     # 3. Essential desktop ecosystem tools
@@ -65,7 +65,7 @@ check_desktop() {
             pass "desktop" "dotfile_${df}" "Config directory ~/.config/${df} exists"
         else
             warn "desktop" "dotfile_${df}" "Config ~/.config/${df} not deployed" \
-                 "" "sudo ./install.sh dotfiles"
+                 "" "./install.sh dotfiles"
         fi
     done
 }

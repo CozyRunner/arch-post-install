@@ -102,9 +102,9 @@ if [ "$TARGET_MODE" == "light" ]; then
 
   # ── Rofi colors ──
   if [ -f "$ROFI_CONFIG/colors-${SCHEME}-light.rasi" ]; then
-    ln -sf "$ROFI_CONFIG/colors-${SCHEME}-light.rasi" "$ROFI_CONFIG/colors.rasi"
+    (cd "$ROFI_CONFIG" && ln -sf "colors-${SCHEME}-light.rasi" colors.rasi)
   elif [ -f "$ROFI_CONFIG/colors-light.rasi" ]; then
-    ln -sf "$ROFI_CONFIG/colors-light.rasi" "$ROFI_CONFIG/colors.rasi"
+    (cd "$ROFI_CONFIG" && ln -sf "colors-light.rasi" colors.rasi)
   fi
 
   # ── Alacritty colors ──
@@ -207,9 +207,9 @@ else
 
   # ── Rofi colors ──
   if [ -f "$ROFI_CONFIG/colors-${SCHEME}-dark.rasi" ]; then
-    ln -sf "$ROFI_CONFIG/colors-${SCHEME}-dark.rasi" "$ROFI_CONFIG/colors.rasi"
+    (cd "$ROFI_CONFIG" && ln -sf "colors-${SCHEME}-dark.rasi" colors.rasi)
   elif [ -f "$ROFI_CONFIG/colors-dark.rasi" ]; then
-    ln -sf "$ROFI_CONFIG/colors-dark.rasi" "$ROFI_CONFIG/colors.rasi"
+    (cd "$ROFI_CONFIG" && ln -sf "colors-dark.rasi" colors.rasi)
   fi
 
   # ── Alacritty colors ──
