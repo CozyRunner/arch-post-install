@@ -31,7 +31,7 @@ case "$selection" in
   hyprlock || swaylock
   ;;
 *"Logout"*)
-  hyprctl dispatch exit
+  loginctl terminate-user "$USER"
   ;;
 *"Suspend"*)
   systemctl suspend

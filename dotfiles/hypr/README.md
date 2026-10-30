@@ -145,7 +145,7 @@ Super + D / Super + I
 | **Quick Controls & Devices** | 📡 | Notification Center (SwayNC), Screen Recorder, Wi-Fi (Impala), Bluetooth (Bluetui), Audio Mixer (WireMix), Clipboard History | `notification_center.sh`, `screenrecord.sh`, `impala`, `bluetui`, `wiremix`, `clipboard.sh` |
 | **System & Maintenance** | 📦 | Update Checker, Arch pacman update, AUR update, Device Firmware, Disk Analyzer (ncdu), About This PC | `check_updates.sh`, `update_arch.sh`, `aur_update.sh`, `firmware_update.sh`, `ncdu`, `about_pc.sh` |
 | **Configuration & Dotfiles** |  | Input/Touchpad, Core Keybindings, Utility Bindings, Monitors, Hypridle, Hyprlock, SwayNC | Config editors via `nvim` in floating terminals |
-| **Power & Session** |  | Lock Session, Suspend, Reboot, Power Off, Logout | `hyprlock`, `systemctl`, `hyprctl dispatch exit` |
+| **Power & Session** |  | Lock Session, Suspend, Reboot, Power Off, Logout | `hyprlock`, `systemctl`, `loginctl terminate-user "$USER"` |
 
 ### How It Works
 
@@ -268,14 +268,16 @@ Displays detailed system information in a styled floating terminal panel with Ne
 
 ## ⌨️ Keybindings
 
-### Core (bindings.conf)
+### Core & Utilities (config/keybinds/core.lua, utilities.lua)
 
 | Keybind | Action |
 |---------|--------|
 | `Super + Q` | Open terminal (kitty) |
 | `Alt + F4` / `Super + C` | Close active window |
 | `Ctrl + Shift + Escape` | Open Task Manager (btop) |
-| `Ctrl + Alt + Delete` | Power & Session Menu |
+| `Super + Escape` | Power & Session Menu (`power_menu.sh`) |
+| `Super + Shift + Q` | Logout Session (`loginctl terminate-user "$USER"`) |
+| `Ctrl + Alt + Delete` | Emergency Close All Windows |
 | `Super + E` | Open file manager (Explorer) |
 | `Super + R` | Run command dialog |
 | `Super + I` | Quick Settings menu |
@@ -291,7 +293,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Super + J` | Toggle split (dwindle) |
 | `Super + S` | Toggle special workspace (scratchpad) |
 | `Super + Alt + S` | Move window to special workspace |
-| `Super + L` | Lock screen |
+| `Super + L` | Lock screen (`hyprlock`) |
 | `Alt + Tab` / `Alt + Shift + Tab` | Switch active windows (forward/reverse) |
 | `Super + Tab` | Task View / Cycle windows |
 | `Super + 1-0` | Switch workspace |
@@ -309,7 +311,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Ctrl + Super + D` | Create / switch to new empty virtual desktop |
 | `Ctrl + Super + F4` | Close active window / desktop task |
 
-### Personal (personal-bindings.conf)
+### Personal & Tools (config/keybinds/personal.lua)
 
 | Keybind | Action |
 |---------|--------|

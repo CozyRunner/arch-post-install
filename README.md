@@ -386,7 +386,7 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 | `SUPER + Shift + T` | Open Theme Scheme Picker |
 | `SUPER + L` | Lock Screen (hyprlock) |
 | `SUPER + Escape` | Power Management Menu |
-| `SUPER + Shift + Q` | Exit Hyprland Session |
+| `SUPER + Shift + Q` | Logout Session (`loginctl terminate-user "$USER"`) |
 | `SUPER + Shift + C` | Calendar & Tasks (Calcure TUI) |
 | `SUPER + Shift + J` | Daily Journal & Notes (tui-journal) |
 | `SUPER + Shift + G` | GTK Configuration Tool (nwg-look) |

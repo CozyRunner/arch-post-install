@@ -317,7 +317,7 @@ menu_power() {
             systemctl poweroff
             ;;
         *"Logout"*)
-            hyprctl dispatch exit
+            loginctl terminate-user "$USER"
             ;;
     esac
 }

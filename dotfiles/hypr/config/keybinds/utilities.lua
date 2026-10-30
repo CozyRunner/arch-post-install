@@ -12,7 +12,7 @@ local mainMod = "SUPER"
 -- Session Management
 hl.bind(mainMod .. " + L",         hl.dsp.exec_cmd("hyprlock"))
 hl.bind(mainMod .. " + Escape",    hl.dsp.exec_cmd("~/.config/hypr/scripts/power_menu.sh"))
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exit())
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd('loginctl terminate-user "$USER"'))
 
 -- Emergency Kill/Close All
 hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd("hyprctl clients -j | jq -r '.[].address' | xargs -I {} hyprctl dispatch closewindow address:{}"))

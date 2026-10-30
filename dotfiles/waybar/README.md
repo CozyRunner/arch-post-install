@@ -20,7 +20,7 @@ To ensure all modules and scripts function correctly, please install the followi
 - `waybar`: The status bar itself.
 - `hyprland`: Required for workspace and window modules.
 - `hyprlock` or `swaylock`: For the lock screen functionality in the power menu.
-- `systemd`: For power management commands (reboot, shutdown, suspend).
+- `systemd` / `loginctl`: For power and session management commands (reboot, shutdown, suspend, and user logout via `loginctl terminate-user "$USER"`).
 
 ### Utilities & Scripts
 - `swaync`: SwayNotificationCenter for notification tray integration and control panel.
