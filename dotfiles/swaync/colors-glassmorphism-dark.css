@@ -1,0 +1,23 @@
+/* SwayNC Colors — Glassmorphism Lumina (Dark) */
+@define-color cc-bg             rgba(8, 8, 28, 0.75);
+@define-color notif-bg          rgba(15, 15, 45, 0.70);
+@define-color notif-border      rgba(255, 255, 255, 0.10);
+@define-color border-top-glow   rgba(255, 255, 255, 0.20);
+@define-color card-bg           rgba(255, 255, 255, 0.04);
+@define-color widget-bg         rgba(255, 255, 255, 0.05);
+@define-color widget-hover-bg   rgba(129, 140, 248, 0.18);
+@define-color slider-trough     rgba(255, 255, 255, 0.12);
+@define-color red-subtle-bg     rgba(248, 113, 113, 0.14);
+@define-color red-subtle-border rgba(248, 113, 113, 0.28);
+@define-color shadow-color      rgba(0, 0, 0, 0.55);
+
+@define-color text-color        #e2e8f0;
+@define-color text-muted        rgba(226, 232, 240, 0.50);
+
+@define-color accent-blue       #818cf8;
+@define-color accent-cyan       #67e8f9;
+@define-color accent-purple     #c084fc;
+@define-color accent-green      #86efac;
+@define-color accent-red        #f87171;
+@define-color accent-orange     #fb923c;
+

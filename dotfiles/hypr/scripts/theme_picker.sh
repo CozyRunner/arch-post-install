@@ -14,7 +14,9 @@ options=" Catppuccin — Soothing pastel aesthetic
  Gruvbox — Retro warm earthy aesthetic
  Everforest — Soft natural green aesthetic
  Nord / Snow — Cool arctic ice aesthetic
- Rosé Pine — Dreamy pastel pink & lavender"
+ Rosé Pine — Dreamy pastel pink & lavender
+ Glassmorphism — Frosted modern glass Lumina aesthetic
+ Default — Classic clean desktop aesthetic"
 
 selection=$(echo -e "$options" | rofi -dmenu -i \
   -p "󰸉  Theme Schemes" \
@@ -38,6 +40,12 @@ case "$selection" in
     ;;
   *"Rosé Pine"*)
     scheme="rose-pine"
+    ;;
+  *"Glassmorphism"*)
+    scheme="glassmorphism"
+    ;;
+  *"Default"*)
+    scheme="default"
     ;;
   *)
     exit 0

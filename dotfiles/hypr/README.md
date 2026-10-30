@@ -91,15 +91,16 @@ hypr/
 │       └── personal.lua       # Personal shortcuts (calcure, tjournal)
 │
 ├── themes/                    # Theme system
-│   └── presets/               # Theme preset definitions
+│   └── presets/               # Theme preset definitions (8 dual-mode families)
 │       ├── catppuccin-dark.lua / catppuccin-light.lua
 │       ├── tokyonight-dark.lua / tokyonight-light.lua
 │       ├── gruvbox-dark.lua    / gruvbox-light.lua
 │       ├── everforest-dark.lua / everforest-light.lua
 │       ├── nord-dark.lua       / nord-light.lua
 │       ├── rose-pine-dark.lua  / rose-pine-light.lua
-│       ├── dark.lua            # Dark mode colors
-│       └── light.lua           # Light mode colors
+│       ├── glassmorphism-dark.lua / glassmorphism-light.lua
+│       ├── dark.lua            # Default dark mode colors
+│       └── light.lua           # Default light mode colors
 │
 ├── hyprpaper.conf             # Wallpaper configuration (hyprlang)
 ├── hypridle.conf              # Idle timeouts and actions (hyprlang)
@@ -108,7 +109,7 @@ hypr/
 │
 ├── scripts/                   # Automation scripts
 │   ├── floating_menu.sh       # ⚡ Quick Settings floating menu
-│   ├── notification_center.sh # 󰂚 Notification Center controller (SwayNC/Dunst)
+│   ├── notification_center.sh # 󰂚 Notification Center controller & theme sync (SwayNC/Dunst)
 │   ├── screenrecord.sh        # 󰑋 GPU Screen Recorder controller
 │   ├── screenshot.sh          # 󰄀 Screenshot Tool controller
 │   ├── toggle_theme.sh        # 🌗 Light/Dark theme toggle
@@ -118,12 +119,10 @@ hypr/
 │   ├── os_age.sh              # 󰸗 System installation age calculator
 │   └── about_pc.sh            # 💻 System information display
 │
-├── assets/                    # Wallpapers and images
-│   ├── Arch-Dark.png
-│   ├── Arch-Light.png
-│   └── wallpaper.jpg
-│
-└── archive/                   # Preserved legacy .conf & backup files
+└── assets/                    # Wallpapers and images
+    ├── Arch-Dark.png
+    ├── Arch-Light.png
+    └── wallpaper.jpg
 ```
 
 ---

@@ -1,0 +1,23 @@
+/* SwayNC Colors — Rosé Pine Dawn (Light) */
+@define-color cc-bg             rgba(250, 244, 237, 0.88);
+@define-color notif-bg          rgba(242, 233, 225, 0.90);
+@define-color notif-border      rgba(87, 82, 121, 0.10);
+@define-color border-top-glow   rgba(255, 255, 255, 0.80);
+@define-color card-bg           rgba(223, 218, 217, 0.50);
+@define-color widget-bg         rgba(223, 218, 217, 0.60);
+@define-color widget-hover-bg   rgba(86, 148, 159, 0.15);
+@define-color slider-trough     rgba(223, 218, 217, 0.80);
+@define-color red-subtle-bg     rgba(180, 99, 122, 0.12);
+@define-color red-subtle-border rgba(180, 99, 122, 0.25);
+@define-color shadow-color      rgba(0, 0, 0, 0.12);
+
+@define-color text-color        #575279;
+@define-color text-muted        rgba(121, 117, 147, 0.65);
+
+@define-color accent-blue       #56949f;
+@define-color accent-cyan       #d7827e;
+@define-color accent-purple     #907aa9;
+@define-color accent-green      #286983;
+@define-color accent-red        #b4637a;
+@define-color accent-orange     #ea9d34;
+

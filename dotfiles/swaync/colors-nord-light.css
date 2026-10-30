@@ -1,0 +1,23 @@
+/* SwayNC Colors — Nord (Light) */
+@define-color cc-bg             rgba(236, 239, 244, 0.88);
+@define-color notif-bg          rgba(229, 233, 240, 0.90);
+@define-color notif-border      rgba(46, 52, 64, 0.12);
+@define-color border-top-glow   rgba(255, 255, 255, 0.80);
+@define-color card-bg           rgba(216, 222, 233, 0.60);
+@define-color widget-bg         rgba(216, 222, 233, 0.70);
+@define-color widget-hover-bg   rgba(94, 129, 172, 0.18);
+@define-color slider-trough     rgba(216, 222, 233, 0.90);
+@define-color red-subtle-bg     rgba(191, 97, 106, 0.14);
+@define-color red-subtle-border rgba(191, 97, 106, 0.28);
+@define-color shadow-color      rgba(0, 0, 0, 0.12);
+
+@define-color text-color        #2e3440;
+@define-color text-muted        rgba(59, 66, 82, 0.65);
+
+@define-color accent-blue       #5e81ac;
+@define-color accent-cyan       #88c0d0;
+@define-color accent-purple     #b48ead;
+@define-color accent-green      #a3be8c;
+@define-color accent-red        #bf616a;
+@define-color accent-orange     #d08770;
+

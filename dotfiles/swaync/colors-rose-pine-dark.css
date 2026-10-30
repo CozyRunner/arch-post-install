@@ -1,0 +1,23 @@
+/* SwayNC Colors — Rosé Pine (Dark) */
+@define-color cc-bg             rgba(25, 23, 36, 0.85);
+@define-color notif-bg          rgba(38, 35, 58, 0.88);
+@define-color notif-border      rgba(224, 222, 244, 0.10);
+@define-color border-top-glow   rgba(196, 167, 231, 0.35);
+@define-color card-bg           rgba(64, 61, 82, 0.50);
+@define-color widget-bg         rgba(64, 61, 82, 0.60);
+@define-color widget-hover-bg   rgba(156, 207, 216, 0.18);
+@define-color slider-trough     rgba(64, 61, 82, 0.80);
+@define-color red-subtle-bg     rgba(235, 111, 146, 0.16);
+@define-color red-subtle-border rgba(235, 111, 146, 0.30);
+@define-color shadow-color      rgba(0, 0, 0, 0.50);
+
+@define-color text-color        #e0def4;
+@define-color text-muted        rgba(144, 140, 170, 0.60);
+
+@define-color accent-blue       #9ccfd8;
+@define-color accent-cyan       #ebbcba;
+@define-color accent-purple     #c4a7e7;
+@define-color accent-green      #31748f;
+@define-color accent-red        #eb6f92;
+@define-color accent-orange     #f6c177;
+

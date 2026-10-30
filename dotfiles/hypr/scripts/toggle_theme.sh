@@ -116,10 +116,14 @@ if [ "$TARGET_MODE" == "light" ]; then
   sleep 0.1
   touch "$ALACRITTY_CONFIG/alacritty.toml" 2>/dev/null || true
 
-  # ── SwayNC style ── [NEW]
-  if [ -f "$SWAYNC_CONFIG/style-light.css" ]; then
-    cp "$SWAYNC_CONFIG/style-light.css" "$SWAYNC_CONFIG/style.css"
-    swaync-client -rs 2>/dev/null || true
+  # ── SwayNC colors & style ──
+  if [ -f "$SWAYNC_CONFIG/colors-${SCHEME}-light.css" ]; then
+    (cd "$SWAYNC_CONFIG" && ln -sf "colors-${SCHEME}-light.css" colors.css)
+  elif [ -f "$SWAYNC_CONFIG/colors-light.css" ]; then
+    (cd "$SWAYNC_CONFIG" && ln -sf "colors-light.css" colors.css)
+  fi
+  if pgrep -x swaync >/dev/null 2>&1; then
+    swaync-client -rs 2>/dev/null || swaync-client -R 2>/dev/null || true
   fi
 
   # ── Hyprlock colors ── [NEW]
@@ -221,10 +225,14 @@ else
   sleep 0.1
   touch "$ALACRITTY_CONFIG/alacritty.toml" 2>/dev/null || true
 
-  # ── SwayNC style ── [NEW]
-  if [ -f "$SWAYNC_CONFIG/style-dark.css" ]; then
-    cp "$SWAYNC_CONFIG/style-dark.css" "$SWAYNC_CONFIG/style.css"
-    swaync-client -rs 2>/dev/null || true
+  # ── SwayNC colors & style ──
+  if [ -f "$SWAYNC_CONFIG/colors-${SCHEME}-dark.css" ]; then
+    (cd "$SWAYNC_CONFIG" && ln -sf "colors-${SCHEME}-dark.css" colors.css)
+  elif [ -f "$SWAYNC_CONFIG/colors-dark.css" ]; then
+    (cd "$SWAYNC_CONFIG" && ln -sf "colors-dark.css" colors.css)
+  fi
+  if pgrep -x swaync >/dev/null 2>&1; then
+    swaync-client -rs 2>/dev/null || swaync-client -R 2>/dev/null || true
   fi
 
   # ── Hyprlock colors ── [NEW]

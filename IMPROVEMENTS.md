@@ -388,7 +388,10 @@ Also fixed: `filesystem.sh` passed `expected` (`"read-write"`) into the `fix_cmd
 - [x] `ARCHITECTURE.md:155` — duplicate `## 4.` heading (two sections numbered 4) resolved.
 - [x] `ARCHITECTURE.md:141` — claims 14 Lua presets; 16 exist (updated).
 - [x] `ARCHITECTURE.md` lists 7 theme schemes; 8 families (16 variants) ship (updated).
-- [ ] `yq` — the tool that decides whether the engine works — is documented as a dependency **nowhere** in `README.md`, `ARCHITECTURE.md`, `docs/`, or `CONTRIBUTING.md`, and `Makefile:70` lists it only as a soft prereq check.
+- [x] `yq` — the tool that decides whether the engine works — is documented as a hard dependency across `README.md`, `ARCHITECTURE.md`, `docs/check-framework.md`, and `CONTRIBUTING.md`, with mandatory checks in `Makefile:70` and preflights in `install.sh` / `arch-postinstall`.
+- [x] File trees in `README.md`, `ARCHITECTURE.md`, `docs/check-framework.md`, and `dotfiles/hypr/README.md` updated to accurately reflect `lib/planner.sh`, `tests/test_plan.sh`, `tests/test_regressions.sh`, `tests/lint_check_slots.sh`, `dotfiles/swaync/`, and removal of `archive/`.
+- [x] Corrected 7-argument contract violation in `docs/check-framework.md` and documented `tests/lint_check_slots.sh`.
+- [x] Corrected stale keybindings (`SUPER + Alt + T` / `SUPER + Shift + T`), PipeWire sound troubleshooting, and modern `hyprctl rollinglog` diagnostics.
 
 ---
 

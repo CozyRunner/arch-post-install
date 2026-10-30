@@ -1,0 +1,23 @@
+/* SwayNC Colors — Everforest (Light) */
+@define-color cc-bg             rgba(253, 246, 227, 0.88);
+@define-color notif-bg          rgba(239, 234, 210, 0.90);
+@define-color notif-border      rgba(76, 79, 105, 0.10);
+@define-color border-top-glow   rgba(255, 255, 255, 0.80);
+@define-color card-bg           rgba(230, 222, 192, 0.50);
+@define-color widget-bg         rgba(230, 222, 192, 0.60);
+@define-color widget-hover-bg   rgba(58, 148, 197, 0.15);
+@define-color slider-trough     rgba(230, 222, 192, 0.80);
+@define-color red-subtle-bg     rgba(248, 85, 82, 0.12);
+@define-color red-subtle-border rgba(248, 85, 82, 0.25);
+@define-color shadow-color      rgba(0, 0, 0, 0.12);
+
+@define-color text-color        #5c6a72;
+@define-color text-muted        rgba(130, 145, 137, 0.65);
+
+@define-color accent-blue       #3a94c5;
+@define-color accent-cyan       #35a77c;
+@define-color accent-purple     #df69ba;
+@define-color accent-green      #8da101;
+@define-color accent-red        #f85552;
+@define-color accent-orange     #f57d26;
+

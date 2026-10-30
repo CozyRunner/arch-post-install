@@ -57,7 +57,7 @@ SLURP_BORDER_WEIGHT=2
 
 # Close notification center before capturing to avoid capturing the overlay panel
 close_notification_panel() {
-    if command -v swaync-client >/dev/null 2>&1; then
+    if pgrep -x swaync >/dev/null 2>&1; then
         swaync-client -cp 2>/dev/null || true
         # Wait for panel slide-out transition (swaync transition-time is ~200ms)
         sleep 0.25

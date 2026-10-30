@@ -1,0 +1,23 @@
+/* SwayNC Colors — Tokyo Night Day (Light) */
+@define-color cc-bg             rgba(230, 235, 245, 0.88);
+@define-color notif-bg          rgba(218, 224, 238, 0.90);
+@define-color notif-border      rgba(55, 96, 191, 0.12);
+@define-color border-top-glow   rgba(255, 255, 255, 0.80);
+@define-color card-bg           rgba(203, 213, 235, 0.50);
+@define-color widget-bg         rgba(203, 213, 235, 0.60);
+@define-color widget-hover-bg   rgba(46, 125, 233, 0.15);
+@define-color slider-trough     rgba(203, 213, 235, 0.80);
+@define-color red-subtle-bg     rgba(245, 42, 101, 0.12);
+@define-color red-subtle-border rgba(245, 42, 101, 0.25);
+@define-color shadow-color      rgba(0, 0, 0, 0.12);
+
+@define-color text-color        #3760bf;
+@define-color text-muted        rgba(97, 114, 166, 0.65);
+
+@define-color accent-blue       #2e7de9;
+@define-color accent-cyan       #007197;
+@define-color accent-purple     #9854f1;
+@define-color accent-green      #587539;
+@define-color accent-red        #f52a65;
+@define-color accent-orange     #b15c00;
+

@@ -1,0 +1,23 @@
+/* SwayNC Colors — Gruvbox (Light) */
+@define-color cc-bg             rgba(249, 245, 215, 0.88);
+@define-color notif-bg          rgba(235, 219, 178, 0.90);
+@define-color notif-border      rgba(60, 56, 54, 0.12);
+@define-color border-top-glow   rgba(255, 255, 255, 0.80);
+@define-color card-bg           rgba(213, 196, 161, 0.50);
+@define-color widget-bg         rgba(213, 196, 161, 0.60);
+@define-color widget-hover-bg   rgba(7, 102, 120, 0.15);
+@define-color slider-trough     rgba(213, 196, 161, 0.80);
+@define-color red-subtle-bg     rgba(157, 0, 6, 0.12);
+@define-color red-subtle-border rgba(157, 0, 6, 0.25);
+@define-color shadow-color      rgba(0, 0, 0, 0.12);
+
+@define-color text-color        #3c3836;
+@define-color text-muted        rgba(124, 111, 100, 0.65);
+
+@define-color accent-blue       #076678;
+@define-color accent-cyan       #427b58;
+@define-color accent-purple     #8f3f71;
+@define-color accent-green      #79740e;
+@define-color accent-red        #9d0006;
+@define-color accent-orange     #af3a03;
+

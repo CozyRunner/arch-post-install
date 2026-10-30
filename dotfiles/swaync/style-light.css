@@ -1,21 +1,9 @@
 /* ============================================================
-   SwayNC Glassmorphism Light — "Lumina Light"
-   Frosted white glass notification center
+   SwayNC Style — Unified Global Theming Engine
+   Compatible with ALL color schemes (imports colors.css)
    ============================================================ */
 
-/* ── Color tokens ── */
-@define-color cc-bg            rgba(255, 255, 255, 0.62);
-@define-color notif-bg         rgba(248, 250, 252, 0.68);
-@define-color notif-border     rgba(0, 0, 0, 0.07);
-@define-color border-top-glow  rgba(255, 255, 255, 0.80);
-@define-color text-color       #1e1b4b;
-@define-color text-muted       rgba(30, 27, 75, 0.45);
-@define-color accent-blue      #6366f1;
-@define-color accent-cyan      #22d3ee;
-@define-color accent-purple    #a855f7;
-@define-color accent-green     #16a34a;
-@define-color accent-red       #dc2626;
-@define-color accent-orange    #ea580c;
+@import "colors.css";
 
 * {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", sans-serif;
@@ -26,23 +14,25 @@
 /* ── Control Center Panel ── */
 .control-center {
     background-color: @cc-bg;
+    /* Glassmorphism border: bright top line, subtle all-around */
     border-top:    1px solid @border-top-glow;
-    border-left:   1px solid rgba(255, 255, 255, 0.60);
+    border-left:   1px solid @notif-border;
     border-right:  1px solid @notif-border;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid @notif-border;
     border-radius: 20px;
     padding: 16px;
+    /* Layered shadow */
     box-shadow:
-        0 6px 32px rgba(0, 0, 0, 0.12),
-        0 1px 0 rgba(255, 255, 255, 0.75) inset;
+        0 12px 48px @shadow-color,
+        0 1px 0 @border-top-glow inset;
     background-image: linear-gradient(
         160deg,
-        rgba(255, 255, 255, 0.50) 0%,
-        transparent 50%
+        rgba(255, 255, 255, 0.05) 0%,
+        transparent 60%
     );
 }
 
-/* ── Notification popup ── */
+/* ── Notification popup (live) ── */
 .notification-row {
     outline: none;
     margin: 8px 0;
@@ -50,18 +40,25 @@
 
 .notification {
     background-color: @notif-bg;
-    border-top:    1px solid rgba(255, 255, 255, 0.70);
-    border-left:   1px solid rgba(255, 255, 255, 0.50);
+    border-top:    1px solid @border-top-glow;
+    border-left:   1px solid @notif-border;
     border-right:  1px solid @notif-border;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid @notif-border;
     border-radius: 16px;
     padding: 14px;
     box-shadow:
-        0 4px 16px rgba(0, 0, 0, 0.10),
-        0 1px 0 rgba(255, 255, 255, 0.70) inset;
+        0 6px 24px @shadow-color,
+        0 1px 0 @border-top-glow inset;
+    background-image: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        transparent 50%
+    );
 }
 
-.notification-content { margin: 6px; }
+.notification-content {
+    margin: 6px;
+}
 
 .summary {
     font-size: 15px;
@@ -82,7 +79,9 @@
 }
 
 /* ── Title widget ── */
-.widget-title { margin: 4px; }
+.widget-title {
+    margin: 4px;
+}
 
 .widget-title > label {
     font-size: 18px;
@@ -91,22 +90,23 @@
 }
 
 .widget-title > button {
-    background: rgba(220, 38, 38, 0.10);
+    background: @red-subtle-bg;
     color: @accent-red;
-    border: 1px solid rgba(220, 38, 38, 0.20);
+    border: 1px solid @red-subtle-border;
     border-radius: 10px;
     padding: 4px 14px;
     font-weight: 600;
 }
 
 .widget-title > button:hover {
-    background: rgba(220, 38, 38, 0.20);
+    background: @red-subtle-border;
+    box-shadow: 0 0 8px @red-subtle-border;
 }
 
 /* ── DND toggle ── */
 .widget-dnd {
     margin: 8px 4px;
-    background: rgba(0, 0, 0, 0.04);
+    background: @card-bg;
     border: 1px solid @notif-border;
     border-radius: 12px;
     padding: 6px 14px;
@@ -120,7 +120,7 @@
 
 .widget-dnd > switch {
     border-radius: 14px;
-    background: rgba(0, 0, 0, 0.12);
+    background: @slider-trough;
 }
 
 .widget-dnd > switch:checked {
@@ -129,13 +129,13 @@
 
 .widget-dnd > switch slider {
     border-radius: 14px;
-    background: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.20);
+    background: @text-color;
+    box-shadow: 0 1px 4px @shadow-color;
 }
 
-/* ── MPRIS ── */
+/* ── MPRIS media player ── */
 .widget-mpris {
-    background: rgba(255, 255, 255, 0.50);
+    background: @card-bg;
     border: 1px solid @notif-border;
     border-radius: 14px;
     padding: 14px;
@@ -143,19 +143,30 @@
 }
 
 .widget-mpris-player { padding: 4px; }
-.widget-mpris-title  { font-weight: bold; font-size: 15px; color: @accent-blue; }
-.widget-mpris-subtitle { font-size: 13px; color: @text-muted; }
 
-/* ── Sliders ── */
-.widget-volume, .widget-backlight {
-    background: rgba(255, 255, 255, 0.50);
+.widget-mpris-title {
+    font-weight: bold;
+    font-size: 15px;
+    color: @accent-cyan;
+}
+
+.widget-mpris-subtitle {
+    font-size: 13px;
+    color: @text-muted;
+}
+
+/* ── Volume / Backlight sliders ── */
+.widget-volume,
+.widget-backlight {
+    background: @card-bg;
     border: 1px solid @notif-border;
     border-radius: 12px;
     padding: 10px 14px;
     margin: 6px 4px;
 }
 
-.widget-volume > label, .widget-backlight > label {
+.widget-volume > label,
+.widget-backlight > label {
     font-size: 16px;
     color: @accent-blue;
     margin-right: 10px;
@@ -163,7 +174,7 @@
 
 scale trough {
     border-radius: 6px;
-    background-color: rgba(0, 0, 0, 0.10);
+    background-color: @slider-trough;
     min-height: 8px;
     min-width: 100px;
 }
@@ -172,6 +183,7 @@ scale highlight {
     border-radius: 6px;
     background-color: @accent-blue;
     min-height: 8px;
+    box-shadow: 0 0 6px @border-top-glow;
 }
 
 /* ── Section labels ── */
@@ -187,8 +199,10 @@ scale highlight {
     text-transform: uppercase;
 }
 
-/* ── Quick-action buttons ── */
-.widget-buttons-grid { margin: 4px; }
+/* ── Quick-action buttons grid ── */
+.widget-buttons-grid {
+    margin: 4px;
+}
 
 .widget-buttons-grid > flowbox {
     padding: 0;
@@ -201,7 +215,7 @@ scale highlight {
 }
 
 .widget-buttons-grid > flowbox > flowboxchild > button {
-    background: rgba(255, 255, 255, 0.60);
+    background: @widget-bg;
     border: 1px solid @notif-border;
     border-radius: 12px;
     color: @text-color;
@@ -212,9 +226,10 @@ scale highlight {
 }
 
 .widget-buttons-grid > flowbox > flowboxchild > button:hover {
-    background: rgba(99, 102, 241, 0.15);
+    background: @widget-hover-bg;
     border-color: @accent-blue;
     color: @accent-blue;
+    box-shadow: 0 0 8px @border-top-glow;
 }
 
 /* ── Tab format Menubar (Screen & Recording Tools) ── */
@@ -229,7 +244,7 @@ scale highlight {
 }
 
 .widget-menubar > box > .menu-button-bar {
-    background: rgba(255, 255, 255, 0.50);
+    background: @widget-bg;
     border: 1px solid @notif-border;
     border-radius: 14px;
     padding: 3px;
@@ -249,8 +264,9 @@ scale highlight {
 
 .widget-menubar > box > .menu-button-bar > button:hover,
 .widget-menubar > box > .menu-button-bar > button.active {
-    background: rgba(99, 102, 241, 0.15);
+    background: @widget-hover-bg;
     color: @accent-blue;
+    box-shadow: 0 0 8px @border-top-glow;
 }
 
 /* Menubar dropdown / popover menus */
@@ -259,15 +275,16 @@ scale highlight {
 .menu-button-bar menu {
     background-color: @cc-bg;
     border: 1px solid @notif-border;
+    border-top: 1px solid @border-top-glow;
     border-radius: 14px;
     padding: 6px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px @shadow-color;
 }
 
 .widget-menubar popover button,
 .widget-menubar popover modelbutton,
 .menu-button-bar menuitem {
-    background: rgba(255, 255, 255, 0.60);
+    background: @widget-bg;
     border: 1px solid @notif-border;
     border-radius: 10px;
     color: @text-color;
@@ -279,12 +296,13 @@ scale highlight {
 .widget-menubar popover button:hover,
 .widget-menubar popover modelbutton:hover,
 .menu-button-bar menuitem:hover {
-    background: rgba(99, 102, 241, 0.15);
+    background: @widget-hover-bg;
     border-color: @accent-blue;
     color: @accent-blue;
+    box-shadow: 0 0 8px @border-top-glow;
 }
 
-/* ── Close buttons ── */
+/* ── Close & action buttons ── */
 .close-button {
     background: transparent;
     color: @text-muted;
@@ -293,6 +311,6 @@ scale highlight {
 }
 
 .close-button:hover {
-    background: rgba(220, 38, 38, 0.12);
+    background: @red-subtle-bg;
     color: @accent-red;
 }

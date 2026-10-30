@@ -1,0 +1,23 @@
+/* SwayNC Colors — Default (Light) */
+@define-color cc-bg             rgba(255, 255, 255, 0.72);
+@define-color notif-bg          rgba(248, 250, 252, 0.78);
+@define-color notif-border      rgba(0, 0, 0, 0.08);
+@define-color border-top-glow   rgba(255, 255, 255, 0.85);
+@define-color card-bg           rgba(0, 0, 0, 0.03);
+@define-color widget-bg         rgba(0, 0, 0, 0.04);
+@define-color widget-hover-bg   rgba(99, 102, 241, 0.14);
+@define-color slider-trough     rgba(0, 0, 0, 0.10);
+@define-color red-subtle-bg     rgba(220, 38, 38, 0.10);
+@define-color red-subtle-border rgba(220, 38, 38, 0.22);
+@define-color shadow-color      rgba(0, 0, 0, 0.12);
+
+@define-color text-color        #1e1b4b;
+@define-color text-muted        rgba(30, 27, 75, 0.50);
+
+@define-color accent-blue       #6366f1;
+@define-color accent-cyan       #22d3ee;
+@define-color accent-purple     #a855f7;
+@define-color accent-green      #16a34a;
+@define-color accent-red        #dc2626;
+@define-color accent-orange     #ea580c;
+

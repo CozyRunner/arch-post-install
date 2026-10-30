@@ -49,7 +49,7 @@ A highly modular, automated, and visually polished Arch Linux post-installation 
 | 🛡️ | **Validation & System-Health Engine**: One command (`arch-postinstall check/health/doctor`) to verify configuration conformance and runtime system health. |
 | 🩺 | **Diagnostic Doctor**: Translates warnings and failures into root-cause comparisons with copy-paste remediation commands. |
 | 🧩 | **Plugin-based Profiles**: Easily add new desktop environments (e.g., GNOME, KDE) by dropping a script into `profiles/`. |
-| 🎨 | **Unified Theming**: Dark (Macchiato) and Light (Latte) themes applied via `SUPER + N`. |
+| 🎨 | **Unified Theming**: 8 dual-mode curated theme schemes (16 presets) synchronized live across Hyprland, Waybar, SwayNC, Rofi, and terminals via `SUPER + Alt + T` (toggle) or `SUPER + Shift + T` (picker). |
 | 👤 | **Profile-Based**: Supports `full`, `base`, or `dotfiles` installation modes. |
 | 🔄 | **Idempotent & Safe**: All validation commands are strictly read-only; installation re-runs use safe flags. |
 | 📜 | **Structured Logging & JSON**: Human-readable colorized reports alongside machine-readable JSON (`--json`). |
@@ -236,10 +236,11 @@ arch-post-install/
 ├── bin/
 │   └── arch-postinstall       # Unified CLI entry point (check, health, doctor, status, install)
 ├── lib/
-│   ├── common.sh              # Shared utilities, YAML fallbacks, privilege checks
+│   ├── common.sh              # Shared utilities, YAML engine (yq), privilege checks
 │   ├── output.sh              # Formatting, ANSI detection, category headers, scorecards
 │   ├── checks.sh              # Assertions API, check registry, JSON serializer
-│   └── doctor.sh              # Automated diagnosis & fix generator
+│   ├── doctor.sh              # Automated diagnosis & fix generator
+│   └── planner.sh             # Dry-run execution planner (desired vs current state)
 ├── scripts/
 │   ├── check/                 # 14 validation & health check modules
 │   │   ├── base.sh            # OS, hostname, timezone, locale, microcode, kernel
@@ -272,7 +273,10 @@ arch-post-install/
 │   ├── test_framework.sh      # Framework and assertion unit tests
 │   ├── test_cli.sh            # CLI interface and exit code tests
 │   ├── test_json.sh           # JSON schema and ANSI compliance tests
-│   └── test_categories.sh     # Mocked assertion category tests
+│   ├── test_categories.sh     # Mocked assertion category tests
+│   ├── test_plan.sh           # Planner state & dry-run tests
+│   ├── test_regressions.sh    # Fast regression safety test suite (80 assertions)
+│   └── lint_check_slots.sh    # Static linter for warn/fail remediation slots
 ├── modules/
 │   ├── core.sh                # Engine: YAML parsing, logging, checks
 │   ├── system.sh              # System-wide setup (pacman tuning, ZRAM, firewall, shell)
@@ -297,10 +301,10 @@ arch-post-install/
 
 ## Theming System
 
-The unified theme engine uses **Catppuccin** color palettes by default for a consistent, eye-pleasing experience, while supporting 7 curated dual-mode theme schemes:
+The unified theme engine provides a cohesive, eye-pleasing aesthetic across 8 curated dual-mode theme families (16 presets):
 
-- 🌑 **Dark Mode**: Catppuccin Macchiato / Mocha
-- ☀️ **Light Mode**: Catppuccin Latte
+- 🌑 **Dark Mode**: High-contrast, easy-on-the-eyes dark palettes
+- ☀️ **Light Mode**: Crisp, clean light variants
 
 ### Theme Schemes
 
@@ -312,17 +316,19 @@ The unified theme engine uses **Catppuccin** color palettes by default for a con
 | **Everforest** | Everforest Dark | Everforest Light | Natural, muted greens and soft earthy background tones. Clean and organic. |
 | **Nord** | Nord Dark | Nord Light / Snow | Cool, arctic ice blues and slate grays. Minimalist and clean. |
 | **Rosé Pine** | Rosé Pine | Rosé Pine Dawn | Pastel, dreamy, soft pink and lavender tones. |
+| **Glassmorphism** | Lumina Dark | Lumina Light | Frosted electric glass aesthetic with deep navy / white base and vivid indigo/cyan accents. |
 | **Default Dark/Light** | Dark Theme | Light Theme | Standard high-contrast dark and light system themes. |
 
 Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interactive Theme Scheme Picker with **`SUPER + Shift + T`**. The system synchronizes the following components in real time:
 
 1. **Hyprland** - Border gradients, active opacity, shadow colors, and layer blurs via `theme.lua`.
 2. **Waybar** - CSS variables for background, text, borders, and accent colors.
-3. **Kitty / Alacritty** - Terminal color schemes.
-4. **Rofi** - Dynamic RASI variables for launchers and quick settings.
-5. **GTK/Qt** - System-wide interface preferences (Dark/Light preference & Adwaita themes).
-6. **Superfile / Zellij** - Terminal file manager and multiplexer palette synchronization.
-7. **Wallpapers** - Coordinated dark and light desktop wallpapers via `hyprpaper`.
+3. **SwayNC** - Notification Center, quick-action grid, tools menubar, and notification popups.
+4. **Kitty / Alacritty** - Terminal color schemes.
+5. **Rofi** - Dynamic RASI variables for launchers and quick settings.
+6. **GTK/Qt** - System-wide interface preferences (Dark/Light preference & Adwaita themes).
+7. **Superfile / Zellij** - Terminal file manager and multiplexer palette synchronization.
+8. **Wallpapers** - Coordinated dark and light desktop wallpapers via `hyprpaper`.
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
@@ -401,7 +407,7 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 | Category | Components |
 |:---:|:---|
 | **Compositor** | [Hyprland](https://hyprland.org) (Native Lua Engine), [hyprpaper](https://github.com/hyprwm/hyprpaper), [hypridle](https://github.com/hyprwm/hypridle), [hyprlock](https://github.com/hyprwm/hyprlock) |
-| **Bar/UI** | [Waybar](https://github.com/Alexays/Waybar), [Dunst](https://dunst-project.org/) |
+| **Bar/UI** | [Waybar](https://github.com/Alexays/Waybar), [SwayNotificationCenter (SwayNC)](https://github.com/ErikReider/SwayNotificationCenter) / [Dunst](https://dunst-project.org/) (optional fallback) |
 | **Launcher** | [Rofi](https://github.com/davatorium/rofi) (Custom Floating & Dmenu Themes) |
 | **Terminal** | [Kitty](https://sw.kovidgoyal.net/kitty/), [Alacritty](https://alacritty.org/) |
 | **File Manager** | [Nautilus](https://apps.gnome.org/Nautilus/), [Superfile](https://github.com/yorukot/superfile), [Yazi](https://github.com/sxyazi/yazi) |
@@ -412,7 +418,7 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 | **Media** | [MPV](https://mpv.io/), [imv](https://github.com/epezent/imv), [feh](https://feh.finalrewind.org/), [Evince](https://wiki.gnome.org/Apps/Evince) |
 | **Audio** | [PipeWire](https://pipewire.org/), [WirePlumber](https://pipewire.pages.freedesktop.org/wireplumber/) |
 | **Network** | [NetworkManager](https://wiki.archlinux.org/title/NetworkManager), [iWD](https://iwd.wiki.kernel.org/) |
-| **Security** | [KWallet](https://utils.kde.org/projects/kwalletmanager/), `pam_kwallet` |
+| **Security** | [KWallet](https://utils.kde.org/projects/kwalletmanager/), `pam_kwallet5` |
 | **Theming** | [nwg-look](https://github.com/nwg-piotr/nwg-look) (GTK Configuration Tool), [Papirus Icons](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme), [Adwaita](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/), [Kvantum](https://github.com/tsujan/Kvantum) |
 
 
@@ -453,13 +459,15 @@ sudo pacman -S --needed base-devel
 
 Check logs:
 ```bash
-cat ~/.hyprland/hyprland.log
+hyprctl rollinglog
+# Or check the session log directly:
+cat "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/hyprland.log"
 ```
 
 ### Sound not working
 
+Restart PipeWire user services:
 ```bash
-pulseaudio --kill
 systemctl --user restart pipewire pipewire-pulse wireplumber
 ```
 
@@ -485,7 +493,7 @@ packages:
 
 ### Add dotfiles
 
-Place your configuration directory in `dotfiles/` and add it to `config/hyprland.yaml`. Existing directories in `~/.config/` will be backed up automatically.
+Place your configuration directory in `dotfiles/` and add it to `config/hyprland.yaml`. Existing directories in `~/.config/` will be safely backed up to `~/.config-backup-<timestamp>/` before symlinks are created.
 
 ```yaml
 dotfiles:
@@ -494,20 +502,20 @@ dotfiles:
 
 ### Change default theme
 
-The theme system is centralized. Edit `dotfiles/theme/config.conf` to switch between flavors:
+The theme system tracks state in `~/.cache/theme_scheme` (e.g. `nord`, `catppuccin`, `tokyo-night`, `gruvbox`, `dracula`, `rose-pine`, `everforest`, `glassmorphism`) and `~/.cache/theme_mode` (`dark` or `light`).
+
+Switch schemes interactively using the Theme Picker (`SUPER + Shift + T` or `~/.config/hypr/scripts/theme_picker.sh`), toggle light/dark (`SUPER + Alt + T` or `~/.config/hypr/scripts/toggle_theme.sh`), or set an explicit scheme and mode via:
 ```bash
-THEME=macchiato   # Dark mode
-# OR:
-THEME=latte       # Light mode
+~/.config/hypr/scripts/toggle_theme.sh set catppuccin dark
 ```
 
 ### Advanced: Custom Profiles
 
-The workbench supports a plugin-based architecture for desktop environments. To add a new profile (e.g., `gnome`):
+The workbench supports a modular architecture for desktop environments. To add a new profile (e.g., `gnome`):
 
 1. Create `config/gnome.yaml` with required packages and dotfiles.
-2. Create `profiles/gnome.sh` and define a `setup_gnome()` function.
-3. Add `run_cmd setup_gnome` to the `full` case in `install.sh`.
+2. Create `profiles/gnome.sh` and define a `setup_gnome()` function (all scripts in `profiles/*.sh` are automatically sourced by `install.sh`).
+3. Call `setup_gnome` within the appropriate mode handler in `install.sh`.
 
 <p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 

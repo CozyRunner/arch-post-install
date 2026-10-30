@@ -23,6 +23,7 @@ graph LR
 - **Root-Cause Diagnostics (`doctor`)**: Translates `WARN` and `FAIL` findings into clear state comparisons (`Expected` vs `Current`), diagnostic details, and actionable copy-paste remediation commands.
 - **Read-Only Safety**: All check, health, doctor, and status commands are strictly non-destructive.
 - **Non-Root Friendly**: Can be executed by regular unprivileged users without requiring mandatory `sudo`.
+- **Hard Dependency on `yq`**: All YAML declarations are evaluated via `yq` (v4+); if absent, the framework safely halts with exit code 4 (`DEP`) rather than misreporting state on empty configs. `jq` is required for structured JSON output (`--json`).
 
 ---
 
@@ -33,10 +34,11 @@ arch-post-install/
 ├── bin/
 │   └── arch-postinstall       # Unified CLI entry point
 ├── lib/
-│   ├── common.sh              # System introspection, YAML parser fallbacks, privilege checks
+│   ├── common.sh              # System introspection, YAML parser (yq), privilege checks
 │   ├── output.sh              # Terminal formatting, TTY detection, scorecards, headers
 │   ├── checks.sh              # Check accumulator, assertions API, JSON serializer
-│   └── doctor.sh              # Diagnostic analysis and remediation generator
+│   ├── doctor.sh              # Diagnostic analysis and remediation generator
+│   └── planner.sh             # Dry-run execution planner (desired vs current state)
 ├── scripts/
 │   └── check/                 # Category validation & health check modules
 │       ├── base.sh            # OS release, hostname, timezone, locale, microcode, kernel
@@ -62,7 +64,10 @@ arch-post-install/
     ├── test_framework.sh      # Core assertion and state unit tests
     ├── test_cli.sh            # CLI argument and exit code tests
     ├── test_json.sh           # JSON schema and ANSI compliance tests
-    └── test_categories.sh     # Mocked assertion category tests
+    ├── test_categories.sh     # Mocked assertion category tests
+    ├── test_plan.sh           # Planner state & dry-run tests
+    ├── test_regressions.sh    # Fast regression safety test suite (80 assertions)
+    └── lint_check_slots.sh    # Static linter for warn/fail remediation slots
 ```
 
 ---
@@ -144,7 +149,8 @@ check_docker() {
         pass "docker" "pkg_docker" "Docker package is installed"
     else
         warn "docker" "pkg_docker" "Docker package is not installed" \
-             "Install docker package" "sudo pacman -S docker"
+             "Package missing from system" "sudo pacman -S docker" \
+             "installed" "missing"
     fi
 
     # Verify service enablement
@@ -158,7 +164,8 @@ health_docker() {
         pass "docker" "daemon_active" "Docker daemon is running"
     else
         warn "docker" "daemon_active" "Docker daemon is inactive" \
-             "Start daemon: sudo systemctl start docker"
+             "Docker daemon is not running" "sudo systemctl start docker" \
+             "active" "inactive"
     fi
 }
 ```
@@ -182,3 +189,24 @@ The framework provides standardized helper functions in `lib/checks.sh`:
 - `assert_service_active(service_name, [category])`
 - `assert_mount(mountpoint, [category])`
 - `assert_user_group(username, group_name, [category])`
+
+### The 7-Argument Contract for `warn` and `fail`
+
+Both `warn` and `fail` strictly adhere to a 7-position argument contract:
+
+```bash
+warn <category> <name> <message> <details> <fix_cmd> <expected> <current>
+fail <category> <name> <message> <details> <fix_cmd> <expected> <current>
+```
+
+> [!CAUTION]
+> **Never put a remediation command in slot 4 (`details`).**
+> Slot 4 is strictly reserved for diagnostic details or root cause context. Remediation commands belong in slot 5 (`fix_cmd`). If a remediation is mistakenly placed in slot 4, `arch-postinstall doctor --fix` will not discover it, and `render_json` will omit `suggested_fix`.
+>
+> Run `bash tests/lint_check_slots.sh` after modifying any check module to statically verify slot positions.
+
+### Remediation Command Safety Rules
+
+Remediations passed to slot 5 (`fix_cmd`) are validated against an allowlist in `fix_cmd_is_safe` (`lib/checks.sh`):
+1. **Forbidden Characters**: Rejects backticks, `;`, `<`, `>`, newlines, unquoted `&`, and all runtime expansion syntax (`$` or `$(...)`). Variables must be expanded at check time, not eval time.
+2. **Allowed Binaries**: Every command or pipeline segment must start with an approved binary from `FIX_CMD_ALLOWED_CMDS` (e.g. `systemctl`, `pacman`, `yay`, `timedatectl`, `chsh`, `chmod`, `btrfs`, `useradd`, `usermod`, `sed`, `install.sh`).

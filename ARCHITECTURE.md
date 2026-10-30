@@ -31,6 +31,7 @@ graph TD
         V --> LK(lib/checks.sh)
         V --> LD(lib/doctor.sh)
         V --> LO(lib/output.sh)
+        V --> LP(lib/planner.sh)
         
         LK --> SC[scripts/check/*.sh]
         SC -->|Reads Source of Truth| I
@@ -39,6 +40,7 @@ graph TD
         V -->|check| V1[Declarative Conformance]
         V -->|health| V2[Runtime System Health]
         V -->|doctor| V3[Diagnostics & Fix Commands]
+        V -->|plan| V4[Execution Plan Preview]
     end
 
     subgraph Runtime ["3. Desktop Runtime Subsystem"]
@@ -50,7 +52,7 @@ graph TD
         J --> P[theme.lua]
         
         Q[scripts/toggle_theme.sh] -->|Syncs| P
-        Q -->|Syncs| R[Waybar / Kitty / Rofi]
+        Q -->|Syncs| R[Waybar / SwayNC / Kitty / Rofi]
     end
 
     G -.->|Symlinks to ~/.config| Runtime
@@ -70,14 +72,14 @@ graph TD
 
 | Module | Responsibility | Key Features |
 |---|---|---|
-| `core.sh` | Orchestration & engine utilities | YAML parser with fallback regex engine, logging handlers, network and root privilege validation. |
-| `system.sh` | Core system provisioning & tuning | Pacman tuning (parallel downloads), ZRAM swap, UFW firewall, Bluetooth auto-enable, fonts, shell. |
+| `core.sh` | Orchestration & engine utilities | YAML configuration engine (hard dependency on `yq`), logging handlers, network and root privilege validation. |
+| `system.sh` | Core system provisioning & tuning | Pacman tuning (parallel downloads), reflector mirror tuning, ZRAM swap, UFW firewall, Bluetooth auto-enable, fonts, shell. |
 | `btrfs.sh` | Disaster recovery & snapshots | Snapper subvolume snapshot configuration, automated pre/post pacman snapshots via `snap-pac`, retention timers. |
 | `packages.sh` | Package lifecycle manager | Batch pacman and AUR installation via `yay`, missing dependency resolution, package presence verification. |
 | `services.sh` | Systemd service manager | Parses and enables systemd `.service` and `.timer` units for both system and user bus. |
-| `users.sh` | User accounts & permissions | Default shell assignment (Fish), supplementary group membership (`wheel`, `video`, `input`, `audio`), locale & timezone. |
+| `users.sh` | User accounts & permissions | Default shell assignment (Fish), supplementary group membership (`wheel`, `docker`; modern systemd/udev seat management obviates legacy audio/video groups), locale & timezone. |
 | `flatpak.sh` | Flatpak & sandboxed apps | Flatpak runtime initialization, Flathub remote registration, and declarative Flatpak application deployment. |
-| `dotfiles.sh` | Configuration deployment | Symlinks `dotfiles/*` into `$HOME/.config/` with automatic `.bak` preservation. |
+| `dotfiles.sh` | Configuration deployment | Symlinks `dotfiles/*` into `$HOME/.config/` with automatic `~/.config-backup-<timestamp>/` preservation. |
 
 ---
 
@@ -88,10 +90,11 @@ The validation engine ensures that post-installation execution leaves the operat
 ```
 bin/arch-postinstall
 ├── lib/
-│   ├── common.sh        # System introspection, UEFI/BIOS detection, YAML parser wrappers
+│   ├── common.sh        # System introspection, UEFI/BIOS detection, YAML parser wrappers (yq)
 │   ├── output.sh        # TTY detection, colored icons (✓, ⚠, ✗, ○, ℹ), scorecards
 │   ├── checks.sh        # Check accumulator, assertions engine, clean JSON serializer
-│   └── doctor.sh        # Diagnosis engine: expected vs current diffs & copy-paste fixes
+│   ├── doctor.sh        # Diagnosis engine: expected vs current diffs & copy-paste fixes
+│   └── planner.sh       # Dry-run execution planner (desired vs current state preview)
 └── scripts/check/       # 14 Modular verification categories
     ├── base.sh          # OS, hostname, timezone, locale, microcode, kernel
     ├── boot.sh          # UEFI/BIOS mode, ESP partition, bootloader, initramfs sync
@@ -161,13 +164,15 @@ sequenceDiagram
     participant Switcher as toggle_theme.sh / theme_picker.sh
     participant Hyprland as Hyprland (theme.lua)
     participant Waybar as Waybar (colors.css)
+    participant SwayNC as SwayNC (colors.css)
     participant Terminals as Kitty / Alacritty
     participant GTK as GTK & Desktop Interface
 
-    User->>Switcher: Trigger SUPER + N or SUPER + Shift + T
+    User->>Switcher: Trigger SUPER + Alt + T or SUPER + Shift + T
     Switcher->>GTK: Set color-scheme (prefer-dark / prefer-light)
     Switcher->>Hyprland: Copy themes/presets/<scheme>.lua -> theme.lua
     Switcher->>Waybar: Swap colors.css & send SIGUSR2
+    Switcher->>SwayNC: Swap colors.css & reload via swaync-client -rs
     Switcher->>Terminals: Update theme.conf & send SIGUSR2
     Switcher->>Hyprland: Preload & set wallpaper via hyprpaper
     Switcher-->>User: Desktop Notification (Scheme & Mode)

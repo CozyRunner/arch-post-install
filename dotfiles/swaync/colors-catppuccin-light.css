@@ -1,0 +1,23 @@
+/* SwayNC Colors — Catppuccin Latte (Light) */
+@define-color cc-bg             rgba(239, 241, 245, 0.88);
+@define-color notif-bg          rgba(230, 233, 239, 0.90);
+@define-color notif-border      rgba(76, 79, 105, 0.10);
+@define-color border-top-glow   rgba(255, 255, 255, 0.80);
+@define-color card-bg           rgba(204, 208, 218, 0.50);
+@define-color widget-bg         rgba(204, 208, 218, 0.60);
+@define-color widget-hover-bg   rgba(30, 102, 245, 0.15);
+@define-color slider-trough     rgba(204, 208, 218, 0.80);
+@define-color red-subtle-bg     rgba(210, 15, 57, 0.12);
+@define-color red-subtle-border rgba(210, 15, 57, 0.25);
+@define-color shadow-color      rgba(0, 0, 0, 0.12);
+
+@define-color text-color        #4c4f69;
+@define-color text-muted        rgba(92, 95, 119, 0.65);
+
+@define-color accent-blue       #1e66f5;
+@define-color accent-cyan       #179299;
+@define-color accent-purple     #8839ef;
+@define-color accent-green      #40a02b;
+@define-color accent-red        #d20f39;
+@define-color accent-orange     #fe640b;
+
