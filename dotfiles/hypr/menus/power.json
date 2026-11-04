@@ -1,0 +1,7 @@
+[
+  {"label": "Lock Session", "icon": "󰌾", "command": "~/.config/hypr/scripts/session.sh lock"},
+  {"label": "Logout",       "icon": "󰍃", "command": "~/.config/hypr/scripts/session.sh logout"},
+  {"label": "Suspend",      "icon": "󰤄", "command": "~/.config/hypr/scripts/session.sh suspend"},
+  {"label": "Reboot",       "icon": "󰑐", "command": "~/.config/hypr/scripts/session.sh reboot"},
+  {"label": "Power Off",    "icon": "",  "command": "~/.config/hypr/scripts/session.sh poweroff"}
+]

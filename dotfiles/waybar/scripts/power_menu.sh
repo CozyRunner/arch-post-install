@@ -1,39 +1,35 @@
 #!/usr/bin/env bash
 
-# Power and User Control Menu using Rofi
-# Designed for Antigravity Waybar theme
+# Waybar Power and User Control Menu using Rofi
+# Dynamically generated from JSON definition
 
 USER_NAME=$(whoami)
 
-# Icons (Nerd Fonts)
-ICON_LOCK="󰌾"
-ICON_LOGOUT="󰍃"
-ICON_SUSPEND="󰤄"
-ICON_REBOOT="󰑐"
-ICON_SHUTDOWN=""
+# Load menu definition (JSON) and build options list
+MENU_FILE="$HOME/.config/hypr/menus/power.json"
+if [[ ! -f "$MENU_FILE" ]]; then
+  echo "Power menu definition not found at $MENU_FILE" >&2
+  exit 1
+fi
+if ! command -v jq &>/dev/null; then
+  echo "jq is required for dynamic power menu" >&2
+  exit 1
+fi
+options=$(jq -r '.[] | "\(.icon) \(.label)"' "$MENU_FILE")
 
-# Build menu options
-options="$ICON_LOCK  Lock Session\n$ICON_LOGOUT  Logout ($USER_NAME)\n$ICON_SUSPEND  Suspend System\n$ICON_REBOOT  Reboot System\n$ICON_SHUTDOWN  Power Off"
+# Show menu using rofi (fallback to existing theme)
+POWER_THEME="$HOME/.config/rofi/floating-menu.rasi"
+selection=$(echo -e "$options" | rofi -dmenu -i \
+  -p "" \
+  -mesg "  $USER_NAME" \
+  -theme "$POWER_THEME")
 
-# Show menu
-# Using rofi in dmenu mode with modern theme and custom overrides
-selection=$(echo -e "$options" | rofi -dmenu -i -p "System Menu" -theme ~/.config/rofi/floating-menu.rasi -theme-str 'window {width: 450px;} listview {lines: 5;}')
+# If nothing selected, exit
+[[ -z "$selection" ]] && exit 0
 
-# Parse selection and execute
-case "$selection" in
-    *"Lock"*)
-        hyprlock || swaylock
-        ;;
-    *"Logout"*)
-        loginctl terminate-user "$USER"
-        ;;
-    *"Suspend"*)
-        systemctl suspend
-        ;;
-    *"Reboot"*)
-        systemctl reboot
-        ;;
-    *"Power Off"*)
-        systemctl poweroff
-        ;;
-esac
+# Extract label and execute associated command
+label=$(echo "$selection" | cut -d' ' -f2-)
+cmd=$(jq -r --arg lbl "$label" '.[] | select(.label == $lbl) | .command' "$MENU_FILE")
+if [[ -n "$cmd" ]]; then
+  eval "$cmd"
+fi

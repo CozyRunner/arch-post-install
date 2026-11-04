@@ -53,17 +53,23 @@ case "$ACTION" in
     fi
     ;;
   sync|theme)
-    # Synchronize SwayNC color palette with active desktop theme
-    SWAYNC_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/swaync"
-    SCHEME="$(cat "$HOME/.cache/theme_scheme" 2>/dev/null || echo "nord")"
-    MODE="$(cat "$HOME/.cache/theme_mode" 2>/dev/null || echo "dark")"
-    if [ -f "$SWAYNC_CONFIG/colors-${SCHEME}-${MODE}.css" ]; then
-      (cd "$SWAYNC_CONFIG" && ln -sf "colors-${SCHEME}-${MODE}.css" colors.css)
-    elif [ -f "$SWAYNC_CONFIG/colors-${MODE}.css" ]; then
-      (cd "$SWAYNC_CONFIG" && ln -sf "colors-${MODE}.css" colors.css)
-    fi
-    if pgrep -x swaync >/dev/null 2>&1; then
-      swaync-client -rs 2>/dev/null || swaync-client -R 2>/dev/null || true
+    # Delegate to the unified theme sync script
+    SYNC_SCRIPT="${HOME}/.config/hypr/scripts/sync_theme.sh"
+    if [[ -x "$SYNC_SCRIPT" ]]; then
+      "$SYNC_SCRIPT" --component swaync
+    else
+      # Inline fallback if sync_theme.sh is missing
+      SWAYNC_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/swaync"
+      SCHEME="$(cat "$HOME/.cache/theme_scheme" 2>/dev/null || echo "nord")"
+      MODE="$(cat "$HOME/.cache/theme_mode" 2>/dev/null || echo "dark")"
+      if [ -f "$SWAYNC_CONFIG/colors-${SCHEME}-${MODE}.css" ]; then
+        (cd "$SWAYNC_CONFIG" && ln -sf "colors-${SCHEME}-${MODE}.css" colors.css)
+      elif [ -f "$SWAYNC_CONFIG/colors-${MODE}.css" ]; then
+        (cd "$SWAYNC_CONFIG" && ln -sf "colors-${MODE}.css" colors.css)
+      fi
+      if pgrep -x swaync >/dev/null 2>&1; then
+        swaync-client -rs 2>/dev/null || swaync-client -R 2>/dev/null || true
+      fi
     fi
     ;;
   reload)

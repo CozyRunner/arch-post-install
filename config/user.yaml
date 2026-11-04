@@ -1,0 +1,19 @@
+# ─────────────────────────────────────────────
+# User Configuration — Arch Post-Install
+# Personal overrides that are not part of any profile.
+# ─────────────────────────────────────────────
+
+# Custom keybindings
+# Override default shortcuts by specifying the action and key combo.
+# These are applied during install and can be regenerated with:
+#   ~/.config/hypr/scripts/generate_user_bindings.sh
+keybindings:
+  logout: "SUPER + SHIFT + Q"        # default; change to e.g. "SUPER + SHIFT + L"
+  lock: "SUPER + L"
+  power_menu: "SUPER + Escape"
+
+# Theme preferences (optional — overrides auto-detection)
+# theme:
+#   scheme: glassmorphism
+#   mode: dark
+

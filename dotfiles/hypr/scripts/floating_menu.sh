@@ -81,7 +81,9 @@ menu_appearance() {
 $theme_label
 󰸉  Select Theme Scheme
 󰋩  Change Wallpaper
-󰏘  GTK Settings (nwg-look)"
+󰏘  GTK Settings (nwg-look)
+  Preview Theme Colors
+🔄  Sync Theme (All Components)"
 
     local choice
     choice=$(rofi_menu "🎨 Appearance" "Control Center › Appearance" "$options")
@@ -106,6 +108,13 @@ $theme_label
             else
                 notify-send "GTK Settings" "nwg-look is not installed" -i dialog-warning
             fi
+            ;;
+        *"Preview Theme"*)
+            bash "$SCRIPTS_DIR/preview_theme.sh"
+            ;;
+        *"Sync Theme"*)
+            bash "$SCRIPTS_DIR/sync_theme.sh"
+            notify-send "Theme Sync" "All components re-synchronized" -i dialog-information -u low -t 2000
             ;;
     esac
 }
@@ -305,19 +314,19 @@ menu_power() {
             main_menu
             ;;
         *"Lock"*)
-            hyprlock || swaylock
+            ~/.config/hypr/scripts/session.sh lock
             ;;
         *"Suspend"*)
-            systemctl suspend
+            ~/.config/hypr/scripts/session.sh suspend
             ;;
         *"Reboot"*)
-            systemctl reboot
+            ~/.config/hypr/scripts/session.sh reboot
             ;;
         *"Power Off"*)
-            systemctl poweroff
+            ~/.config/hypr/scripts/session.sh poweroff
             ;;
         *"Logout"*)
-            loginctl terminate-user "$USER"
+            ~/.config/hypr/scripts/session.sh logout
             ;;
     esac
 }

@@ -145,7 +145,7 @@ Super + D / Super + I
 | **Quick Controls & Devices** | 📡 | Notification Center (SwayNC), Screen Recorder, Wi-Fi (Impala), Bluetooth (Bluetui), Audio Mixer (WireMix), Clipboard History | `notification_center.sh`, `screenrecord.sh`, `impala`, `bluetui`, `wiremix`, `clipboard.sh` |
 | **System & Maintenance** | 📦 | Update Checker, Arch pacman update, AUR update, Device Firmware, Disk Analyzer (ncdu), About This PC | `check_updates.sh`, `update_arch.sh`, `aur_update.sh`, `firmware_update.sh`, `ncdu`, `about_pc.sh` |
 | **Configuration & Dotfiles** |  | Input/Touchpad, Core Keybindings, Utility Bindings, Monitors, Hypridle, Hyprlock, SwayNC | Config editors via `nvim` in floating terminals |
-| **Power & Session** |  | Lock Session, Suspend, Reboot, Power Off, Logout | `hyprlock`, `systemctl`, `loginctl terminate-user "$USER"` |
+| **Power & Session** |  | Lock Session, Suspend, Reboot, Power Off, Logout | `session.sh` (delegates to `loginctl`, `systemctl`, `hyprlock`) |
 
 ### How It Works
 
@@ -276,7 +276,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Alt + F4` / `Super + C` | Close active window |
 | `Ctrl + Shift + Escape` | Open Task Manager (btop) |
 | `Super + Escape` | Power & Session Menu (`power_menu.sh`) |
-| `Super + Shift + Q` | Logout Session (`loginctl terminate-user "$USER"`) |
+| `Super + Shift + Q` | Logout Session (`session.sh logout`) |
 | `Ctrl + Alt + Delete` | Emergency Close All Windows |
 | `Super + E` | Open file manager (Explorer) |
 | `Super + R` | Run command dialog |

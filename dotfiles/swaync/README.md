@@ -30,13 +30,25 @@ dotfiles/swaync/
 └── colors-light.css                # Default neutral light fallback
 ```
 
+> **Note:** `style-dark.css` and `style-light.css` were removed — they were byte-for-byte copies of `style.css`. Theme differentiation is handled entirely by the `colors-*.css` files.
+
 ## Dynamic Color Synchronization
 
-When themes switch via any of the following triggers:
-- Keyboard shortcut: `SUPER + ALT + T` (`toggle_theme.sh`)
-- Scheme selector: `SUPER + SHIFT + T` (`theme_picker.sh`)
-- SwayNC quick button: `󰖙 Theme` inside the Control Center
-- CLI command: `~/.config/hypr/scripts/notification_center.sh sync`
+Theme colors stay in sync across **all** UI components (SwayNC, Waybar, Rofi, Kitty, Alacritty, Hyprland, Hyprlock) through several mechanisms:
 
-`toggle_theme.sh` automatically updates `colors.css` to `colors-${SCHEME}-${TARGET_MODE}.css` and invokes `swaync-client -rs` to re-render the control center in real time.
+| Trigger | Script | What It Does |
+|---------|--------|--------------|
+| Keyboard shortcut `SUPER + ALT + T` | `toggle_theme.sh` | Toggles light/dark and updates **all** components |
+| Scheme selector `SUPER + SHIFT + T` | `theme_picker.sh` | Pick a scheme + mode, delegates to `toggle_theme.sh` |
+| SwayNC quick button `󰖙 Theme` | `toggle_theme.sh` | Same as keyboard shortcut |
+| CLI `notification_center.sh sync` | `sync_theme.sh --component swaync` | Re-syncs SwayNC only |
+| CLI `sync_theme.sh` | `sync_theme.sh` | Re-syncs **all** components to cached state |
+| CLI `sync_theme.sh --validate` | `sync_theme.sh` | Checks that all color files exist for current scheme |
+| CLI `sync_theme.sh --status` | `sync_theme.sh` | Prints current theme state & active symlinks |
 
+### How It Works
+
+1. `toggle_theme.sh` writes the active scheme and mode to `~/.cache/theme_scheme` and `~/.cache/theme_mode`.
+2. For each component, it symlinks or copies the matching `colors-${SCHEME}-${MODE}.css` into `colors.css`, falling back to `colors-${MODE}.css` if the scheme-specific file is missing.
+3. `sync_theme.sh` can re-apply step 2 at any time without toggling — useful after manual edits, fresh login, or partial failures.
+4. `swaync-client -rs` is called to hot-reload the notification center style.
