@@ -42,9 +42,9 @@ fi
 # ── Read keybindings ──────────────────────────────────────────
 # Map action → script command
 declare -A ACTION_CMDS=(
-    [logout]="~/.config/hypr/scripts/session.sh logout"
-    [lock]="~/.config/hypr/scripts/session.sh lock"
-    [power_menu]="~/.config/hypr/scripts/power_menu.sh"
+    [logout]="$HOME/.config/hypr/scripts/session.sh logout"
+    [lock]="$HOME/.config/hypr/scripts/session.sh lock"
+    [power_menu]="$HOME/.config/hypr/scripts/power_menu.sh"
 )
 
 # Parse key combos from YAML — yq outputs null for missing keys

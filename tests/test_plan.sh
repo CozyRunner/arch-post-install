@@ -55,7 +55,7 @@ assert_true "echo \"${plan_out}\" | grep -q 'Summary:'" "Plan output has summary
 
 # Test 1.2: Plan with --profile hyprland
 set +e
-prof_out="$("${BIN}" plan --profile hyprland 2>&1)"
+"${BIN}" plan --profile hyprland >/dev/null 2>&1
 prof_exit=$?
 set -e
 assert_eq "0" "${prof_exit}" "arch-postinstall plan --profile hyprland should exit with 0"
@@ -68,7 +68,7 @@ assert_true "! echo \"${nocolor_out}\" | grep -q $'\033\\['" "Plan with --no-col
 
 # Test 1.4: Invalid configuration file path exits with code 3
 set +e
-bad_cfg_out="$("${BIN}" plan --config /nonexistent/path/to/config.yaml 2>&1)"
+"${BIN}" plan --config /nonexistent/path/to/config.yaml >/dev/null 2>&1
 bad_cfg_exit=$?
 set -e
 assert_eq "3" "${bad_cfg_exit}" "Plan with nonexistent config file should exit with code 3"
@@ -119,6 +119,34 @@ cleanup() {
     rm -rf "${TEMP_DIR}"
 }
 trap cleanup EXIT
+
+# If pacman is not installed (e.g. running on Ubuntu CI runner), provide a minimal mock
+# so tests verifying pacman package transition logic (NOOP for installed vs ADD for missing)
+# can execute reliably across different host environments.
+if ! command -v pacman &>/dev/null; then
+    MOCK_BIN="${TEMP_DIR}/mock_bin"
+    mkdir -p "${MOCK_BIN}"
+    cat > "${MOCK_BIN}/pacman" << 'MOCK_PACMAN'
+#!/bin/sh
+case "$1" in
+    -Qq)
+        echo "bash"
+        ;;
+    -Q)
+        if [ "$2" = "bash" ]; then
+            echo "bash 5.2.0"
+            exit 0
+        fi
+        exit 1
+        ;;
+    *)
+        exit 1
+        ;;
+esac
+MOCK_PACMAN
+    chmod +x "${MOCK_BIN}/pacman"
+    export PATH="${MOCK_BIN}:${PATH}"
+fi
 
 # Create a test YAML config
 cat > "${TEMP_DIR}/packages_test.yaml" << 'EOF'
@@ -273,7 +301,7 @@ fi
 
 assert_true "[[ \${EUID:-1} -ne 0 ]]" "Test runs as non-root user"
 set +e
-non_root_out="$("${BIN}" plan --json 2>/dev/null)"
+"${BIN}" plan --json >/dev/null 2>&1
 non_root_exit=$?
 set -e
 assert_eq "0" "${non_root_exit}" "Plan executes successfully without root privilege"

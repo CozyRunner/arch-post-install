@@ -100,7 +100,8 @@ detect_waybar_files() {
 backup_waybar_files() {
     log_step "Backing up existing Waybar configuration"
     if [[ -f "${CONFIG_FILE}" ]]; then
-        local cfg_bak="${BACKUP_DIR}/$(basename "${CONFIG_FILE}").bak_${TIMESTAMP}"
+        local cfg_bak
+        cfg_bak="${BACKUP_DIR}/$(basename "${CONFIG_FILE}").bak_${TIMESTAMP}"
         cp "${CONFIG_FILE}" "${cfg_bak}"
         log_success "Backed up config: ${cfg_bak}"
     fi

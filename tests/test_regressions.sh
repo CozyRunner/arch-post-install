@@ -587,7 +587,7 @@ EOF
     #    Stubbing the probes is what drives the WARN branches that carry a fix.
     forced="$(
         set +u
-        cd "${ROOT_DIR}"
+        cd "${ROOT_DIR}" || exit 1
         source lib/common.sh  >/dev/null 2>&1
         source lib/output.sh >/dev/null 2>&1
         source lib/checks.sh  >/dev/null 2>&1
@@ -604,6 +604,7 @@ EOF
         # require_yaml_parser, which itself probes command_exists yq.
         command_exists()       { [[ "${1}" == yq ]] && command -v yq &>/dev/null; }
         for c in bluetooth audio desktop systemd; do
+            # shellcheck disable=SC1090
             source "scripts/check/${c}.sh"
             "check_${c}"
         done

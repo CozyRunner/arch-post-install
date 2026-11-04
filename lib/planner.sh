@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2088
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Library: planner.sh
@@ -554,7 +555,6 @@ plan_discover_profile() {
 render_plan_text() {
     echo -e "${C_BOLD}Arch Post-Install Plan${C_RESET}\n"
 
-    local current_sub=""
     local -a subsystems=("packages" "services" "dotfiles" "shell" "system" "profile")
 
     for target_sub in "${subsystems[@]}"; do

@@ -112,7 +112,7 @@ set_etc_key() {
                 next
             }
             { if (!seen) { print repl; seen=1 } }
-        ' "${file}" - > "${file}.set_etc_key.tmp" \
+        ' "${file}" - | sudo tee "${file}.set_etc_key.tmp" > /dev/null \
         || { log_error "Failed to update ${key} in ${file}"; return 1; }
     sudo mv "${file}.set_etc_key.tmp" "${file}"
 }

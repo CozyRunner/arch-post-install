@@ -40,8 +40,10 @@ check_hardware() {
             info "hardware" "gpu_device" "No PCI GPU detected (headless or virtual display)"
         fi
     elif [[ -d /sys/class/drm ]]; then
-        local cards
-        cards="$(ls -1 /sys/class/drm/card* 2>/dev/null | grep -v '-' | wc -l || echo "0")"
+        local cards=0
+        for c in /sys/class/drm/card[0-9]*; do
+            [[ -e "${c}" && "${c}" != *-* ]] && ((cards++)) || true
+        done
         if [[ "${cards}" -gt 0 ]]; then
             pass "hardware" "gpu_device" "DRM graphics cards detected: ${cards}"
         fi
