@@ -190,6 +190,7 @@ menu_controls() {
 menu_system() {
     local options="󰌍  Back to Main Menu
 󰚐  Check Updates
+󰏗  Package Manager (SPM)
 󰣇  Update Arch Linux
 󰚙  Update AUR Packages
 󰚰  Update Device Firmware
@@ -206,6 +207,9 @@ menu_system() {
             ;;
         *"Check Update"*)
             launch_term "Check Update" "floating-term" bash "$SCRIPTS_DIR/check_updates.sh"
+            ;;
+        *"Package Manager"*|*"SPM"*)
+            bash "$SCRIPTS_DIR/spm.sh"
             ;;
         *"Update Arch"*)
             launch_term "System Update" "floating-term" bash "$SCRIPTS_DIR/update_arch.sh"
@@ -227,6 +231,75 @@ menu_system() {
             ;;
         *"About This PC"*)
             launch_term "About This PC" "medium-floating-term" bash "$SCRIPTS_DIR/about_pc.sh"
+            ;;
+    esac
+}
+
+# ------------------------------------------------------------------------------
+# 4. TUI Applications Sub-Menu
+# ------------------------------------------------------------------------------
+menu_tui() {
+    local options="󰌍  Back to Main Menu
+󰏗  Package Manager (SPM)
+󰇧  System Monitor (btop)
+  Git Client (lazygit)
+󰡨  Docker Manager (lazydocker)
+  File Manager (Yazi)
+󰋊  Disk Analyzer (ncdu)
+  Calendar & Tasks (Calcure)
+󰠮  Journal & Notes (tui-journal)
+󰛳  REST & API Client (posting)
+󰓃  Audio Mixer (WireMix)
+󰖩  Network Manager (Impala)
+󰂯  Bluetooth Devices (Bluetui)
+󰆍  Multiplexer (Zellij)"
+
+    local choice
+    choice=$(rofi_menu "💻 TUI Apps" "Control Center › TUI Applications" "$options")
+    [[ -z "$choice" ]] && exit 0
+
+    case "$choice" in
+        *"Back to Main Menu"*)
+            main_menu
+            ;;
+        *"Package Manager"*|*"SPM"*)
+            bash "$SCRIPTS_DIR/spm.sh"
+            ;;
+        *"System Monitor"*|*"btop"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" btop
+            ;;
+        *"Git Client"*|*"lazygit"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" lazygit
+            ;;
+        *"Docker Manager"*|*"lazydocker"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" lazydocker
+            ;;
+        *"File Manager"*|*"Yazi"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" yazi
+            ;;
+        *"Disk Analyzer"*|*"ncdu"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" ncdu
+            ;;
+        *"Calendar"*|*"Calcure"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" calcure
+            ;;
+        *"Journal"*|*"tui-journal"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" tjournal
+            ;;
+        *"REST"*|*"posting"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" posting
+            ;;
+        *"Audio Mixer"*|*"WireMix"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" wiremix
+            ;;
+        *"Network Manager"*|*"Impala"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" impala
+            ;;
+        *"Bluetooth"*|*"Bluetui"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" bluetui
+            ;;
+        *"Multiplexer"*|*"Zellij"*)
+            bash "$SCRIPTS_DIR/tui_app.sh" zellij
             ;;
     esac
 }
@@ -338,6 +411,7 @@ main_menu() {
     local root_options="🎨  Appearance & Theming
 📡  Quick Controls & Devices
 📦  System & Maintenance
+💻  TUI Applications
   Configuration & Dotfiles
   Power & Session"
 
@@ -355,6 +429,9 @@ main_menu() {
         *"System & Maintenance"*)
             menu_system
             ;;
+        *"TUI Applications"*|*"TUI Apps"*)
+            menu_tui
+            ;;
         *"Configuration & Dotfiles"*)
             menu_config
             ;;
@@ -370,6 +447,7 @@ case "$ACTION" in
     appearance) menu_appearance ;;
     controls)   menu_controls ;;
     system)     menu_system ;;
+    tui)        menu_tui ;;
     config)     menu_config ;;
     power)      menu_power ;;
     *)          main_menu ;;

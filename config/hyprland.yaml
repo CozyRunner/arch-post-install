@@ -122,6 +122,7 @@ packages:
     - vfox
     - calcure
     - clipse
+    - spm-arch            # Simple Package Manager TUI (interactive fzf package browser & manager)
 
   flatpak: []
 

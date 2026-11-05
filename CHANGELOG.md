@@ -2,9 +2,12 @@
 
 All notable changes to the Arch Post-Install project are documented here.
 
-## [Unreleased] — 2026-11-04
+## [Unreleased] — 2026-11-05
 
 ### Added
+- **SPM (Simple Package Manager) Integration** (`spm.sh`): Added launcher for `spm-arch` ([adelmonte/Simple_Package_Manager](https://github.com/adelmonte/Simple_Package_Manager)), an interactive visual Arch Linux package browser and manager powered by `fzf`. Bound to `SUPER + Shift + P` and integrated into Control Center.
+- **TUI Applications Hub** (`tui_app.sh`): Central launcher and interactive Rofi selection menu for all terminal UI apps (SPM, btop, lazygit, lazydocker, yazi, calcure, tui-journal, posting, wiremix, impala, bluetui, zellij). Bound to `SUPER + Alt + P`.
+- **Dedicated TUI Applications Sub-Menu in Control Center** (`floating_menu.sh`): Direct access to all terminal UI workflows from the `Super + D / Super + I` quick settings menu.
 - **Unified Session Manager** (`session.sh`): Central entry point for `logout`, `lock`, `suspend`, `reboot`, `poweroff`. All keybindings, power menus, and floating menu actions now delegate here.
 - **Data-Driven Power Menu** (`menus/power.json`): Power/session menu entries are defined in JSON instead of hard-coded `case` blocks. Both the Hyprland and Waybar power menu scripts read this file via `jq`.
 - **Global Theme Sync** (`sync_theme.sh`): Standalone script to re-synchronize all UI components (SwayNC, Waybar, Rofi, Kitty, Alacritty, Hyprland, Hyprlock) to the cached theme state. Supports `--status`, `--validate`, `--component <name>`, and `--all` sub-commands.

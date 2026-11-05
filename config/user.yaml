@@ -11,6 +11,8 @@ keybindings:
   logout: "SUPER + SHIFT + Q"        # default; change to e.g. "SUPER + SHIFT + L"
   lock: "SUPER + L"
   power_menu: "SUPER + Escape"
+  package_manager: "SUPER + SHIFT + P"  # SPM - Simple Package Manager
+  tui_menu: "SUPER + ALT + P"           # Interactive TUI applications hub
 
 # Theme preferences (optional — overrides auto-detection)
 # theme:

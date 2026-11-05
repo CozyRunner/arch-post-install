@@ -13,6 +13,7 @@ This file tracks the high‑level implementation plan for the new feature ideas.
 | 4 | Theme Preview CLI (`preview_theme.sh`) | ✅ Done |
 | 5 | User‑configurable keybindings (`config/user.yaml` + generator) | ✅ Done |
 | 6 | Final documentation, CHANGELOG, release | ✅ Done |
+| 7 | TUI Applications Hub & SPM (Simple Package Manager) integration | ✅ Done |
 
 ## Completed Work
 
@@ -58,9 +59,19 @@ This file tracks the high‑level implementation plan for the new feature ideas.
 - Updated `docs/roadmap.md` with final status
 - Updated README.md, hypr README, waybar README, and swaync README
 
+### Phase 7 — TUI Applications Hub & SPM Integration
+- Included `spm-arch` in `config/hyprland.yaml` under `packages.aur`
+- Created `dotfiles/hypr/scripts/spm.sh` dedicated launcher for SPM with fallback handling
+- Created `dotfiles/hypr/scripts/tui_app.sh` central launcher & Rofi interactive menu for all TUI apps
+- Added dedicated `💻 TUI Applications` sub-menu and SPM entry in `dotfiles/hypr/scripts/floating_menu.sh`
+- Added keybindings: `Super + Shift + P` (SPM) and `Super + Alt + P` (TUI menu) in `personal.lua`
+- Configurable via `config/user.yaml` and `generate_user_bindings.sh`
+
 ## New Files Added
 | File | Purpose |
 |------|---------|
+| `dotfiles/hypr/scripts/spm.sh` | SPM (Simple Package Manager) launcher |
+| `dotfiles/hypr/scripts/tui_app.sh` | TUI apps launcher and interactive selector |
 | `dotfiles/hypr/scripts/session.sh` | Unified session manager |
 | `dotfiles/hypr/scripts/sync_theme.sh` | Global theme re-synchronization |
 | `dotfiles/hypr/scripts/preview_theme.sh` | HTML theme color preview |

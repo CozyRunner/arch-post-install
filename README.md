@@ -387,6 +387,8 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 | `SUPER + L` | Lock Screen (hyprlock) |
 | `SUPER + Escape` | Power Management Menu |
 | `SUPER + Shift + Q` | Logout Session (`session.sh logout`) |
+| `SUPER + Shift + P` | Simple Package Manager ([SPM](https://github.com/adelmonte/Simple_Package_Manager) TUI) |
+| `SUPER + Alt + P` | TUI Applications Launcher Menu |
 | `SUPER + Shift + C` | Calendar & Tasks (Calcure TUI) |
 | `SUPER + Shift + J` | Daily Journal & Notes (tui-journal) |
 | `SUPER + Shift + G` | GTK Configuration Tool (nwg-look) |
@@ -412,7 +414,8 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 | **Terminal** | [Kitty](https://sw.kovidgoyal.net/kitty/), [Alacritty](https://alacritty.org/) |
 | **File Manager** | [Nautilus](https://apps.gnome.org/Nautilus/), [Superfile](https://github.com/yorukot/superfile), [Yazi](https://github.com/sxyazi/yazi) |
 | **Editor** | [Neovim](https://neovim.io) ([LazyVim](https://lazyvim.github.io) setup) |
-| **Productivity** | [Calcure](https://github.com/anufrievroman/calcure) (Calendar & Tasks TUI), [TUI-Journal](https://github.com/AmmarAbouZor/tui-journal) (Terminal Journal & Notes TUI) |
+| **Package Manager** | [SPM](https://github.com/adelmonte/Simple_Package_Manager) (Simple Package Manager TUI), [yay](https://github.com/Jguer/yay) (AUR helper) |
+| **Productivity & TUI** | [Calcure](https://github.com/anufrievroman/calcure) (Calendar & Tasks TUI), [TUI-Journal](https://github.com/AmmarAbouZor/tui-journal) (Terminal Journal & Notes TUI), [Posting](https://github.com/darrenburns/posting) (REST/API Client), [btop](https://github.com/aristocratos/btop), [ncdu](https://dev.yorhel.nl/ncdu) |
 | **Multiplexer** | [Zellij](https://zellij.dev/) |
 | **Browser** | [Chromium](https://www.chromium.org/) |
 | **Media** | [MPV](https://mpv.io/), [imv](https://github.com/epezent/imv), [feh](https://feh.finalrewind.org/), [Evince](https://wiki.gnome.org/Apps/Evince) |

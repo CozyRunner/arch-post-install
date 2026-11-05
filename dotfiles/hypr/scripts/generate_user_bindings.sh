@@ -45,6 +45,8 @@ declare -A ACTION_CMDS=(
     [logout]="$HOME/.config/hypr/scripts/session.sh logout"
     [lock]="$HOME/.config/hypr/scripts/session.sh lock"
     [power_menu]="$HOME/.config/hypr/scripts/power_menu.sh"
+    [package_manager]="$HOME/.config/hypr/scripts/spm.sh"
+    [tui_menu]="$HOME/.config/hypr/scripts/tui_app.sh menu"
 )
 
 # Parse key combos from YAML — yq outputs null for missing keys

@@ -143,7 +143,8 @@ Super + D / Super + I
 |--------------|------|-------------------|----------------|
 | **Appearance & Theming** | 🎨 | Light/Dark Toggle, Theme Scheme Picker, Wallpaper Grid, GTK (nwg-look) | `toggle_theme.sh`, `theme_picker.sh`, `wallpaper_picker.sh`, `nwg-look` |
 | **Quick Controls & Devices** | 📡 | Notification Center (SwayNC), Screen Recorder, Wi-Fi (Impala), Bluetooth (Bluetui), Audio Mixer (WireMix), Clipboard History | `notification_center.sh`, `screenrecord.sh`, `impala`, `bluetui`, `wiremix`, `clipboard.sh` |
-| **System & Maintenance** | 📦 | Update Checker, Arch pacman update, AUR update, Device Firmware, Disk Analyzer (ncdu), About This PC | `check_updates.sh`, `update_arch.sh`, `aur_update.sh`, `firmware_update.sh`, `ncdu`, `about_pc.sh` |
+| **System & Maintenance** | 📦 | Package Manager (SPM), Update Checker, Arch pacman update, AUR update, Device Firmware, Disk Analyzer (ncdu), About This PC | `spm.sh`, `check_updates.sh`, `update_arch.sh`, `aur_update.sh`, `firmware_update.sh`, `ncdu`, `about_pc.sh` |
+| **TUI Applications** | 💻 | Interactive visual tools: SPM, btop, lazygit, lazydocker, Yazi, Calcure, tui-journal, posting, wiremix, impala, bluetui | `tui_app.sh`, `spm.sh` in floating terminal windows |
 | **Configuration & Dotfiles** |  | Input/Touchpad, Core Keybindings, Utility Bindings, Monitors, Hypridle, Hyprlock, SwayNC | Config editors via `nvim` in floating terminals |
 | **Power & Session** |  | Lock Session, Suspend, Reboot, Power Off, Logout | `session.sh` (delegates to `loginctl`, `systemctl`, `hyprlock`) |
 
@@ -153,9 +154,10 @@ The menu is rendered by `rofi` in dmenu mode using a custom glassmorphic theme (
 
 ```
 Super + D / Super + I  →  rofi (floating-menu.rasi)
-                           ├─ 🎨 Appearance & Theming     →  Theme · Scheme · Wallpapers · GTK
+                           ├─ 🎨 Appearance & Theming     →  Theme · Scheme · Wallpapers · GTK · Preview
                            ├─ 📡 Quick Controls & Devices →  Notifications · Wi-Fi · Bluetooth · Audio · Clips
-                           ├─ 📦 System & Maintenance     →  Updates (Arch, AUR, Firmware) · ncdu · About PC
+                           ├─ 📦 System & Maintenance     →  SPM · Updates (Arch, AUR, Firmware) · ncdu · About PC
+                           ├─ 💻 TUI Applications         →  SPM · btop · lazygit · lazydocker · yazi · calcure
                            ├─  Configuration & Dotfiles  →  Keybinds · Monitors · Input · Rules · Daemons
                            └─  Power & Session           →  Lock · Suspend · Reboot · Power Off · Logout
 ```
@@ -317,6 +319,8 @@ Displays detailed system information in a styled floating terminal panel with Ne
 |---------|--------|
 | `Super + Return` | Open terminal |
 | `Super + B` | Open browser |
+| `Super + Shift + P` | Package Manager (SPM - Simple Package Manager) |
+| `Super + Alt + P` | TUI Applications Hub Menu |
 | `Super + Shift + C` | Calendar & Tasks (calcure) |
 | `Super + Shift + J` | TUI Journal (tui-journal) |
 | `Super + Shift + G` | GTK Configuration Tool (`nwg-look`) |
