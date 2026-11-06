@@ -5,6 +5,10 @@ All notable changes to the Arch Post-Install project are documented here.
 ## [Unreleased] — 2026-11-05
 
 ### Added
+- **Screenshot OCR Text Extraction Engine** (`ocr_extract.sh`): Extract and copy text from screen captures via Tesseract OCR and Wayland clipboard (`wl-copy`). Supports area selection (`slurp`), entire screen (`grim`), active focused window (`hyprctl activewindow`), display output, and an interactive Rofi menu. Bound to `SUPER + Shift + O` (area), `SUPER + Ctrl + O` (screen), `SUPER + Alt + O` (active window), and `SUPER + Alt + Print` (OCR menu).
+- **Screenshot CLI & Menu OCR Subcommands** (`screenshot.sh`): Added `ocr`, `ocr-area`, `ocr-screen`, `ocr-window`, `ocr-display`, `ocr-active`, and `ocr-menu` modes, and integrated OCR options directly into the screenshot Rofi selector menu.
+- **SwayNC & Control Center OCR Integration**: Added direct action buttons for OCR text extraction into SwayNC Notification Center quick-actions grid (`dotfiles/swaync/config.json`), a dedicated `󰚢 OCR Tool` dropdown menu in the tools menubar, and the Quick Controls hub (`dotfiles/hypr/scripts/floating_menu.sh`).
+- **User Keybinding Mapping for OCR** (`config/user.yaml` + `generate_user_bindings.sh`): Added configurable `ocr_area` and `ocr_screen` bindings.
 - **SPM (Simple Package Manager) Integration** (`spm.sh`): Added launcher for `spm-arch` ([adelmonte/Simple_Package_Manager](https://github.com/adelmonte/Simple_Package_Manager)), an interactive visual Arch Linux package browser and manager powered by `fzf`. Bound to `SUPER + Shift + P` and integrated into Control Center.
 - **TUI Applications Hub** (`tui_app.sh`): Central launcher and interactive Rofi selection menu for all terminal UI apps (SPM, btop, lazygit, lazydocker, yazi, calcure, tui-journal, posting, wiremix, impala, bluetui, zellij). Bound to `SUPER + Alt + P`.
 - **Dedicated TUI Applications Sub-Menu in Control Center** (`floating_menu.sh`): Direct access to all terminal UI workflows from the `Super + D / Super + I` quick settings menu.

@@ -60,6 +60,22 @@ hl.bind("CTRL + Print",            hl.dsp.exec_cmd("~/.config/hypr/scripts/scree
 hl.bind(mainMod .. " + Print",     hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh menu"))
 
 -- ------------------------------------------------------------------------------
+-- --- OCR TEXT EXTRACTION (via ~/.config/hypr/scripts/ocr_extract.sh) ---
+-- ------------------------------------------------------------------------------
+
+-- Extract & copy text from user-selected region (Win + Shift + O)
+hl.bind(mainMod .. " + SHIFT + O",   hl.dsp.exec_cmd("~/.config/hypr/scripts/ocr_extract.sh area"))
+
+-- Extract & copy entire screen text (Win + Ctrl + O)
+hl.bind(mainMod .. " + CTRL + O",    hl.dsp.exec_cmd("~/.config/hypr/scripts/ocr_extract.sh screen"))
+
+-- Extract & copy text from active window (Win + Alt + O)
+hl.bind(mainMod .. " + ALT + O",     hl.dsp.exec_cmd("~/.config/hypr/scripts/ocr_extract.sh active"))
+
+-- Open interactive OCR extraction menu (Win + Alt + Print)
+hl.bind(mainMod .. " + ALT + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/ocr_extract.sh menu"))
+
+-- ------------------------------------------------------------------------------
 -- --- SCREEN RECORDING (via ~/.config/hypr/scripts/screenrecord.sh) ---
 -- ------------------------------------------------------------------------------
 

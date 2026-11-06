@@ -14,6 +14,7 @@ This file tracks the high‑level implementation plan for the new feature ideas.
 | 5 | User‑configurable keybindings (`config/user.yaml` + generator) | ✅ Done |
 | 6 | Final documentation, CHANGELOG, release | ✅ Done |
 | 7 | TUI Applications Hub & SPM (Simple Package Manager) integration | ✅ Done |
+| 8 | Screenshot OCR Text Extraction (Area, Screen, Window & Clipboard) | ✅ Done |
 
 ## Completed Work
 
@@ -67,9 +68,19 @@ This file tracks the high‑level implementation plan for the new feature ideas.
 - Added keybindings: `Super + Shift + P` (SPM) and `Super + Alt + P` (TUI menu) in `personal.lua`
 - Configurable via `config/user.yaml` and `generate_user_bindings.sh`
 
+### Phase 8 — Screenshot OCR Text Extraction
+- Created `dotfiles/hypr/scripts/ocr_extract.sh` supporting `area`, `screen`, `display`, `window`, `active`, and `menu` modes with Tesseract OCR engine and Wayland clipboard (`wl-copy`).
+- Added `tesseract` and `tesseract-data-eng` to `config/hyprland.yaml`.
+- Integrated OCR into `dotfiles/hypr/scripts/screenshot.sh` (CLI flags + Rofi selection menu).
+- Integrated OCR shortcuts into Hyprland keybindings (`SUPER + Shift + O`, `SUPER + Ctrl + O`, `SUPER + Alt + O`, `SUPER + Alt + Print`) in `utilities.lua`.
+- Added OCR action buttons into SwayNC notification center tools menubar (`dotfiles/swaync/config.json`).
+- Added OCR extraction entry into Control Center Quick Controls (`dotfiles/hypr/scripts/floating_menu.sh`).
+- Added user keybinding overrides for `ocr_area` and `ocr_screen` in `config/user.yaml` and `generate_user_bindings.sh`.
+
 ## New Files Added
 | File | Purpose |
 |------|---------|
+| `dotfiles/hypr/scripts/ocr_extract.sh` | OCR text extraction and clipboard engine |
 | `dotfiles/hypr/scripts/spm.sh` | SPM (Simple Package Manager) launcher |
 | `dotfiles/hypr/scripts/tui_app.sh` | TUI apps launcher and interactive selector |
 | `dotfiles/hypr/scripts/session.sh` | Unified session manager |

@@ -11,15 +11,18 @@ set -euo pipefail
 # ------------------------------------------------------------------------------
 case "${1:-}" in
     -h|--help|help)
-        echo "Usage: $0 [screen|display|area|window|active|menu]"
+        echo "Usage: $0 [screen|display|area|window|active|ocr|ocr-screen|ocr-window|menu]"
         echo ""
         echo "Modes:"
-        echo "  screen   - Capture entire screen (all connected displays)"
-        echo "  display  - Capture active display where cursor is positioned"
-        echo "  area     - Capture user-defined selection area (drag region)"
-        echo "  window   - Capture specific application window (interactive click)"
-        echo "  active   - Capture currently focused application window"
-        echo "  menu     - Launch interactive Rofi screenshot selector"
+        echo "  screen     - Capture entire screen (all connected displays)"
+        echo "  display    - Capture active display where cursor is positioned"
+        echo "  area       - Capture user-defined selection area (drag region)"
+        echo "  window     - Capture specific application window (interactive click)"
+        echo "  active     - Capture currently focused application window"
+        echo "  ocr        - Extract & copy text from selected area (OCR)"
+        echo "  ocr-screen - Extract & copy text from entire screen (OCR)"
+        echo "  ocr-window - Extract & copy text from application window (OCR)"
+        echo "  menu       - Launch interactive Rofi screenshot selector"
         exit 0
         ;;
 esac
@@ -173,10 +176,25 @@ finalize_screenshot() {
     echo "$target_file"
 }
 
+# Delegate OCR extraction to ocr_extract.sh
+exec_ocr() {
+    local ocr_mode="$1"
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    if [[ -x "$script_dir/ocr_extract.sh" ]]; then
+        "$script_dir/ocr_extract.sh" "$ocr_mode"
+    elif [[ -x "$HOME/.config/hypr/scripts/ocr_extract.sh" ]]; then
+        "$HOME/.config/hypr/scripts/ocr_extract.sh" "$ocr_mode"
+    else
+        echo "Error: ocr_extract.sh not found." >&2
+        exit 1
+    fi
+}
+
 # Interactive Rofi menu for screenshot options
 show_rofi_menu() {
     local rofi_theme="${ROFI_THEME:-$HOME/.config/rofi/floating-menu.rasi}"
-    local options="󰹑  Entire Screen\n󰍹  Active Display (Cursor)\n󰒅  Selection Area\n󰖯  Application Window (Click)\n󱂬  Active Window (Focused)"
+    local options="󰹑  Entire Screen\n󰍹  Active Display (Cursor)\n󰒅  Selection Area\n󰖯  Application Window (Click)\n󱂬  Active Window (Focused)\n󰚢  Extract Text (OCR Selection)\n󰚢  Extract Text (OCR Entire Screen)"
 
     local choice
     if [[ -f "$rofi_theme" ]]; then
@@ -188,6 +206,12 @@ show_rofi_menu() {
     [[ -z "$choice" ]] && exit 0
 
     case "$choice" in
+        *"OCR Selection"*)
+            exec_ocr area
+            ;;
+        *"OCR Entire Screen"*)
+            exec_ocr screen
+            ;;
         *"Entire Screen"*)
             capture_screen
             ;;
@@ -300,19 +324,40 @@ case "$MODE" in
     active|activewindow)
         capture_active_window
         ;;
+    ocr|ocr-area|text-area|extract-text)
+        exec_ocr area
+        ;;
+    ocr-screen|text-screen|ocr-entire)
+        exec_ocr screen
+        ;;
+    ocr-window|text-window)
+        exec_ocr window
+        ;;
+    ocr-display|text-display)
+        exec_ocr display
+        ;;
+    ocr-active|text-active)
+        exec_ocr active
+        ;;
+    ocr-menu)
+        exec_ocr menu
+        ;;
     menu|gui|interactive)
         show_rofi_menu
         ;;
     -h|--help|help)
-        echo "Usage: $0 [screen|display|area|window|active|menu]"
+        echo "Usage: $0 [screen|display|area|window|active|ocr|ocr-screen|ocr-window|menu]"
         echo ""
         echo "Modes:"
-        echo "  screen   - Capture entire screen (all connected displays)"
-        echo "  display  - Capture active display where cursor is positioned"
-        echo "  area     - Capture user-defined selection area (drag region)"
-        echo "  window   - Capture specific application window (interactive click)"
-        echo "  active   - Capture currently focused application window"
-        echo "  menu     - Launch interactive Rofi screenshot selector"
+        echo "  screen     - Capture entire screen (all connected displays)"
+        echo "  display    - Capture active display where cursor is positioned"
+        echo "  area       - Capture user-defined selection area (drag region)"
+        echo "  window     - Capture specific application window (interactive click)"
+        echo "  active     - Capture currently focused application window"
+        echo "  ocr        - Extract & copy text from selected area (OCR)"
+        echo "  ocr-screen - Extract & copy text from entire screen (OCR)"
+        echo "  ocr-window - Extract & copy text from application window (OCR)"
+        echo "  menu       - Launch interactive Rofi screenshot selector"
         exit 0
         ;;
     *)

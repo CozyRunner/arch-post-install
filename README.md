@@ -396,6 +396,10 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 | `Print` / `SUPER + Shift + S` | Snipping Tool Screenshot (Area & Clipboard) |
 | `ALT + Print` | Screenshot Active Window |
 | `SHIFT + Print` | Screenshot Current Monitor |
+| `SUPER + Shift + O` | Extract Text from Selected Region (OCR Area → Clipboard) |
+| `SUPER + Ctrl + O` | Extract Text from Full Screen (OCR Screen → Clipboard) |
+| `SUPER + Alt + O` | Extract Text from Active Window (OCR Window → Clipboard) |
+| `SUPER + Alt + Print` | Interactive Text Extraction (OCR) Menu |
 | `XF86AudioRaise / Lower` | Volume Control (wpctl) |
 | `XF86AudioMute / MicMute` | Mute Output / Microphone |
 | `XF86MonBrightnessUp / Down` | Display Brightness (brightnessctl) |
@@ -419,6 +423,7 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 | **Multiplexer** | [Zellij](https://zellij.dev/) |
 | **Browser** | [Chromium](https://www.chromium.org/) |
 | **Media** | [MPV](https://mpv.io/), [imv](https://github.com/epezent/imv), [feh](https://feh.finalrewind.org/), [Evince](https://wiki.gnome.org/Apps/Evince) |
+| **Screenshot & OCR** | [grim](https://gitlab.freedesktop.org/emersion/grim), [slurp](https://github.com/emersion/slurp), [Tesseract OCR](https://github.com/tesseract-ocr/tesseract), [wl-clipboard](https://github.com/bugaevc/wl-clipboard), [GPU Screen Recorder](https://git.dec05eba.com/gpu-screen-recorder/about/) |
 | **Audio** | [PipeWire](https://pipewire.org/), [WirePlumber](https://pipewire.pages.freedesktop.org/wireplumber/) |
 | **Network** | [NetworkManager](https://wiki.archlinux.org/title/NetworkManager), [iWD](https://iwd.wiki.kernel.org/) |
 | **Security** | [KWallet](https://utils.kde.org/projects/kwalletmanager/), `pam_kwallet5` |

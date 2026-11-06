@@ -81,6 +81,16 @@
           "command": "kitty --class floating-term -e ~/.config/hypr/scripts/check_updates.sh"
         },
         {
+          "label": "󰚢 OCR Text",
+          "type": "normal",
+          "command": "~/.config/hypr/scripts/ocr_extract.sh menu"
+        },
+        {
+          "label": "󰄀 Screenshot",
+          "type": "normal",
+          "command": "~/.config/hypr/scripts/screenshot.sh menu"
+        },
+        {
           "label": " Settings",
           "type": "normal",
           "command": "~/.config/hypr/scripts/floating_menu.sh"
@@ -93,7 +103,7 @@
       ]
     },
     "label#tools": {
-      "text": "Screen & Recording Tools"
+      "text": "Screen, OCR & Recording Tools"
     },
     "menubar#tools": {
       "menu#screenshot": {
@@ -121,11 +131,49 @@
             "label": "󰖯 App Window",
             "type": "normal",
             "command": "~/.config/hypr/scripts/screenshot.sh window"
+          },
+          {
+            "label": "󱂬 Screenshot Menu",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/screenshot.sh menu"
+          }
+        ]
+      },
+      "menu#ocr": {
+        "label": "󰚢  OCR Tool",
+        "position": "left",
+        "animation-type": "slide_down",
+        "animation-duration": 200,
+        "actions": [
+          {
+            "label": "󰒅 Selection Area",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/ocr_extract.sh area"
+          },
+          {
+            "label": "󰹑 Entire Screen",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/ocr_extract.sh screen"
+          },
+          {
+            "label": "󰖯 Active Window",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/ocr_extract.sh active"
+          },
+          {
+            "label": "󰍹 Active Display",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/ocr_extract.sh display"
+          },
+          {
+            "label": "󱂬 Interactive Menu",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/ocr_extract.sh menu"
           }
         ]
       },
       "menu#record": {
-        "label": "󰑋  Screen Recorder",
+        "label": "󰑋  Record",
         "position": "right",
         "animation-type": "slide_down",
         "animation-duration": 200,

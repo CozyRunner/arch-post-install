@@ -125,6 +125,7 @@ $theme_label
 menu_controls() {
     local options="󰌍  Back to Main Menu
 󰄀  Screenshot Tool
+󰚢  Extract Text (OCR)
 󰑋  Screen Recorder (GPU)
 󰂚  Notification Center
 󰖩  Network Manager (Impala)
@@ -142,6 +143,9 @@ menu_controls() {
             ;;
         *"Screenshot Tool"*)
             bash "$SCRIPTS_DIR/screenshot.sh" menu
+            ;;
+        *"Extract Text"*|*"OCR"*)
+            bash "$SCRIPTS_DIR/ocr_extract.sh" menu
             ;;
         *"Screen Recorder"*)
             bash "$SCRIPTS_DIR/screenrecord.sh" menu

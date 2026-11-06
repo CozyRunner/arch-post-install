@@ -52,3 +52,26 @@ Theme colors stay in sync across **all** UI components (SwayNC, Waybar, Rofi, Ki
 2. For each component, it symlinks or copies the matching `colors-${SCHEME}-${MODE}.css` into `colors.css`, falling back to `colors-${MODE}.css` if the scheme-specific file is missing.
 3. `sync_theme.sh` can re-apply step 2 at any time without toggling — useful after manual edits, fresh login, or partial failures.
 4. `swaync-client -rs` is called to hot-reload the notification center style.
+
+---
+
+## Control Panel Widgets & Tools
+
+The Control Panel integrates quick system actions and screen utilities directly into SwayNC:
+
+### 1. Quick-Action Grid (`buttons-grid`)
+4x2 high-accessibility grid for one-click workflows:
+- **`󰖙 Theme`**: Instant dark/light mode toggle
+- **`󰋩 Wallpaper`**: Visual wallpaper selector with thumbnail grid
+- **`󰅍 Clipboard`**: Clipboard history manager (`clipse`)
+- **`󰚰 Updates`**: Interactive package update checker
+- **`󰚢 OCR Text`**: Interactive OCR text extraction selector menu (`ocr_extract.sh menu`)
+- **`󰄀 Screenshot`**: Interactive screenshot utility selector menu (`screenshot.sh menu`)
+- **` Settings`**: Control Center Quick Settings hub (`floating_menu.sh`)
+- **` Power`**: Power & session management dialog (`power_menu.sh`)
+
+### 2. Screen, OCR & Recording Tools Bar (`menubar#tools`)
+Modular multi-tab dropdown toolbars:
+- **`󰄀 Screenshot`**: Entire Screen, Active Display, Selection Area, App Window, Screenshot Menu
+- **`󰚢 OCR Tool`**: Selection Area (Drag), Entire Screen, Active Window, Active Display, Interactive Menu
+- **`󰑋 Record`**: GPU Screen Recorder presets (Screen, Display, Area, Window, Stop, Menu)

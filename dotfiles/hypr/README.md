@@ -32,6 +32,7 @@ A personal Hyprland configuration with a clean, minimal aesthetic featuring smoo
 | `wpctl` | Audio control (WirePlumber) |
 | `playerctl` | Media player control |
 | `grimblast` | Screenshot utility |
+| `tesseract` | Optical character recognition (OCR text extraction) |
 | `jq` | JSON processor (used by scripts) |
 | `nwg-look` | GTK configuration & theme editor |
 | `fastfetch` | System info (optional, for About PC) |
@@ -341,7 +342,18 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Shift + Print` | Capture active display where cursor is positioned |
 | `Ctrl + Print` | Capture entire screen (all connected displays) |
 | `Super + Print` | Interactive Screenshot Tool menu (Rofi) |
-| *Notification Center* | Integrated Tab Controls: Screenshot tab (`Entire Screen`, `Active Display`, `Selection Area`, `App Window`) |
+| *Notification Center* | Integrated Tab Controls: Screenshot tab (`Entire Screen`, `Active Display`, `Selection Area`, `App Window`, `Screenshot Menu`) |
+
+### Text Extraction (OCR / Snipping)
+
+| Keybind | Action |
+|---------|--------|
+| `Super + Shift + O` | Extract text from selected region (OCR Area) → clipboard |
+| `Super + Ctrl + O` | Extract text from entire screen (OCR Screen) → clipboard |
+| `Super + Alt + O` | Extract text from active focused window (OCR Window) → clipboard |
+| `Super + Alt + Print` | Interactive Text Extraction (OCR) menu (Rofi) |
+| *Notification Center* | Quick-Action Grid (`󰚢 OCR Text`) & Dedicated Tools Tab (`󰚢 OCR Tool` dropdown) |
+| *Control Center* | `Super + D` / `Super + I` → Quick Controls → 󰚢 Extract Text (OCR) |
 
 ### Screen Recording (GPU Screen Recorder)
 

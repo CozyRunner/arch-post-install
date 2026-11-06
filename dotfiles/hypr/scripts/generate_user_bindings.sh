@@ -47,6 +47,8 @@ declare -A ACTION_CMDS=(
     [power_menu]="$HOME/.config/hypr/scripts/power_menu.sh"
     [package_manager]="$HOME/.config/hypr/scripts/spm.sh"
     [tui_menu]="$HOME/.config/hypr/scripts/tui_app.sh menu"
+    [ocr_area]="$HOME/.config/hypr/scripts/ocr_extract.sh area"
+    [ocr_screen]="$HOME/.config/hypr/scripts/ocr_extract.sh screen"
 )
 
 # Parse key combos from YAML — yq outputs null for missing keys

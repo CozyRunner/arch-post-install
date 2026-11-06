@@ -66,6 +66,8 @@ packages:
     - slurp
     - wl-clipboard
     - gpu-screen-recorder
+    - tesseract
+    - tesseract-data-eng
 
     # Graphics & Hardware Acceleration (AMD/Mesa)
     - vulkan-radeon

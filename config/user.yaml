@@ -13,6 +13,8 @@ keybindings:
   power_menu: "SUPER + Escape"
   package_manager: "SUPER + SHIFT + P"  # SPM - Simple Package Manager
   tui_menu: "SUPER + ALT + P"           # Interactive TUI applications hub
+  ocr_area: "SUPER + SHIFT + O"         # Extract text from selected area
+  ocr_screen: "SUPER + CTRL + O"        # Extract text from entire screen
 
 # Theme preferences (optional — overrides auto-detection)
 # theme:
