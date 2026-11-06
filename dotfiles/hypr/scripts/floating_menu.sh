@@ -124,6 +124,7 @@ $theme_label
 # ------------------------------------------------------------------------------
 menu_controls() {
     local options="󰌍  Back to Main Menu
+󰍜  Application Launcher
 󰄀  Screenshot Tool
 󰚢  Extract Text (OCR)
 󰑋  Screen Recorder (GPU)
@@ -140,6 +141,9 @@ menu_controls() {
     case "$choice" in
         *"Back to Main Menu"*)
             main_menu
+            ;;
+        *"Application Launcher"*)
+            bash "$SCRIPTS_DIR/app_launcher.sh"
             ;;
         *"Screenshot Tool"*)
             bash "$SCRIPTS_DIR/screenshot.sh" menu

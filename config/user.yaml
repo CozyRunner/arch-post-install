@@ -15,6 +15,7 @@ keybindings:
   tui_menu: "SUPER + ALT + P"           # Interactive TUI applications hub
   ocr_area: "SUPER + SHIFT + O"         # Extract text from selected area
   ocr_screen: "SUPER + CTRL + O"        # Extract text from entire screen
+  app_launcher: "SUPER + Space"         # Application launcher (Recent Apps / All Apps)
 
 # Theme preferences (optional — overrides auto-detection)
 # theme:

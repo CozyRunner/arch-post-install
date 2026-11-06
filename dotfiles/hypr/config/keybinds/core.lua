@@ -18,9 +18,9 @@ hl.bind(mainMod .. " + Q",      hl.dsp.exec_cmd(p.terminal))
 hl.bind(mainMod .. " + B",      hl.dsp.exec_cmd(p.browser))
 hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd(p.fileManager))
 
--- Application Launchers & Settings (Win + R = Run, Win + I = Settings)
+-- Application Launchers & Settings (Win + R / Win + Space = App Launcher, Win + I = Settings)
 hl.bind(mainMod .. " + R",      hl.dsp.exec_cmd(p.menu))
-hl.bind(mainMod .. " + SPACE",  hl.dsp.exec_cmd("rofi -show drun"))
+hl.bind(mainMod .. " + SPACE",  hl.dsp.exec_cmd(p.menu))
 hl.bind(mainMod .. " + I",      hl.dsp.exec_cmd("~/.config/hypr/scripts/floating_menu.sh"))
 
 -- Task Manager & Clipboard (Ctrl + Shift + Esc = Task Manager, Win + V = Clipboard)

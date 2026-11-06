@@ -341,7 +341,7 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 |------------|--------|
 | `SUPER + Q` | Launch primary terminal (Kitty) |
 | `SUPER + Return` | Launch secondary terminal (Alacritty) |
-| `SUPER + Space` / `SUPER + R` | Application Launcher (Rofi) |
+| `SUPER + Space` / `SUPER + R` | Application Launcher (Recent Apps default & All Apps view) |
 | `SUPER + E` | File Manager (Nautilus) |
 | `SUPER + B` | Web Browser (Chromium) |
 | `SUPER + I` / `SUPER + D` | Quick Settings Floating Menu (Control Center) |

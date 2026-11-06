@@ -15,6 +15,7 @@ This file tracks the high‑level implementation plan for the new feature ideas.
 | 6 | Final documentation, CHANGELOG, release | ✅ Done |
 | 7 | TUI Applications Hub & SPM (Simple Package Manager) integration | ✅ Done |
 | 8 | Screenshot OCR Text Extraction (Area, Screen, Window & Clipboard) | ✅ Done |
+| 9 | Modern Rofi Application Launcher (Recent Apps default & All Apps view) | ✅ Done |
 
 ## Completed Work
 
@@ -77,9 +78,19 @@ This file tracks the high‑level implementation plan for the new feature ideas.
 - Added OCR extraction entry into Control Center Quick Controls (`dotfiles/hypr/scripts/floating_menu.sh`).
 - Added user keybinding overrides for `ocr_area` and `ocr_screen` in `config/user.yaml` and `generate_user_bindings.sh`.
 
+### Phase 9 — Modern Rofi Application Launcher
+- Created `dotfiles/hypr/scripts/app_launcher.sh` utilizing native Rofi script mode.
+- Shows recently accessed applications by default sorted by MRU order with latest used at the top.
+- Prominent "View All Applications" action button with "Back to Recent Applications" return navigation.
+- Automatically records and promotes launched applications to the top of Recent Apps.
+- Created `dotfiles/rofi/launcher.rasi` with modern glassmorphism, responsive dynamic height, and distinct action button styling.
+- Bound to `SUPER + Space` and `SUPER + R` via `programs.lua` and `core.lua`.
+
 ## New Files Added
 | File | Purpose |
 |------|---------|
+| `dotfiles/hypr/scripts/app_launcher.sh` | Modern application launcher with Recent & All Apps views |
+| `dotfiles/rofi/launcher.rasi` | Modern responsive glassmorphic Rofi launcher theme |
 | `dotfiles/hypr/scripts/ocr_extract.sh` | OCR text extraction and clipboard engine |
 | `dotfiles/hypr/scripts/spm.sh` | SPM (Simple Package Manager) launcher |
 | `dotfiles/hypr/scripts/tui_app.sh` | TUI apps launcher and interactive selector |

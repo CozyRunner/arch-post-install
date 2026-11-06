@@ -1,33 +1,137 @@
 # Changelog
 
-All notable changes to the Arch Post-Install project are documented here.
+All notable changes to the Arch Post-Install project are documented in this file.
 
-## [Unreleased] — 2026-11-05
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [2026-11-06]
 
 ### Added
-- **Screenshot OCR Text Extraction Engine** (`ocr_extract.sh`): Extract and copy text from screen captures via Tesseract OCR and Wayland clipboard (`wl-copy`). Supports area selection (`slurp`), entire screen (`grim`), active focused window (`hyprctl activewindow`), display output, and an interactive Rofi menu. Bound to `SUPER + Shift + O` (area), `SUPER + Ctrl + O` (screen), `SUPER + Alt + O` (active window), and `SUPER + Alt + Print` (OCR menu).
-- **Screenshot CLI & Menu OCR Subcommands** (`screenshot.sh`): Added `ocr`, `ocr-area`, `ocr-screen`, `ocr-window`, `ocr-display`, `ocr-active`, and `ocr-menu` modes, and integrated OCR options directly into the screenshot Rofi selector menu.
-- **SwayNC & Control Center OCR Integration**: Added direct action buttons for OCR text extraction into SwayNC Notification Center quick-actions grid (`dotfiles/swaync/config.json`), a dedicated `󰚢 OCR Tool` dropdown menu in the tools menubar, and the Quick Controls hub (`dotfiles/hypr/scripts/floating_menu.sh`).
-- **User Keybinding Mapping for OCR** (`config/user.yaml` + `generate_user_bindings.sh`): Added configurable `ocr_area` and `ocr_screen` bindings.
-- **SPM (Simple Package Manager) Integration** (`spm.sh`): Added launcher for `spm-arch` ([adelmonte/Simple_Package_Manager](https://github.com/adelmonte/Simple_Package_Manager)), an interactive visual Arch Linux package browser and manager powered by `fzf`. Bound to `SUPER + Shift + P` and integrated into Control Center.
-- **TUI Applications Hub** (`tui_app.sh`): Central launcher and interactive Rofi selection menu for all terminal UI apps (SPM, btop, lazygit, lazydocker, yazi, calcure, tui-journal, posting, wiremix, impala, bluetui, zellij). Bound to `SUPER + Alt + P`.
-- **Dedicated TUI Applications Sub-Menu in Control Center** (`floating_menu.sh`): Direct access to all terminal UI workflows from the `Super + D / Super + I` quick settings menu.
-- **Unified Session Manager** (`session.sh`): Central entry point for `logout`, `lock`, `suspend`, `reboot`, `poweroff`. All keybindings, power menus, and floating menu actions now delegate here.
-- **Data-Driven Power Menu** (`menus/power.json`): Power/session menu entries are defined in JSON instead of hard-coded `case` blocks. Both the Hyprland and Waybar power menu scripts read this file via `jq`.
-- **Global Theme Sync** (`sync_theme.sh`): Standalone script to re-synchronize all UI components (SwayNC, Waybar, Rofi, Kitty, Alacritty, Hyprland, Hyprlock) to the cached theme state. Supports `--status`, `--validate`, `--component <name>`, and `--all` sub-commands.
-- **Theme Preview CLI** (`preview_theme.sh`): Generates an HTML color swatch page for any scheme+mode and opens it in the browser. Supports `--list`, `--compare <mode>`, and single-scheme preview.
-- **User-Configurable Keybindings** (`config/user.yaml` + `generate_user_bindings.sh`): Users can override default keybinding shortcuts (logout, lock, power menu) by editing `config/user.yaml` and regenerating the Lua binding file.
-- **Pre-commit hook** (`.git/hooks/pre-commit`): Runs `lint_check_slots.sh` and `shellcheck` before every commit.
-- **Project roadmap** (`docs/roadmap.md`): Tracks implementation phases and progress.
-- **CHANGELOG.md**: This file.
+- **Modern Rofi Application Launcher** (`app_launcher.sh` + `launcher.rasi`): Clean, minimal, and responsive application launcher powered by Rofi script mode:
+  - Defaults to displaying Most Recently Used (MRU) applications on open for fast, uncluttered access.
+  - Prominent "View All Applications" action switches seamlessly to the complete installed applications catalog.
+  - "Back to Recent" action allows quick return to the MRU view.
+  - Automatic usage tracking dynamically elevates launched applications to the top of the recent list.
+  - Rich search indexing matching `.desktop` names, generic names, localized comments, and category keywords.
+  - Keyboard shortcut `Shift + Delete` allows instant removal of entries from launcher history.
+  - Pre-seeded default application recommendations on clean installations.
+  - Dedicated glassmorphic theme (`dotfiles/rofi/launcher.rasi`) featuring a 2-column grid and theme variable integration.
+  - Keybindings mapped to `SUPER + Space` and `SUPER + R` across Hyprland configurations.
+- **Screenshot OCR Text Extraction Engine** (`ocr_extract.sh`): Extract and copy text from screen captures directly to the Wayland clipboard (`wl-copy`) using the Tesseract OCR engine:
+  - Interactive area selection mode (`slurp`), full screen capture (`grim`), active focused window capture (`hyprctl activewindow`), specific display output capture, and an interactive Rofi menu selector.
+  - Hyprland keybindings: `SUPER + Shift + O` (area selection), `SUPER + Ctrl + O` (entire screen), `SUPER + Alt + O` (active window), and `SUPER + Alt + Print` (OCR menu).
+- **Screenshot CLI & Menu OCR Subcommands** (`screenshot.sh`): Extended screenshot script with `ocr`, `ocr-area`, `ocr-screen`, `ocr-window`, `ocr-display`, `ocr-active`, and `ocr-menu` modes, and integrated OCR options directly into the screenshot Rofi selector menu.
+- **Notification Center & Control Center OCR Integration**:
+  - SwayNC quick actions grid button (`󰚢 OCR Text`) in `dotfiles/swaync/config.json`.
+  - SwayNC tools menubar dropdown (`menubar#tools`) featuring a dedicated `󰚢 OCR Tool` menu with Area, Active Window, and Full Screen actions.
+  - Quick Controls hub integration in `dotfiles/hypr/scripts/floating_menu.sh`.
+- **User Keybinding Mapping for OCR** (`config/user.yaml` + `generate_user_bindings.sh`): Added user-configurable `ocr_area` and `ocr_screen` bindings.
 
 ### Changed
-- `floating_menu.sh`: Power & Session section now delegates all actions to `session.sh`. Added "Preview Theme Colors" and "Sync Theme" entries to the Appearance sub-menu.
-- `notification_center.sh`: The `sync` action now delegates to `sync_theme.sh --component swaync` with an inline fallback.
-- `utilities.lua`: Logout keybinding calls `session.sh logout` instead of inline `loginctl`.
-- `docs/archive/hypr/additional-bindings.conf`: Fallback logout binding updated to use `session.sh logout`.
+- `dotfiles/hypr/config/keybinds/core.lua`: Bound application launcher to `app_launcher.sh` for `SUPER + Space`.
+- `dotfiles/hypr/config/programs.lua`: Updated primary `programs.menu` definition to invoke `app_launcher.sh`.
+- `dotfiles/swaync/config.json`: Optimized tools menubar layout and styling for enhanced dropdown menu visibility.
+- `.gitignore`: Comprehensive review and overhaul to prevent symlinked dotfiles runtime/state leaks (dynamic keybinding overrides, crash reports, TUI journal databases, Clipse history, Calcure backups, file manager logs), add local user override patterns (`*.local.yaml`, `.env.local`), expand editor/IDE coverage (Neovim ShaDa/swap, Cursor, VSCode, JetBrains), and ignore Linux core dumps and packaging artifacts.
+
+### Fixed
+- `dotfiles/rofi/launcher.rasi`: Resolved Rofi RASI parser syntax errors caused by unsupported CSS `box-shadow` property and invalid `:hover` pseudo-class, replacing them with standard Rofi state classes (`element selected.normal`, `element normal.active`).
+
+## [2026-11-05]
+
+### Added
+- **SPM (Simple Package Manager) Integration** (`spm.sh`): Added wrapper and launcher for `spm-arch` ([adelmonte/Simple_Package_Manager](https://github.com/adelmonte/Simple_Package_Manager)), an interactive visual Arch Linux package browser and manager powered by `fzf`.
+  - Added AUR dependency `spm-arch` to `config/hyprland.yaml`.
+  - Keybinding `SUPER + Shift + P` mapped in `dotfiles/hypr/config/keybinds/personal.lua`.
+  - Integrated into Control Center quick menus.
+- **TUI Applications Hub** (`tui_app.sh`): Central launcher and interactive Rofi picker for terminal user interface applications:
+  - Supported TUI applications: SPM, btop, lazygit, lazydocker, yazi, calcure, tui-journal, posting, wiremix, impala, bluetui, and zellij.
+  - Keybinding `SUPER + Alt + P` mapped in `dotfiles/hypr/config/keybinds/personal.lua`.
+  - Dedicated TUI Applications sub-menu in Control Center (`floating_menu.sh`).
+
+## [2026-11-04]
+
+### Added
+- **Unified Session Manager** (`session.sh`): Central entry point for handling `logout`, `lock`, `suspend`, `reboot`, and `poweroff`. Keybindings, power menus, and floating menu actions delegate to this script.
+- **Data-Driven Power Menu** (`menus/power.json`): Power/session menu entries defined in structured JSON format. Refactored both Hyprland (`dotfiles/hypr/scripts/power_menu.sh`) and Waybar (`dotfiles/waybar/scripts/power_menu.sh`) power menus to parse `power.json` via `jq`.
+- **Global Theme Synchronization** (`sync_theme.sh`): Multi-component theme sync utility to re-synchronize SwayNC, Waybar, Rofi, Kitty, Alacritty, Hyprland, and Hyprlock to the active theme state. Supports `--status`, `--validate`, `--component <name>`, and `--all`.
+- **Theme Preview CLI** (`preview_theme.sh`): Generates an HTML color swatch preview page for any scheme and mode with browser preview, scheme comparison, and palette listing.
+- **User-Configurable Keybindings** (`config/user.yaml` + `generate_user_bindings.sh`): Allows overriding default keybindings (logout, lock, power menu, OCR, etc.) via user configuration compiled into Lua.
+- **Repository Quality & Governance**:
+  - Pre-commit hook (`.git/hooks/pre-commit`): Enforces `lint_check_slots.sh` and ShellCheck before commits.
+  - Project architecture roadmap (`docs/roadmap.md`): Implementation phase and milestones tracker.
+
+### Changed
+- `dotfiles/hypr/scripts/floating_menu.sh`: Power & Session section delegates all actions to `session.sh`. Added "Preview Theme Colors" and "Sync Theme" entries to the Appearance sub-menu.
+- `dotfiles/hypr/scripts/notification_center.sh`: Sourcing and `sync` action delegates to `sync_theme.sh --component swaync` with inline fallback.
+- `dotfiles/hypr/config/keybinds/utilities.lua`: Logout keybinding updated to invoke `session.sh logout`.
+- `docs/archive/hypr/additional-bindings.conf`: Fallback logout keybinding updated to `session.sh logout`.
 - Documentation updated across `README.md`, `dotfiles/hypr/README.md`, `dotfiles/waybar/README.md`, and `dotfiles/swaync/README.md`.
 
 ### Removed
-- `dotfiles/swaync/style-dark.css` and `style-light.css`: Byte-for-byte copies of `style.css` that served no purpose. Theme differentiation is handled entirely by `colors-*.css` files.
+- `dotfiles/swaync/style-dark.css` and `style-light.css`: Removed redundant duplicate copies of `style.css`; theme customization is handled exclusively through `colors-*.css`.
 
+### Fixed
+- `tests/test_plan.sh`: Fixed test assertion for already-installed package NOOP operations.
+- `lib/planner.sh` & `modules/core.sh`: Enhanced command quoting and error status checks.
+
+## [2026-10-30]
+
+### Added
+- **SwayNC Theme Switcher Integration**: Integrated SwayNC notification center color scheme switching with modular CSS variables and real-time reload.
+
+### Changed
+- **Session Logout**: Replaced `hyprctl exit` with `loginctl terminate-user` for clean PAM session termination and proper resource cleanup.
+
+## [2026-10-21]
+
+### Added
+- **Screen Recording Suite**: Added screen recording capabilities using `wf-recorder` with configurable audio capture, interactive area/monitor selection, Hyprland keybindings, status notifications, and SwayNC status widgets.
+
+## [2026-10-20]
+
+### Added
+- **Rosé Pine Theme**: Added Rosé Pine color scheme palette variants across desktop components.
+- **Screenshot Tool Suite**: Integrated screenshot workflow utilizing `grim`, `slurp`, and `swappy` with area, window, and full screen modes.
+
+### Changed
+- **SwayNC Layout**: Updated notification center quick action buttons grid layout and interactive button styles.
+
+## [2026-10-05]
+
+### Added
+- **NCDU Disk Usage Analyzer**: Integrated `ncdu` terminal disk analyzer with dedicated menu options and keybinds.
+
+### Changed
+- **Glassmorphic Floating Quick Menu**: Redesigned floating settings menu with glassmorphic styling, enhanced icons, and robust script fallbacks.
+
+## [2026-09-29]
+
+### Added
+- **Clipse Clipboard Manager**: Migrated clipboard management from `cliphist` to `clipse`, providing a modern TUI clipboard manager with floating window rules.
+
+### Fixed
+- **Engine Reliability**: Resolved 11 silent-failure defects in the post-install engine and verification test suite.
+
+## [2026-09-17]
+
+### Added
+- **Declarative Plan & Dry-Run Mode**: Implemented `bin/arch-postinstall plan` for pre-execution inspection of planned system changes without mutating the host.
+- Comprehensive automated plan testing suite (`tests/test_plan.sh`).
+
+## [2026-08-26]
+
+### Added
+- **System Hardening & Optimization**: Added ZRAM swap configuration, Btrfs subvolume layout optimization, and UFW firewall profile setup.
+- **Interactive Doctor Remediation**: Added `doctor --fix` interactive system remediation engine.
+
+## [2026-08-12]
+
+### Added
+- **System Check & Health Framework**: Modular diagnostics framework (`scripts/check/*.sh`, `bin/arch-postinstall check/health`) with automated test suite and CLI runner.
+- **Waybar MPRIS Media Controller**: Hover-expanding media controller widget for Waybar.
+- **Catppuccin Mocha Color Theme**: System-wide theme styling across window manager and status bar.
+
+## [2026-08-11]
+
+### Changed
+- **Modular Lua Hyprland Architecture**: Refactored static Hyprland configuration into a modular Lua-based structure (`hyprland.lua`, `config/*.lua`) leveraging Hyprland 0.55+ Lua configuration bindings.

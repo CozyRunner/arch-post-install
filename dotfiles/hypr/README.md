@@ -282,7 +282,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Super + Shift + Q` | Logout Session (`session.sh logout`) |
 | `Ctrl + Alt + Delete` | Emergency Close All Windows |
 | `Super + E` | Open file manager (Explorer) |
-| `Super + R` | Run command dialog |
+| `Super + R` | Application Launcher (`app_launcher.sh`) |
 | `Super + I` | Quick Settings menu |
 | `Super + V` | Clipboard history |
 | `Super + Up` | Maximize active window |
@@ -291,7 +291,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Super + Shift + V` | Toggle floating mode |
 | `Super + T` | Pin window |
 | `Super + Backspace` | Center window |
-| `Super + Space` | Rofi app launcher |
+| `Super + Space` | Application Launcher (`app_launcher.sh` — Recent & All Apps) |
 | `Super + P` | Pseudo-tile (dwindle) |
 | `Super + J` | Toggle split (dwindle) |
 | `Super + S` | Toggle special workspace (scratchpad) |
@@ -385,6 +385,7 @@ Custom rofi themes live in `~/.config/rofi/`:
 
 | Theme | Purpose |
 |-------|---------|
+| `launcher.rasi` | Modern Application Launcher (640px, Recent Apps & All Apps view) |
 | `modern.rasi` | General-purpose launcher (600px, vertical list) |
 | `floating-menu.rasi` | Quick Settings menu (380px, glassmorphic cards) |
 | `wallpaper-picker.rasi` | Wallpaper grid (60% width, 4-column, 200px thumbnails) |

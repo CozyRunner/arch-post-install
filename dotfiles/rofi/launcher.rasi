@@ -1,0 +1,164 @@
+/**
+ * Modern Clean Application Launcher — Rofi Theme
+ * Glassmorphic, responsive, and minimal application launcher
+ * Featuring Recent Apps by default and All Apps view
+ */
+
+@import "~/.config/rofi/colors.rasi"
+
+configuration {
+    show-icons:          true;
+    icon-theme:          "Papirus-Dark";
+    font:                "JetBrainsMono Nerd Font 13";
+    terminal:            "kitty";
+    hover-select:        true;
+    me-select-entry:     "";
+    me-accept-entry:     "MousePrimary";
+    kb-row-up:           "Up,Control+k,Shift+Tab,Control+p";
+    kb-row-down:         "Down,Control+j,Control+n";
+    kb-accept-entry:     "Control+m,Return,KP_Enter";
+}
+
+* {
+    background-color: transparent;
+    text-color:       @fg;
+    border-color:     @border-glass;
+    spacing:          0;
+    padding:          0;
+    margin:           0;
+}
+
+window {
+    transparency:     "real";
+    background-color: @bg;
+    border:           1px;
+    border-color:     @border-glass;
+    border-radius:    20px;
+    width:            640px;
+    location:         center;
+    anchor:           center;
+    y-offset:         -60px;
+}
+
+mainbox {
+    background-color: transparent;
+    children:         [ "inputbar", "message", "listview" ];
+    padding:          16px;
+    spacing:          10px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border:           1px;
+    border-color:     @border-glass;
+    border-radius:    14px;
+    padding:          12px 16px;
+    spacing:          12px;
+    children:         [ "prompt", "entry" ];
+}
+
+prompt {
+    font:             "JetBrainsMono Nerd Font Bold 14";
+    text-color:       @accent;
+    vertical-align:   0.5;
+}
+
+entry {
+    font:              "JetBrainsMono Nerd Font 13";
+    text-color:        @fg;
+    placeholder:       "Search applications…";
+    placeholder-color: @fg-dim;
+    vertical-align:    0.5;
+    cursor:            text;
+}
+
+message {
+    padding:          2px 8px;
+    border-radius:    8px;
+    background-color: transparent;
+}
+
+textbox {
+    markup:           true;
+    background-color: transparent;
+    text-color:       @fg-dim;
+    font:             "JetBrainsMono Nerd Font 11";
+    vertical-align:   0.5;
+}
+
+listview {
+    background-color: transparent;
+    columns:          1;
+    lines:            8;
+    spacing:          6px;
+    padding:          2px 0;
+    fixed-height:     false;
+    dynamic:          true;
+    cycle:            true;
+    scrollbar:        false;
+}
+
+element {
+    background-color: transparent;
+    padding:          10px 14px;
+    spacing:          14px;
+    border-radius:    12px;
+    orientation:      horizontal;
+    cursor:           pointer;
+}
+
+element-icon {
+    background-color: transparent;
+    size:             32px;
+    vertical-align:   0.5;
+    cursor:           inherit;
+}
+
+element-text {
+    background-color: transparent;
+    text-color:       @fg;
+    font:             "JetBrainsMono Nerd Font 13";
+    vertical-align:   0.5;
+    cursor:           inherit;
+}
+
+/* Hover and selection states */
+element normal.normal    { background-color: transparent; text-color: @fg; }
+element alternate.normal { background-color: transparent; text-color: @fg; }
+
+element selected.normal {
+    background-color: @bg-sel;
+    border:           1px;
+    border-color:     @accent;
+}
+
+element selected.normal element-text {
+    text-color: @accent;
+    font:       "JetBrainsMono Nerd Font Bold 13";
+}
+
+/* Action button style (View All Apps / Back to Recent Apps) */
+element normal.active,
+element alternate.active {
+    background-color: @bg-alt;
+    border:           1px;
+    border-color:     @border-glass;
+}
+
+element normal.active element-text,
+element alternate.active element-text {
+    text-color: @accent;
+    font:       "JetBrainsMono Nerd Font SemiBold 13";
+}
+
+element selected.active {
+    background-color: @accent;
+    border:           1px;
+    border-color:     @accent;
+}
+
+element selected.active element-text {
+    text-color: @bg;
+    font:       "JetBrainsMono Nerd Font Bold 13";
+}
+

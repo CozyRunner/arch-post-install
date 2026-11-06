@@ -32,4 +32,4 @@ configuration {
   /* Import dynamic colors */
   @import "~/.config/rofi/colors.rasi"
 
-@theme "~/.config/rofi/modern.rasi"
+@theme "~/.config/rofi/launcher.rasi"
