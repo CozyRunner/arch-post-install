@@ -51,8 +51,8 @@ if [[ ! -f "$ROFI_THEME" ]]; then
     fi
 fi
 
-# Maximum number of recent apps displayed in recent view
-MAX_RECENT="${MAX_RECENT:-8}"
+# Maximum number of recent apps displayed in recent view (defaults to 5)
+MAX_RECENT="${MAX_RECENT:-5}"
 
 # ── Internal Storage ──────────────────────────────────────────
 declare -A APP_NAMES=()
@@ -212,7 +212,7 @@ seed_default_recent() {
         if [[ -n "${APP_NAMES[$id]:-}" ]]; then
             echo "$id" >> "$RECENT_FILE"
             seeded=$((seeded + 1))
-            [[ $seeded -ge 6 ]] && break
+            [[ $seeded -ge $MAX_RECENT ]] && break
         fi
     done
 }
@@ -265,11 +265,11 @@ render_recent_mode() {
         seed_default_recent
     fi
 
-    echo -en "\0prompt\x1f  Recent Apps\n"
+    echo -en "\0prompt\x1f  Recent\n"
     echo -en "\0data\x1frecent\n"
-    echo -en "\0message\x1f<span weight='bold' foreground='#818cf8'>Recently Used Applications</span>  <span foreground='#94a3b8' size='small'>· Type to search or select 'View All Apps'</span>\n"
+    echo -en "\0message\x1f<b>Recent Applications</b>  <small>· Type to filter or browse all below</small>\n"
 
-    # Print recent applications in MRU order
+    # Print recent applications in MRU order (capped at MAX_RECENT)
     if [[ -f "$RECENT_FILE" ]]; then
         while IFS= read -r id; do
             [[ -z "$id" ]] && continue
@@ -286,17 +286,17 @@ render_recent_mode() {
 
     # Prominent "View All Applications" action button
     # Marked with permanent=true so it stays visible even during search filtering
-    echo -en "󰍜  View All Applications (${total_apps})\0icon\x1fview-app-grid\x1finfo\x1ftoggle_all\x1factive\x1ftrue\x1fpermanent\x1ftrue\x1fmeta\x1fall apps applications view browse\n"
+    echo -en "View All Applications (${total_apps})\0icon\x1fview-app-grid\x1finfo\x1ftoggle_all\x1factive\x1ftrue\x1fpermanent\x1ftrue\x1fmeta\x1fall apps applications view browse more catalog list search installed\n"
 }
 
 render_all_mode() {
     echo -en "\0prompt\x1f󰍜  All Apps\n"
     echo -en "\0data\x1fall\n"
     echo -en "\0keep-filter\x1ftrue\n"
-    echo -en "\0message\x1f<span weight='bold' foreground='#818cf8'>All Applications</span>  <span foreground='#94a3b8' size='small'>· Select 'Back to Recent' to return</span>\n"
+    echo -en "\0message\x1f<b>All Applications</b>  <small>· Select 'Back to Recent Applications' to return</small>\n"
 
-    # Action button to navigate back to Recent Apps view
-    echo -en "󰌍  Back to Recent Applications\0icon\x1fgo-previous\x1finfo\x1ftoggle_recent\x1factive\x1ftrue\x1fpermanent\x1ftrue\x1fmeta\x1fback recent return\n"
+    # Action button to navigate back to Recent Apps view (single arrow from icon)
+    echo -en "Back to Recent Applications\0icon\x1fgo-previous\x1finfo\x1ftoggle_recent\x1factive\x1ftrue\x1fpermanent\x1ftrue\x1fmeta\x1fback recent return previous\n"
 
     # Sort applications alphabetically by display name (case-insensitive)
     local sorted_entries=()

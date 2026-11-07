@@ -4,6 +4,19 @@ All notable changes to the Arch Post-Install project are documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2026-11-07]
+
+### Changed
+- `dotfiles/hypr/scripts/app_launcher.sh`:
+  - Limited recent applications displayed on launch to 5 (`MAX_RECENT=5`), ensuring the "View All Applications" action button is always immediately visible without scrolling.
+  - Removed duplicate text arrow icon (`󰌍`) from "Back to Recent Applications", retaining a single clean SVG arrow icon from the system icon theme (`go-previous`).
+  - Removed redundant prefix icon from "View All Applications" for clean alignment with the desktop icon slot.
+  - Switched message header strings to theme-adaptive semantic markup (`<b>`, `<small>`) instead of hardcoded hex colors to adapt seamlessly to both dark and light palettes.
+- `dotfiles/rofi/launcher.rasi`:
+  - Enhanced design with accent-tinted 1px borders (`@border`), 18px radius, and jitter-free 1px transparent base borders on elements.
+  - Styled message header with a subtle frosted glass pill background (`@bg-alt`, 10px radius) for visual balance.
+  - Refined action button icon sizing (26px) and contrast states for seamless navigation feedback.
+
 ## [2026-11-06]
 
 ### Added
