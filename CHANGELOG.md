@@ -4,6 +4,15 @@ All notable changes to the Arch Post-Install project are documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2026-11-08]
+
+### Changed
+- `dotfiles/waybar/scripts/clipboard.sh`:
+  - Overhauled hover tooltip and alt text format with rich GTK/Pango markup, clear visual hierarchy, and distinct empty/active states.
+  - Added live preview of up to 3 recent clipboard clips with automated `@html` entity escaping, whitespace normalization, and clean truncation.
+  - Added `alt` text field (`Empty` / `${count} items`) and context-aware CSS classes (`active`, `empty`, `disabled`) to the Waybar JSON payload.
+  - Expanded the middle-click clipboard action menu to integrate OCR screen text extraction (`ocr_extract.sh`) alongside Clipse manager and history clearing.
+
 ## [2026-11-07]
 
 ### Changed
