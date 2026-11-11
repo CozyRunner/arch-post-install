@@ -739,6 +739,64 @@ EOF
     fi
 }
 
+# ── Keep Awake — System Sleep Inhibitor integration ──────────────────────────
+{
+    # 1. keep_awake.sh exists and is executable
+    if [[ -x "${ROOT_DIR}/dotfiles/hypr/scripts/keep_awake.sh" ]]; then
+        ok
+    else
+        fail "keep_awake.sh exists and is executable"
+    fi
+
+    # 2. keep_awake.sh CLI help output contains required commands
+    awake_help="$("${ROOT_DIR}/dotfiles/hypr/scripts/keep_awake.sh" --help 2>&1 || true)"
+    for cmd in on off toggle status is-active waybar menu; do
+        if grep -q "${cmd}" <<< "${awake_help}"; then
+            ok
+        else
+            fail "keep_awake.sh help documents command '${cmd}'"
+        fi
+    done
+
+    # 3. waybar JSON output matches schema
+    wb_json="$("${ROOT_DIR}/dotfiles/hypr/scripts/keep_awake.sh" waybar 2>/dev/null || true)"
+    if jq -e '.text and .alt and .tooltip and .class' <<< "${wb_json}" >/dev/null 2>&1; then
+        ok
+    else
+        fail "keep_awake.sh waybar outputs valid JSON with text, alt, tooltip, class"
+    fi
+
+    # 4. session.sh suspend checks keep_awake.sh
+    if grep -q "keep_awake.sh" "${ROOT_DIR}/dotfiles/hypr/scripts/session.sh" && grep -q "is-active" "${ROOT_DIR}/dotfiles/hypr/scripts/session.sh"; then
+        ok
+    else
+        fail "session.sh suspend checks keep_awake is-active"
+    fi
+
+    # 5. waybar config.jsonc registers custom/keep_awake module
+    waybar_cfg="${ROOT_DIR}/dotfiles/waybar/config.jsonc"
+    if grep -q '"custom/keep_awake"' "${waybar_cfg}"; then
+        ok
+    else
+        fail "waybar config.jsonc registers custom/keep_awake in modules-right"
+    fi
+
+    if grep -q 'keep_awake\.sh waybar' "${waybar_cfg}"; then
+        ok
+    else
+        fail "waybar config.jsonc configures custom/keep_awake module"
+    fi
+
+    # 6. swaync config.json registers menu#awake
+    swaync_cfg="${ROOT_DIR}/dotfiles/swaync/config.json"
+    if jq -e '."widget-config"["menubar#tools"]["menu#awake"].actions' "${swaync_cfg}" >/dev/null 2>&1; then
+        ok
+    else
+        fail "swaync config.json includes menu#awake in menubar#tools"
+    fi
+}
+
+
 
 # ── Summary ──────────────────────────────────────────────────────────────────
 

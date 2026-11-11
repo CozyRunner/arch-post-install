@@ -270,6 +270,23 @@ window#waybar {
     margin: 2px 0;
 }
 
+#custom-keep_awake {
+    color: @foreground-dim;
+    padding: 0 10px;
+    margin: 2px 0;
+}
+
+#custom-keep_awake.active {
+    color: @accent-orange;
+    font-weight: 600;
+}
+
+#custom-keep_awake:hover {
+    color: @accent-blue;
+    background: @bg-hover;
+    border-radius: 8px;
+}
+
 #custom-clipboard {
     color: @accent-orange;
     padding: 0 10px;

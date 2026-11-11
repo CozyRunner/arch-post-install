@@ -11,6 +11,7 @@ keybindings:
   logout: "SUPER + SHIFT + Q"        # default; change to e.g. "SUPER + SHIFT + L"
   lock: "SUPER + L"
   power_menu: "SUPER + Escape"
+  keep_awake: "SUPER + ALT + A"         # Temporarily prevent system sleep
   package_manager: "SUPER + SHIFT + P"  # SPM - Simple Package Manager
   tui_menu: "SUPER + ALT + P"           # Interactive TUI applications hub
   ocr_area: "SUPER + SHIFT + O"         # Extract text from selected area

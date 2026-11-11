@@ -4,6 +4,22 @@ All notable changes to the Arch Post-Install project are documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2026-11-11]
+
+### Added
+- **Keep Awake — System Sleep Inhibitor** (`dotfiles/hypr/scripts/keep_awake.sh`): Temporarily prevents system sleep and suspend for a configurable period while allowing display power-saving timeouts to function normally:
+  - Inhibits system sleep/suspend via `systemd-inhibit --what=sleep:handle-suspend-key:handle-lid-switch --mode=block` without modifying systemd or hypridle configuration files.
+  - Keeps system awake while allowing the screen/monitor to dim and turn off automatically per existing DPMS settings.
+  - Dynamic duration parser supporting flexible intervals: `15m`, `30m`, `1h`, `2h`, `4h`, `90m`, `1h30m`, and integer minutes.
+  - Interactive Rofi duration picker (`keep_awake.sh menu`) with quick presets, custom duration prompt, live remaining countdown, and extension actions (+30m, +1h, +2h).
+  - Immediate manual deactivation (`keep_awake.sh off`) and toggle support (`keep_awake.sh toggle`).
+  - Automatic expiration with desktop notifications (`notify-send`) and automatic restoration of default sleep behavior.
+  - Waybar status module (`custom/keep_awake`) displaying dynamic time-remaining indicator (`󰅶 45m`), distinct active/inactive styles, left-click menu, right-click toggle, and instant signal updates via `RTMIN+8`.
+  - SwayNC Notification Center integration: added dedicated `󰅶 Awake` dropdown menu in `menubar#tools` with quick duration triggers.
+  - Control Center integration: added "Keep System Awake" action to Quick Controls and Power & Session menus in `dotfiles/hypr/scripts/floating_menu.sh` and `power.json`.
+  - Manual suspend protection in `dotfiles/hypr/scripts/session.sh`: checks inhibitor state before executing `systemctl suspend` to prevent accidental sleep.
+  - User keybinding integration: mapped `SUPER + ALT + A` across `utilities.lua`, `personal.lua`, `config/user.yaml`, and `generate_user_bindings.sh`.
+
 ## [2026-11-08]
 
 ### Changed

@@ -17,4 +17,5 @@ hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd(p.terminal .. " -e calcure"))
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.exec_cmd(p.terminal .. " -e tjournal"))
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("~/.config/hypr/scripts/spm.sh"))
 hl.bind(mainMod .. " + ALT + P",   hl.dsp.exec_cmd("~/.config/hypr/scripts/tui_app.sh menu"))
+hl.bind(mainMod .. " + ALT + A",   hl.dsp.exec_cmd("~/.config/hypr/scripts/keep_awake.sh menu"))
 

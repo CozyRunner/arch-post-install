@@ -19,6 +19,7 @@
     "memory",
     "custom/clipboard",
     "custom/language",
+    "custom/keep_awake",
     "battery",
     "custom/notification",
     "custom/power",
@@ -162,6 +163,16 @@
     "interval": 1,
     "on-click": "hyprctl switchxkblayout all next",
     "format": "{}",
+  },
+  "custom/keep_awake": {
+    "format": "{}",
+    "exec": "~/.config/hypr/scripts/keep_awake.sh waybar",
+    "return-type": "json",
+    "interval": 10,
+    "signal": 8,
+    "on-click": "~/.config/hypr/scripts/keep_awake.sh menu",
+    "on-click-right": "~/.config/hypr/scripts/keep_awake.sh toggle",
+    "tooltip": true
   },
   "custom/clipboard": {
     "format": "{}",

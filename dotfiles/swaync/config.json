@@ -103,7 +103,7 @@
       ]
     },
     "label#tools": {
-      "text": "Screen, OCR & Recording Tools"
+      "text": "Screen, Recording & Awake Tools"
     },
     "menubar#tools": {
       "menu#screenshot": {
@@ -140,7 +140,7 @@
         ]
       },
       "menu#ocr": {
-        "label": "󰚢  OCR Tool",
+        "label": "󰚢  OCR",
         "position": "left",
         "animation-type": "slide_down",
         "animation-duration": 200,
@@ -207,6 +207,39 @@
             "label": "󱂬 Recording Menu",
             "type": "normal",
             "command": "~/.config/hypr/scripts/screenrecord.sh menu"
+          }
+        ]
+      },
+      "menu#awake": {
+        "label": "󰅶  Awake",
+        "position": "right",
+        "animation-type": "slide_down",
+        "animation-duration": 200,
+        "actions": [
+          {
+            "label": "󰅶 30 Minutes",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/keep_awake.sh on 30m"
+          },
+          {
+            "label": "󰅶 1 Hour",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/keep_awake.sh on 1h"
+          },
+          {
+            "label": "󰅶 2 Hours",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/keep_awake.sh on 2h"
+          },
+          {
+            "label": "󰾪 Turn Off",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/keep_awake.sh off"
+          },
+          {
+            "label": "󱂬 Custom Menu",
+            "type": "normal",
+            "command": "~/.config/hypr/scripts/keep_awake.sh menu"
           }
         ]
       }

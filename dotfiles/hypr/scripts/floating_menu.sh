@@ -128,6 +128,7 @@ menu_controls() {
 󰄀  Screenshot Tool
 󰚢  Extract Text (OCR)
 󰑋  Screen Recorder (GPU)
+󰅶  Keep System Awake
 󰂚  Notification Center
 󰖩  Network Manager (Impala)
 󰂯  Bluetooth Devices (Bluetui)
@@ -153,6 +154,9 @@ menu_controls() {
             ;;
         *"Screen Recorder"*)
             bash "$SCRIPTS_DIR/screenrecord.sh" menu
+            ;;
+        *"Keep System Awake"*|*"Keep Awake"*)
+            bash "$SCRIPTS_DIR/keep_awake.sh" menu
             ;;
         *"Notification Center"*)
             bash "$SCRIPTS_DIR/notification_center.sh" toggle
@@ -380,6 +384,7 @@ menu_config() {
 # ------------------------------------------------------------------------------
 menu_power() {
     local options="󰌍  Back to Main Menu
+󰅶  Keep System Awake
 󰌾  Lock Session
 󰤄  Suspend System
 󰑐  Reboot System
@@ -393,6 +398,9 @@ menu_power() {
     case "$choice" in
         *"Back to Main Menu"*)
             main_menu
+            ;;
+        *"Keep System Awake"*|*"Keep Awake"*)
+            bash "$SCRIPTS_DIR/keep_awake.sh" menu
             ;;
         *"Lock"*)
             ~/.config/hypr/scripts/session.sh lock

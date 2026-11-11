@@ -322,6 +322,7 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Super + B` | Open browser |
 | `Super + Shift + P` | Package Manager (SPM - Simple Package Manager) |
 | `Super + Alt + P` | TUI Applications Hub Menu |
+| `Super + Alt + A` | Keep Awake Duration Menu (Rofi) |
 | `Super + Shift + C` | Calendar & Tasks (calcure) |
 | `Super + Shift + J` | TUI Journal (tui-journal) |
 | `Super + Shift + G` | GTK Configuration Tool (`nwg-look`) |
@@ -365,6 +366,21 @@ Displays detailed system information in a styled floating terminal panel with Ne
 | `Super + Alt + S` | Stop active screen recording session |
 | `Super + Alt + R` | Interactive Screen Recording menu (Rofi) |
 | *Notification Center* | Integrated Tab Controls: Screen Recorder tab (`Entire Screen`, `Active Display`, `Selection Area`, `App Window`, `Stop Recording`, `Recording Menu`) |
+
+### Keep Awake (System Sleep Inhibitor)
+
+Temporarily prevents system sleep/suspend without modifying permanent power settings or disabling monitor idle DPMS sleep:
+
+| Keybind / Trigger | Action |
+|-------------------|--------|
+| `Super + Alt + A` | Interactive Keep Awake Duration Menu (Rofi) |
+| *Waybar* | Left-click: Open duration menu · Right-click: Quick toggle |
+| *Notification Center* | Dedicated Tools Tab (`󰅶 Awake` dropdown: 30m, 1h, 2h, Off, Custom) |
+| *Control Center* | `Super + D` / `Super + I` → Quick Controls / Power & Session → 󰅶 Keep System Awake |
+| `keep_awake.sh on [dur]` | CLI activate with duration (e.g. `15m`, `30m`, `1h`, `2h`, `4h`) |
+| `keep_awake.sh off` | CLI manual restore / disable inhibitor |
+| `keep_awake.sh status` | CLI query active state and remaining countdown |
+
 
 ### Media (media.conf)
 

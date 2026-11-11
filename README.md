@@ -389,6 +389,7 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 | `SUPER + Shift + Q` | Logout Session (`session.sh logout`) |
 | `SUPER + Shift + P` | Simple Package Manager ([SPM](https://github.com/adelmonte/Simple_Package_Manager) TUI) |
 | `SUPER + Alt + P` | TUI Applications Launcher Menu |
+| `SUPER + Alt + A` | Keep Awake Duration Menu (Temporarily Prevent System Sleep) |
 | `SUPER + Shift + C` | Calendar & Tasks (Calcure TUI) |
 | `SUPER + Shift + J` | Daily Journal & Notes (tui-journal) |
 | `SUPER + Shift + G` | GTK Configuration Tool (nwg-look) |
@@ -427,6 +428,7 @@ Toggle dark/light mode instantly with **`SUPER + Alt + T`**, or open the interac
 | **Audio** | [PipeWire](https://pipewire.org/), [WirePlumber](https://pipewire.pages.freedesktop.org/wireplumber/) |
 | **Network** | [NetworkManager](https://wiki.archlinux.org/title/NetworkManager), [iWD](https://iwd.wiki.kernel.org/) |
 | **Security** | [KWallet](https://utils.kde.org/projects/kwalletmanager/), `pam_kwallet5` |
+| **Power & Session** | [systemd-inhibit](https://www.freedesktop.org/software/systemd/man/systemd-inhibit.html) (Keep Awake temporary sleep inhibitor), [hyprlock](https://github.com/hyprwm/hyprlock) |
 | **Theming** | [nwg-look](https://github.com/nwg-piotr/nwg-look) (GTK Configuration Tool), [Papirus Icons](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme), [Adwaita](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/), [Kvantum](https://github.com/tsujan/Kvantum) |
 
 
