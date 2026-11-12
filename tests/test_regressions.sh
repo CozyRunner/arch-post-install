@@ -794,6 +794,20 @@ EOF
     else
         fail "swaync config.json includes menu#awake in menubar#tools"
     fi
+
+    # 7. keep_awake.sh defines custom_duration_menu and handles decimal duration
+    if grep -q "custom_duration_menu()" "${ROOT_DIR}/dotfiles/hypr/scripts/keep_awake.sh"; then
+        ok
+    else
+        fail "keep_awake.sh defines custom_duration_menu"
+    fi
+
+    dur_out="$(bash -c "source '${ROOT_DIR}/dotfiles/hypr/scripts/keep_awake.sh' --help >/dev/null 2>&1 || true; parse_duration 1.5h")"
+    if [[ "${dur_out}" == "5400" ]]; then
+        ok
+    else
+        fail "keep_awake.sh parse_duration handles decimal 1.5h"
+    fi
 }
 
 

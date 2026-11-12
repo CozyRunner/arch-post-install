@@ -42,7 +42,7 @@ update_waybar() {
     pkill -RTMIN+8 waybar 2>/dev/null || true
 }
 
-# Parse duration string (e.g. 15m, 1h, 90m, 1h30m, 30) into seconds
+# Parse duration string (e.g. 15m, 1h, 90m, 1h30m, 1.5h, 30) into seconds
 parse_duration() {
     local input="${1:-1h}"
     [[ -z "$input" ]] && return 1
@@ -51,6 +51,20 @@ parse_duration() {
     # Pure integer defaults to minutes
     if [[ "$input" =~ ^[0-9]+$ ]]; then
         echo $(( input * 60 ))
+        return 0
+    fi
+
+    # Support decimal hours (e.g. 1.5h, 0.5h, 2.5h)
+    if [[ "$input" =~ ^([0-9]+)[.,]([0-9]+)h?$ ]]; then
+        local whole="${BASH_REMATCH[1]}"
+        local frac="${BASH_REMATCH[2]}"
+        local sec_whole=$(( whole * 3600 ))
+        local frac_len=${#frac}
+        local divisor=1
+        local i
+        for (( i=0; i<frac_len; i++ )); do divisor=$(( divisor * 10 )); done
+        local sec_frac=$(( (frac * 3600) / divisor ))
+        echo $(( sec_whole + sec_frac ))
         return 0
     fi
 
@@ -165,6 +179,11 @@ start_awake() {
     local duration_input="${1:-1h}"
     local duration_sec
     duration_sec=$(parse_duration "$duration_input") || {
+        if command -v notify-send &>/dev/null; then
+            notify-send "Invalid Duration" \
+                "Could not parse '$duration_input'.\nUse format like: 30m, 1h, 2h, 90m" \
+                -i dialog-warning -u normal 2>/dev/null || true
+        fi
         echo "Error: Invalid duration '$duration_input'. Use format like: 30m, 1h, 2h, 90m" >&2
         return 1
     }
@@ -326,17 +345,124 @@ waybar_output() {
     fi
 }
 
+# Text input prompt for arbitrary durations with clean rofi styling (no empty listview)
 prompt_custom_duration() {
-    local custom=""
-    if command -v rofi &>/dev/null; then
-        custom=$(echo "" | rofi -dmenu -p "󱎫 Duration" \
-            -mesg "  Enter duration (e.g. 45m, 90m, 1h30m, 3h):" \
-            -theme "$ROFI_THEME") || true
+    if ! command -v rofi &>/dev/null; then
+        echo "Rofi is required for interactive menu. Use CLI: keep_awake.sh on [duration]" >&2
+        return 1
     fi
 
-    if [[ -n "$custom" ]]; then
-        start_awake "$custom"
+    local custom=""
+    # Override theme to disable listview and render a clean, compact single-line input prompt dialog
+    local theme_override='mainbox { children: [ "inputbar", "message" ]; spacing: 10px; padding: 20px; } listview { enabled: false; } entry { placeholder: "e.g. 45m, 90m, 1h30m, 3h"; }'
+
+    custom=$(echo "" | rofi -dmenu \
+        -p "󱎫 Duration" \
+        -mesg "  Enter duration (e.g. 45m, 90m, 1h30m, 3h) & press Enter:" \
+        -theme "$ROFI_THEME" \
+        -theme-str "$theme_override") || true
+
+    custom="$(echo "$custom" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+
+    # If user pressed Escape or cancelled without typing, return to custom duration menu
+    if [[ -z "$custom" ]]; then
+        custom_duration_menu
+        return 0
     fi
+
+    if parse_duration "$custom" &>/dev/null; then
+        start_awake "$custom"
+    else
+        if command -v notify-send &>/dev/null; then
+            notify-send "Invalid Duration" \
+                "Could not parse '$custom'.\nUse format like: 45m, 90m, 1h, 2h30m" \
+                -i dialog-warning -u normal 2>/dev/null || true
+        fi
+        echo "Error: Invalid duration '$custom'" >&2
+        prompt_custom_duration
+    fi
+}
+
+# Dedicated sub-menu for custom duration selection and manual input
+custom_duration_menu() {
+    if ! command -v rofi &>/dev/null; then
+        echo "Rofi is required for interactive menu. Use CLI: keep_awake.sh on [duration]" >&2
+        return 1
+    fi
+
+    local options="󰌍  Back to Keep Awake Menu
+󱎫  10 Minutes
+󱎫  20 Minutes
+󱎫  45 Minutes
+󱎫  90 Minutes (1.5 Hours)
+󱎫  3 Hours
+󱎫  5 Hours
+󱎫  6 Hours
+󱎫  12 Hours
+󱎫  24 Hours (Full Day)
+󰄬  Type Custom Duration (e.g. 45m, 1h30m)..."
+
+    local choice
+    choice=$(echo -e "$options" | rofi -dmenu -i \
+        -p "󱎫 Custom Duration" \
+        -mesg "  Select duration or type custom (e.g. 45m, 90m, 1h30m, 3h):" \
+        -theme "$ROFI_THEME") || true
+
+    [[ -z "$choice" ]] && return 0
+
+    case "$choice" in
+        *"Back to Keep Awake Menu"*)
+            show_menu
+            ;;
+        *"10 Minutes"*)
+            start_awake "10m"
+            ;;
+        *"20 Minutes"*)
+            start_awake "20m"
+            ;;
+        *"45 Minutes"*)
+            start_awake "45m"
+            ;;
+        *"90 Minutes"*)
+            start_awake "90m"
+            ;;
+        *"3 Hours"*)
+            start_awake "3h"
+            ;;
+        *"5 Hours"*)
+            start_awake "5h"
+            ;;
+        *"6 Hours"*)
+            start_awake "6h"
+            ;;
+        *"12 Hours"*)
+            start_awake "12h"
+            ;;
+        *"24 Hours"*)
+            start_awake "24h"
+            ;;
+        *"Type Custom Duration"*)
+            prompt_custom_duration
+            ;;
+        *)
+            # The user typed a custom duration directly into the rofi entry bar
+            local clean_val
+            clean_val="$(echo "$choice" | sed -E 's/^[󰄬󱎫󰌍[:space:]]+//;s/[[:space:]]+$//')"
+            if parse_duration "$choice" &>/dev/null; then
+                start_awake "$choice"
+            elif parse_duration "$clean_val" &>/dev/null; then
+                start_awake "$clean_val"
+            else
+                if command -v notify-send &>/dev/null; then
+                    notify-send "Invalid Duration" \
+                        "Could not parse '$choice'.\nUse format like: 45m, 90m, 1h, 2h30m" \
+                        -i dialog-warning -u normal 2>/dev/null || true
+                fi
+                echo "Error: Invalid duration '$choice'" >&2
+                custom_duration_menu
+            fi
+            ;;
+    esac
 }
 
 show_menu() {
@@ -362,7 +488,7 @@ show_menu() {
 󱎫  Extend by 30 Minutes
 󱎫  Extend by 1 Hour
 󱎫  Extend by 2 Hours
-󰄬  Set New Custom Duration...
+󰄬  Set Custom Duration...
 󰌍  Cancel"
 
         choice=$(echo -e "$options" | rofi -dmenu -i \
@@ -386,8 +512,20 @@ show_menu() {
                 local new_dur=$(( remaining_sec + 7200 ))
                 start_awake "${new_dur}s"
                 ;;
-            *"Set New Custom"*)
-                prompt_custom_duration
+            *"Set Custom Duration"*|*"Set New Custom"*)
+                custom_duration_menu
+                ;;
+            *"Cancel"*)
+                exit 0
+                ;;
+            *)
+                local clean_val
+                clean_val="$(echo "$choice" | sed -E 's/^[󰄬󱎫󰌍[:space:]]+//;s/[[:space:]]+$//')"
+                if parse_duration "$choice" &>/dev/null; then
+                    start_awake "$choice"
+                elif parse_duration "$clean_val" &>/dev/null; then
+                    start_awake "$clean_val"
+                fi
                 ;;
         esac
     else
@@ -425,7 +563,19 @@ show_menu() {
                 start_awake "8h"
                 ;;
             *"Custom Duration"*)
-                prompt_custom_duration
+                custom_duration_menu
+                ;;
+            *"Cancel"*)
+                exit 0
+                ;;
+            *)
+                local clean_val
+                clean_val="$(echo "$choice" | sed -E 's/^[󰄬󱎫󰌍[:space:]]+//;s/[[:space:]]+$//')"
+                if parse_duration "$choice" &>/dev/null; then
+                    start_awake "$choice"
+                elif parse_duration "$clean_val" &>/dev/null; then
+                    start_awake "$clean_val"
+                fi
                 ;;
         esac
     fi

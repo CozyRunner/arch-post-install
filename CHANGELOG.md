@@ -4,6 +4,16 @@ All notable changes to the Arch Post-Install project are documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2026-11-12]
+
+### Fixed
+- `dotfiles/hypr/scripts/keep_awake.sh`:
+  - Resolved UI defect in Custom Duration selection: replaced empty `rofi -dmenu` prompt (which rendered an awkward blank element in listview) with a dedicated `custom_duration_menu` sub-menu.
+  - Added extended duration presets (`10m`, `20m`, `45m`, `90m`, `3h`, `5h`, `6h`, `12h`, `24h`) and seamless return navigation (`󰌍  Back to Keep Awake Menu`).
+  - Enabled direct duration typing: entering any custom interval (e.g. `45m`, `1h30m`, `2.5h`) directly in the entry field in either the main menu or the sub-menu now automatically parses and activates Keep Awake.
+  - Overhauled manual duration entry prompt (`prompt_custom_duration`) using `-theme-str` override to disable listview and provide a clean single-line dialog with contextual placeholder text.
+  - Added support for decimal hour durations (e.g. `1.5h`, `0.5h`, `2.5h`) in `parse_duration` and visual desktop warnings via `notify-send` on invalid inputs.
+
 ## [2026-11-11]
 
 ### Added
