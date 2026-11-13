@@ -4,6 +4,12 @@ All notable changes to the Arch Post-Install project are documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2026-11-13]
+
+### Fixed
+- `dotfiles/waybar/config.jsonc`:
+  - Added `:i` integer format modifier to `format-wifi` and `format-ethernet` bandwidth tokens (`{bandwidthUpBits:i}` and `{bandwidthDownBits:i}`) in the `network` module to eliminate fluctuating floating-point decimals and prevent bar layout jitter.
+
 ## [2026-11-12]
 
 ### Fixed

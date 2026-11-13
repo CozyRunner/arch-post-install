@@ -110,8 +110,8 @@
     "format-icons": ["", "", "", "", ""],
   },
   "network": {
-    "format-wifi": " ({signalStrength}%) 󰁞 {bandwidthUpBits} 󰁆 {bandwidthDownBits}",
-    "format-ethernet": " {ipaddr} 󰁞 {bandwidthUpBits} 󰁆 {bandwidthDownBits}",
+    "format-wifi": " ({signalStrength}%) 󰁞 {bandwidthUpBits:i} 󰁆 {bandwidthDownBits:i}",
+    "format-ethernet": " {ipaddr} 󰁞 {bandwidthUpBits:i} 󰁆 {bandwidthDownBits:i}",
     "on-click": "kitty --class medium-floating-term -e impala",
     "format-linked": " (No IP)",
     "format-disconnected": "⚠ Disconnected",
