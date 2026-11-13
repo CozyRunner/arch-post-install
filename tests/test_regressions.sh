@@ -808,6 +808,13 @@ EOF
     else
         fail "keep_awake.sh parse_duration handles decimal 1.5h"
     fi
+
+    # 8. waybar config.jsonc network module sets interface to prevent multi-interface delta anomalies
+    if grep -q '"interface":' "${waybar_cfg}"; then
+        ok
+    else
+        fail "waybar config.jsonc network module specifies interface"
+    fi
 }
 
 

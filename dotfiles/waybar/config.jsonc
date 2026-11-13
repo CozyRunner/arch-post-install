@@ -110,6 +110,7 @@
     "format-icons": ["", "", "", "", ""],
   },
   "network": {
+    "interface": "wlan0",
     "format-wifi": " ({signalStrength}%) 󰁞 {bandwidthUpBits:i} 󰁆 {bandwidthDownBits:i}",
     "format-ethernet": " {ipaddr} 󰁞 {bandwidthUpBits:i} 󰁆 {bandwidthDownBits:i}",
     "on-click": "kitty --class medium-floating-term -e impala",

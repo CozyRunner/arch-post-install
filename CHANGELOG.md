@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 - `dotfiles/waybar/config.jsonc`:
+  - Resolved negative speed and garbage/overflow bandwidth anomalies (`18446744073709551615 b/s` / `16 Eb/s`) in the `network` speed meter: explicitly configured `"interface": "wlan0"` to prevent auto-detection from alternating across virtual and Docker bridge interfaces (`docker0`, `br-*`, `veth*`), ensuring clean and monotonic byte-counter delta calculations.
   - Added `:i` integer format modifier to `format-wifi` and `format-ethernet` bandwidth tokens (`{bandwidthUpBits:i}` and `{bandwidthDownBits:i}`) in the `network` module to eliminate fluctuating floating-point decimals and prevent bar layout jitter.
 
 ## [2026-11-12]
