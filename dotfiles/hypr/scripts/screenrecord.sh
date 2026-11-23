@@ -33,12 +33,14 @@ esac
 # ------------------------------------------------------------------------------
 # Configuration & Paths
 # ------------------------------------------------------------------------------
-VIDEOS_DIR="$(xdg-user-dir VIDEOS 2>/dev/null || echo "$HOME/Videos")"
+VIDEOS_DIR="$(xdg-user-dir VIDEOS 2>/dev/null || true)"
+if [[ -z "$VIDEOS_DIR" || "$VIDEOS_DIR" == "$HOME" ]]; then
+    VIDEOS_DIR="$HOME/Videos"
+fi
 RECORDINGS_DIR="${RECORDINGS_DIR:-$VIDEOS_DIR/Recordings}"
-mkdir -p "$RECORDINGS_DIR"
 
 STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/screenrecorder"
-mkdir -p "$STATE_DIR"
+mkdir -p "$STATE_DIR" 2>/dev/null || true
 PID_FILE="$STATE_DIR/recording.pid"
 META_FILE="$STATE_DIR/recording.meta"
 
@@ -51,16 +53,22 @@ SLURP_BORDER_WEIGHT=2
 # ------------------------------------------------------------------------------
 # Dependency Verification
 # ------------------------------------------------------------------------------
+notify() {
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send "$@"
+    fi
+}
+
 check_dependencies() {
     local missing=()
-    for cmd in notify-send jq hyprctl slurp; do
+    for cmd in jq hyprctl slurp; do
         if ! command -v "$cmd" >/dev/null 2>&1; then
             missing+=("$cmd")
         fi
     done
 
     if ! command -v gpu-screen-recorder >/dev/null 2>&1; then
-        notify-send -u critical -a "Screen Recorder" \
+        notify -u critical -a "Screen Recorder" \
             "Dependency Missing" \
             "gpu-screen-recorder is not installed.\nInstall it with: sudo pacman -S gpu-screen-recorder"
         echo "Error: gpu-screen-recorder is not installed." >&2
@@ -69,7 +77,7 @@ check_dependencies() {
     fi
 
     if [[ ${#missing[@]} -gt 0 ]]; then
-        notify-send -u critical -a "Screen Recorder" \
+        notify -u critical -a "Screen Recorder" \
             "Dependencies Missing" \
             "Required utilities missing: ${missing[*]}"
         echo "Error: Missing utilities: ${missing[*]}" >&2
@@ -214,6 +222,7 @@ start_recording() {
     fi
 
     close_notification_panel
+    mkdir -p "$RECORDINGS_DIR"
 
     # Start gpu-screen-recorder in background
     gpu-screen-recorder \

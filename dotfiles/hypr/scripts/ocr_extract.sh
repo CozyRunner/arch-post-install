@@ -37,26 +37,28 @@ case "${1:-}" in
 esac
 
 # ── Dependencies Check ────────────────────────────────────────
+notify() {
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send "$@"
+    fi
+}
+
 MISSING_DEPS=()
-for cmd in grim slurp wl-copy notify-send jq hyprctl; do
+for cmd in grim slurp wl-copy jq hyprctl; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
         MISSING_DEPS+=("$cmd")
     fi
 done
 
 if [[ ${#MISSING_DEPS[@]} -gt 0 ]]; then
-    if command -v notify-send >/dev/null 2>&1; then
-        notify-send -u critical "OCR Error" "Missing required tools: ${MISSING_DEPS[*]}"
-    fi
+    notify -u critical "OCR Error" "Missing required tools: ${MISSING_DEPS[*]}"
     echo "Error: Missing required tools: ${MISSING_DEPS[*]}" >&2
     exit 1
 fi
 
 if ! command -v tesseract >/dev/null 2>&1; then
     MSG="Tesseract OCR engine is not installed.\nInstall via: sudo pacman -S tesseract tesseract-data-eng"
-    if command -v notify-send >/dev/null 2>&1; then
-        notify-send -u critical "OCR Error: Tesseract Missing" "$MSG" -i dialog-warning
-    fi
+    notify -u critical "OCR Error: Tesseract Missing" "$MSG" -i dialog-warning
     echo -e "\033[1;31m[ERROR]\033[0m $MSG" >&2
     exit 1
 fi
@@ -139,7 +141,7 @@ finalize_ocr() {
     text="$(printf '%s' "$raw_text" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
     if [[ -z "$text" ]]; then
-        notify-send \
+        notify \
             -a "OCR Tool" \
             -i dialog-information \
             "No Text Detected" \
@@ -163,7 +165,7 @@ finalize_ocr() {
         preview="${preview}..."
     fi
 
-    notify-send \
+    notify \
         -a "OCR Tool" \
         -i edit-copy \
         "Text Copied to Clipboard" \

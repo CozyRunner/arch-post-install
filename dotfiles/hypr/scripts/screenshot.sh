@@ -30,9 +30,15 @@ esac
 # ------------------------------------------------------------------------------
 # Dependencies Check
 # ------------------------------------------------------------------------------
-for cmd in grim slurp wl-copy notify-send jq hyprctl; do
+notify() {
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send "$@"
+    fi
+}
+
+for cmd in grim slurp wl-copy jq hyprctl; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
-        notify-send -u critical "Screenshot Error" "Required dependency '$cmd' is not installed."
+        notify -u critical "Screenshot Error" "Required dependency '$cmd' is not installed."
         echo "Error: '$cmd' is not installed." >&2
         exit 1
     fi
@@ -41,9 +47,11 @@ done
 # ------------------------------------------------------------------------------
 # Configuration & Paths
 # ------------------------------------------------------------------------------
-PICTURES_DIR="$(xdg-user-dir PICTURES 2>/dev/null || echo "$HOME/Pictures")"
+PICTURES_DIR="$(xdg-user-dir PICTURES 2>/dev/null || true)"
+if [[ -z "$PICTURES_DIR" || "$PICTURES_DIR" == "$HOME" ]]; then
+    PICTURES_DIR="$HOME/Pictures"
+fi
 SCREENSHOT_DIR="${SCREENSHOT_DIR:-$PICTURES_DIR/Screenshots}"
-mkdir -p "$SCREENSHOT_DIR"
 
 TIMESTAMP="$(date +'%Y-%m-%d_%H-%M-%S')"
 OUTPUT_FILE="$SCREENSHOT_DIR/Screenshot_${TIMESTAMP}.png"
@@ -148,29 +156,31 @@ finalize_screenshot() {
 
     # Send notification asynchronously with action buttons
     (
-        local action
-        action="$(notify-send \
-            -a "Screenshot Tool" \
-            -i "$target_file" \
-            --action="view=View" \
-            --action="folder=Show in Folder" \
-            "Screenshot Captured" \
-            "${mode_desc}\nSaved: ${base_name}\nCopied to clipboard.")" || true
+        if command -v notify-send >/dev/null 2>&1; then
+            local action
+            action="$(notify-send \
+                -a "Screenshot Tool" \
+                -i "$target_file" \
+                --action="view=View" \
+                --action="folder=Show in Folder" \
+                "Screenshot Captured" \
+                "${mode_desc}\nSaved: ${base_name}\nCopied to clipboard.")" || true
 
-        case "$action" in
-            view)
-                if command -v imv >/dev/null 2>&1; then
-                    imv "$target_file" >/dev/null 2>&1 &
-                elif command -v xdg-open >/dev/null 2>&1; then
-                    xdg-open "$target_file" >/dev/null 2>&1 &
-                fi
-                ;;
-            folder)
-                if command -v xdg-open >/dev/null 2>&1; then
-                    xdg-open "$SCREENSHOT_DIR" >/dev/null 2>&1 &
-                fi
-                ;;
-        esac
+            case "$action" in
+                view)
+                    if command -v imv >/dev/null 2>&1; then
+                        imv "$target_file" >/dev/null 2>&1 &
+                    elif command -v xdg-open >/dev/null 2>&1; then
+                        xdg-open "$target_file" >/dev/null 2>&1 &
+                    fi
+                    ;;
+                folder)
+                    if command -v xdg-open >/dev/null 2>&1; then
+                        xdg-open "$SCREENSHOT_DIR" >/dev/null 2>&1 &
+                    fi
+                    ;;
+            esac
+        fi
     ) >/dev/null 2>&1 &
 
     echo "$target_file"
@@ -237,6 +247,7 @@ show_rofi_menu() {
 # 1. Capture the entire screen (all connected displays / full desktop)
 capture_screen() {
     close_notification_panel
+    mkdir -p "$SCREENSHOT_DIR"
     grim "$OUTPUT_FILE"
     finalize_screenshot "$OUTPUT_FILE" "Entire Screen"
 }
@@ -246,6 +257,7 @@ capture_display() {
     local display_name
     display_name="$(get_active_display)"
     close_notification_panel
+    mkdir -p "$SCREENSHOT_DIR"
 
     if [[ -n "$display_name" ]]; then
         grim -o "$display_name" "$OUTPUT_FILE"
@@ -269,6 +281,7 @@ capture_area() {
         -w "$SLURP_BORDER_WEIGHT" 2>/dev/null)" || exit 0
 
     if [[ -n "$geom" ]]; then
+        mkdir -p "$SCREENSHOT_DIR"
         grim -g "$geom" "$OUTPUT_FILE"
         finalize_screenshot "$OUTPUT_FILE" "Selection Area"
     fi
@@ -282,6 +295,7 @@ capture_window() {
     geom="$(select_window_geometry)" || exit 0
 
     if [[ -n "$geom" ]]; then
+        mkdir -p "$SCREENSHOT_DIR"
         grim -g "$geom" "$OUTPUT_FILE"
         finalize_screenshot "$OUTPUT_FILE" "Application Window"
     fi
@@ -296,6 +310,7 @@ capture_active_window() {
     app_title="$(hyprctl activewindow -j | jq -r '.class // "Active Window"')"
 
     if [[ -n "$geom" ]]; then
+        mkdir -p "$SCREENSHOT_DIR"
         grim -g "$geom" "$OUTPUT_FILE"
         finalize_screenshot "$OUTPUT_FILE" "Active Window ($app_title)"
     else

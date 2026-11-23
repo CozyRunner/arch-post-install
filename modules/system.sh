@@ -153,6 +153,8 @@ compression-algorithm = zstd'
     if systemctl is-active --quiet systemd-zram-setup@zram0.service; then
         if [[ ${needs_restart} -eq 1 ]]; then
             log_info "ZRAM config changed; restarting swap device"
+            sudo swapoff /dev/zram0 2>/dev/null || true
+            sudo systemctl stop dev-zram0.swap 2>/dev/null || true
             run_logged sudo systemctl restart systemd-zram-setup@zram0.service
         else
             log_success "ZRAM already active with the desired configuration"
@@ -244,8 +246,11 @@ setup_firewall() {
 #  */
 ufw_has_rule_ssh() {
     local rules
-    rules="$(sudo ufw status 2>/dev/null || true)"
-    grep -qiE '(^|[[:space:]])(OpenSSH|22/tcp)([[:space:]]|$)' <<< "${rules}"
+    rules="$(sudo ufw status 2>/dev/null || true)"$'\n'"$(sudo ufw show added 2>/dev/null || true)"
+    if [[ -f /etc/ufw/user.rules ]]; then
+        rules="${rules}"$'\n'"$(sudo cat /etc/ufw/user.rules 2>/dev/null || true)"
+    fi
+    grep -qiE '(^|[[:space:]])(OpenSSH|22/tcp)([[:space:]]|$)|dport 22\b' <<< "${rules}"
 }
 
 # /**

@@ -4,6 +4,28 @@ All notable changes to the Arch Post-Install project are documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2026-11-23]
+
+### Fixed
+- `modules/system.sh`:
+  - Resolved fatal UFW installation abort (`No SSH allow rule present after applying defaults`): `ufw_has_rule_ssh()` now inspects staged rules via `ufw show added` and `/etc/ufw/user.rules` in addition to `ufw status`, correctly detecting pre-configured SSH allow rules when UFW is inactive.
+  - Resolved ZRAM device configuration restart crash (`Device or resource busy (os error 16)`): `setup_zram()` now safely deactivates active swap on `/dev/zram0` and stops `dev-zram0.swap` before restarting `systemd-zram-setup@zram0.service`.
+- `config/hyprland.yaml`:
+  - Added missing `libnotify` package dependency under `Screenshot & Screen Recording` to ensure `notify-send` is installed for all desktop script notifications.
+  - Replaced obsolete package `rofi-wayland` with official repository package `rofi` (v2.x with native Wayland support).
+  - Replaced package name `ttf-font-awesome` with official `otf-font-awesome`.
+  - Removed deprecated/obsolete package references `mesa-vdpau`, `libva-mesa-driver` (integrated into modern `mesa`), and `libspa-0.2-bluetooth` (provided by `pipewire-audio`), preventing Pacman transaction batch aborts during installation.
+- `dotfiles/hypr/scripts/ocr_extract.sh`:
+  - Added resilient `notify()` helper and removed `notify-send` from fatal dependency checks, allowing headless and CLI OCR extraction to stdout and Wayland clipboard (`wl-copy`) to succeed cleanly without requiring an active notification daemon.
+- `dotfiles/hypr/scripts/screenshot.sh`:
+  - Fixed XDG Pictures directory fallback logic to default to `$HOME/Pictures/Screenshots` when `xdg-user-dir PICTURES` returns `$HOME` or is uninitialized.
+  - Deferred screenshot directory creation (`mkdir -p`) to active capture handlers, preventing unnecessary filesystem operations during help or mode dispatch.
+  - Wrapped notification calls in a safe check to ensure screenshots are saved and copied to clipboard even if `notify-send` is not present.
+- `dotfiles/hypr/scripts/screenrecord.sh`:
+  - Fixed XDG Videos directory fallback logic to default to `$HOME/Videos/Recordings` when `xdg-user-dir VIDEOS` returns `$HOME` or is uninitialized.
+  - Moved recordings directory creation (`mkdir -p`) into `start_recording`, enabling read-only commands (`screenrecord.sh status` and `--help`) to execute cleanly without attempting directory creation.
+  - Added resilient notification helper and safe `STATE_DIR` initialization.
+
 ## [2026-11-13]
 
 ### Fixed
