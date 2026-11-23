@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [2026-11-23]
 
+### Changed
+- `dotfiles/waybar/style.css`:
+  - Removed drop shadow effects (`box-shadow: none;`) around the Waybar root window and floating module pill containers (`.modules-left`, `.modules-center`, `.modules-right`) for a flat, clean aesthetic.
+
 ### Fixed
 - `modules/system.sh`:
   - Resolved fatal UFW installation abort (`No SSH allow rule present after applying defaults`): `ufw_has_rule_ssh()` now inspects staged rules via `ufw show added` and `/etc/ufw/user.rules` in addition to `ufw status`, correctly detecting pre-configured SSH allow rules when UFW is inactive.
