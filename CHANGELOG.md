@@ -4,6 +4,20 @@ All notable changes to the Arch Post-Install project are documented in this file
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2026-11-24]
+
+### Changed
+- `dotfiles/hypr/config/looknfeel.lua`, `dotfiles/hypr/theme.lua`, `dotfiles/hypr/themes/presets/*.lua`:
+  - Added `ignore_alpha = 0.5` to the `rofi` layer rule (`hl.layer_rule({ match = { namespace = "rofi" }, blur = true, ignore_alpha = 0.5 })`) across base config, themes, and all 16 presets. Prevents Hyprland from blurring Rofi's full-screen transparent layer surface and eliminates the unwanted full-screen dark frosted background effect.
+- `dotfiles/waybar/config.jsonc`:
+  - Updated the application launcher icon click handler from raw `rofi -show drun` to `~/.config/hypr/scripts/app_launcher.sh` to ensure consistent themed launcher execution with Recent Apps and All Apps navigation.
+
+### Fixed
+- `dotfiles/rofi/spotlight.rasi`:
+  - Removed unsupported CSS `box-shadow:` with `inset` and invalid pseudo-selector `element:hover`, resolving theme parser failures (`Failed to parse theme: "spotlight.rasi"`) that caused Rofi to fall back to the unconstrained built-in default theme.
+- `dotfiles/hypr/config/rules.lua`:
+  - Added floating and centering window rules for `^(Rofi|rofi)$` to guarantee that Rofi always floats and never gets tiled across the entire workspace if launched in XWayland or standard window mode.
+
 ## [2026-11-23]
 
 ### Changed

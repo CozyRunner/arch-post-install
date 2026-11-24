@@ -38,10 +38,6 @@ window {
     location:         center;
     anchor:           center;
     y-offset:         -80px;
-    /* Depth shadow */
-    box-shadow:
-        0 8px 40px rgba(0, 0, 0, 0.50),
-        0 1px 0 rgba(255, 255, 255, 0.15) inset;
 }
 
 /* ── Main content container ── */
@@ -133,9 +129,4 @@ element.selected.normal {
 element.selected.normal element-text {
     text-color: @sel;
     font:       "JetBrainsMono Nerd Font Bold 14";
-}
-
-element:hover {
-    background-color: @bg-hover;
-    border-radius:    12px;
 }

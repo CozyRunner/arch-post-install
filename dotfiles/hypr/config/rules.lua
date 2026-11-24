@@ -37,8 +37,16 @@ hl.window_rule({
 -- Floating rules for common utilities
 hl.window_rule({
 	name = "floating-utilities",
-	match = { class = "^(pavucontrol|blueman-manager|nm-connection-editor|nm-applet|nwg-look)$" },
+	match = { class = "^(pavucontrol|blueman-manager|nm-connection-editor|nm-applet|nwg-look|Rofi|rofi)$" },
 	float = true,
+})
+
+-- Explicit rule for Rofi (fallback floating and center if launched as normal client)
+hl.window_rule({
+	name = "rofi-rules",
+	match = { class = "^(Rofi|rofi)$" },
+	float = true,
+	center = true,
 })
 
 -- Explicit size for GTK Settings (nwg-look)
