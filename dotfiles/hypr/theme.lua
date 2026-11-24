@@ -61,7 +61,7 @@ hl.config({
 -- Layer rules: blur all floating UI layers for glassmorphism consistency
 hl.layer_rule({ match = { namespace = "rofi" },                     blur = true })
 hl.layer_rule({ match = { namespace = "wlogout" },                  blur = true })
-hl.layer_rule({ match = { namespace = "waybar" },                   blur = true })
+hl.layer_rule({ match = { namespace = "waybar" },                   blur = true, ignore_alpha = 0.5 })
 hl.layer_rule({ match = { namespace = "swaync-control-center" },    blur = true })
 hl.layer_rule({ match = { namespace = "swaync-notification-window" }, blur = true })
 hl.layer_rule({ match = { namespace = "hyprlock" },                 blur = true })

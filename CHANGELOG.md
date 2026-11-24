@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [2026-11-23]
 
 ### Changed
+- `dotfiles/hypr/config/looknfeel.lua`, `dotfiles/hypr/theme.lua`, `dotfiles/hypr/themes/presets/glassmorphism-*.lua`:
+  - Added `ignore_alpha = 0.5` to Waybar layer rules (`hl.layer_rule({ match = { namespace = "waybar" }, blur = true, ignore_alpha = 0.5 })`) to eliminate the rectangular dark blurred background box/shadow cast across the top of the screen around Waybar's transparent layer surface.
 - `dotfiles/waybar/style.css`:
   - Removed drop shadow effects (`box-shadow: none;`) around the Waybar root window and floating module pill containers (`.modules-left`, `.modules-center`, `.modules-right`) for a flat, clean aesthetic.
 
