@@ -15,4 +15,7 @@
     sel:     @selected;
     bg-sel:  @background-alt;
     accent:  @selected;
+    border-glass: rgba(0, 0, 0, 0.08);
+    bg-hover:     rgba(30, 102, 245, 0.10);
+    bg-card:      rgba(239, 241, 245, 0.70);
 }

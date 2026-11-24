@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Updated the application launcher icon click handler from raw `rofi -show drun` to `~/.config/hypr/scripts/app_launcher.sh` to ensure consistent themed launcher execution with Recent Apps and All Apps navigation.
 
 ### Fixed
+- `dotfiles/rofi/launcher.rasi`, `dotfiles/rofi/spotlight.rasi`, `dotfiles/rofi/glassmorphism-power.rasi`:
+  - Added baseline fallback variable declarations (`border-glass`, `bg-hover`, `bg-card`, `border`) preceding `@import` directives. Ensures theme validation succeeds without popup warnings even if `colors.rasi` is unlinked or omits extended glass variables.
+- `dotfiles/rofi/colors-*.rasi`:
+  - Added `border-glass`, `bg-hover`, and `bg-card` across all 14 color palette files (`catppuccin-dark/light`, `dark/light`, `everforest-dark/light`, `gruvbox-dark/light`, `nord-dark/light`, `rose-pine-dark/light`, `tokyonight-dark/light`). Resolves Rofi startup validation failure (`Validating the theme failed: the variable 'border-glass' in 'inputbar/message { border-color: var(border-glass);}' failed to resolve`) when switching themes.
 - `dotfiles/rofi/spotlight.rasi`:
   - Removed unsupported CSS `box-shadow:` with `inset` and invalid pseudo-selector `element:hover`, resolving theme parser failures (`Failed to parse theme: "spotlight.rasi"`) that caused Rofi to fall back to the unconstrained built-in default theme.
 - `dotfiles/hypr/config/rules.lua`:

@@ -13,4 +13,7 @@
     fg-dim:  @foreground-dim;
     sel:     @selected;
     bg-sel:  @background-alt;
+    border-glass: rgba(255, 255, 255, 0.10);
+    bg-hover:     rgba(137, 180, 250, 0.12);
+    bg-card:      rgba(30, 30, 46, 0.70);
 }

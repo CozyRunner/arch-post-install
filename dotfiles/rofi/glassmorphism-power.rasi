@@ -2,6 +2,13 @@
    Rofi Glassmorphism Power Menu — "Lumina"
    Clean centered glass card for system actions
    ============================================================ */
+/* Baseline fallback variables (overridden by imported colors file) */
+* {
+    border-glass: rgba(255, 255, 255, 0.10);
+    bg-hover:     rgba(129, 140, 248, 0.12);
+    bg-card:      rgba(15, 15, 40, 0.65);
+}
+
 @import "~/.config/rofi/colors-glassmorphism-dark.rasi"
 
 configuration {
